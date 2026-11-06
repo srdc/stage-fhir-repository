@@ -16,7 +16,8 @@ import scala.concurrent.duration.{DurationInt, FiniteDuration}
  * (Onfhir.apply(..., cdsRoute = ...), see srdc.stage.fhir.Boot).
  *
  * The services use the FHIR configuration of this server (FhirConfigurationManager) for their in-memory FHIR search,
- * and prefetch requests without a fhirServer go to this server in-process (OnFhirLocalClient).
+ * and prefetch requests without a fhirServer go to this server in-process (OnFhirLocalClient). When the FHIR API is
+ * access controlled, CdsSecurity checks the service calls and sends their prefetch reads through the FHIR API instead.
  */
 object CdsModule {
 
@@ -36,8 +37,9 @@ object CdsModule {
     val cdsRoute = onfhirCds.start().route
     // The server tries this route first for every request: change the timeout only for the CDS paths
     // (withRequestTimeout takes effect even if the inner route rejects the request)
+    val securedCdsRoute = CdsSecurity.secure(basePath)(cdsRoute)
     pathPrefixTest(basePath) {
-      withRequestTimeout(requestTimeout)(cdsRoute)
+      withRequestTimeout(requestTimeout)(securedCdsRoute)
     }
   }
 }

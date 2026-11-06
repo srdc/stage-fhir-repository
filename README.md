@@ -4,8 +4,14 @@ An [onFHIR](https://onfhir.io) R4 repository for STAGE, simplified from `adlife-
 HS Monitor configurations, CDS services or custom operations, only what the STAGE apps use, plus SMART Health Cards
 issuing (`Patient/[id]/$health-cards-issue`) and the STAGE CDS Hooks services, served by the same server under
 `<server>/cds-hooks/cds-services`. The CDS services were the separate `smart-cds` project (imported here with its history
-from its `onfhir-feast-integration` branch); they use this server's FHIR configuration and, for prefetch requests
-without a `fhirServer`, read the data from this server in-process.
+from its `onfhir-feast-integration` branch); they use this server's FHIR configuration.
+
+CDS service calls that need patient data (a `patientId` in the context, or prefetches the server has to fetch) use the
+FHIR API rights of the caller (`CdsSecurity`): the request must carry the app's SMART access token
+(`fhirAuthorization.access_token`, or a Bearer header), the token must be able to read `Patient/{patientId}`, and the
+missing prefetches are read from this server's FHIR API with that token. Calls on supplied data only (e.g. `definition`,
+`valueset`) and the discovery endpoint are open. Off when `fhir.authorization.method = none`; see `stage.cds.security`
+in `application.conf`.
 
 It can run as two separate repositories, STAGE and EHR (own port, database and signing key), to demonstrate sharing data between
 organisations with SMART Health Cards / Links.
