@@ -1,0 +1,100 @@
+{
+  "resourceType": "ValueSet",
+  "id": "stroop-test",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/stroop-test",
+  "name": "StroopTest",
+  "title": "Stroop Test",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "STAGE ValueSet from the ValueSets sheet of FHIR_profiles.xlsx (WP7 profiling).",
+  "compose": {
+    "include": [
+      {
+        "system": "http://stage-healthyaging.eu/fhir/CodeSystem/stroop-test-variables",
+        "concept": [
+          {
+            "code": "avg-response-time",
+            "display": "Average response time"
+          },
+          {
+            "code": "correct",
+            "display": "# correct answers for session"
+          },
+          {
+            "code": "error",
+            "display": "# errors for session"
+          },
+          {
+            "code": "timeout",
+            "display": "# timeouts for session"
+          },
+          {
+            "code": "neutral-avg-response-time",
+            "display": "Average response time -  neutral"
+          },
+          {
+            "code": "neutral-correct",
+            "display": "# correct answers - neutral"
+          },
+          {
+            "code": "neutral-incorrect",
+            "display": "# incorrect answers - neutral"
+          },
+          {
+            "code": "neutral-timeout",
+            "display": "# timeouts - neutral"
+          },
+          {
+            "code": "congruent-avg-response-time",
+            "display": "Average response time -  congruent"
+          },
+          {
+            "code": "congruent-correct",
+            "display": "# correct answers - congruent"
+          },
+          {
+            "code": "congruent-incorrect",
+            "display": "# incorrect answers - congruent"
+          },
+          {
+            "code": "congruent-timeout",
+            "display": "# timeouts - congruent"
+          },
+          {
+            "code": "incongruent-avg-response-time",
+            "display": "Average response time -  incongruent"
+          },
+          {
+            "code": "incongruent-correct",
+            "display": "# correct answers - incongruent"
+          },
+          {
+            "code": "incongruent-incorrect",
+            "display": "# incorrect answers - incongruent"
+          },
+          {
+            "code": "incongruent-timeout",
+            "display": "# timeouts - incongruent"
+          },
+          {
+            "code": "shape-avg-response-time",
+            "display": "Average response time -  shape"
+          },
+          {
+            "code": "shape-correct",
+            "display": "# correct answers - shape"
+          },
+          {
+            "code": "shape-incorrect",
+            "display": "# incorrect answers - shape"
+          },
+          {
+            "code": "shape-timeout",
+            "display": "# timeouts - shape"
+          }
+        ]
+      }
+    ]
+  }
+}

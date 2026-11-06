@@ -1,0 +1,32 @@
+{
+  "resourceType": "ValueSet",
+  "id": "life-events",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/life-events",
+  "name": "LifeEvents",
+  "title": "Life Events",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "STAGE ValueSet from the ValueSets sheet of FHIR_profiles.xlsx (WP7 profiling).",
+  "compose": {
+    "include": [
+      {
+        "system": "https://stage-healthyageing.eu/CodeSystem/life-event-code",
+        "concept": [
+          {
+            "code": "event-type",
+            "display": "Event Type"
+          },
+          {
+            "code": "description",
+            "display": "Event Description"
+          },
+          {
+            "code": "impact",
+            "display": "Impact on Wellbeing"
+          }
+        ]
+      }
+    ]
+  }
+}

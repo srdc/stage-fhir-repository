@@ -1,0 +1,199 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en",
+  "status": "active",
+  "date": "2025-03-04T17:35:23.781Z",
+  "code": [
+    {
+      "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-code",
+      "code": "life-space-mobility",
+      "display": "Life Space Mobility"
+    }
+  ],
+  "meta": {
+    "tag": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-category",
+        "code": "patient"
+      }
+    ]
+  },
+  "subjectType": [
+    "Patient"
+  ],
+  "title": "Life Space Mobility",
+  "description": "A questionnaire assessing mobility across different spaces.",
+  "item": [
+    {
+      "linkId": "lsm_q1",
+      "type": "choice",
+      "required": true,
+      "text": "During the past 4 weeks, have you been in rooms of your home other than the one where you sleep?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "No"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Yes"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "lsm_q2",
+      "type": "choice",
+      "required": true,
+      "text": "If yes, how often did you move to other rooms?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "F0",
+            "display": "Daily"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "F1",
+            "display": "4-6 times a week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "F2",
+            "display": "1-3 times a week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "F3",
+            "display": "Less than once a week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "F4",
+            "display": "Not applicable"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "lsm_q3",
+      "type": "choice",
+      "required": true,
+      "text": "Did you use assistive devices or need help from another person?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "H0",
+            "display": "I did not need an assistive device or help from another person"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "H1",
+            "display": "I needed an assistive device but not help from another person"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "H2",
+            "display": "I needed help from another person"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "H3",
+            "display": "Not applicable"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "lsm_q4",
+      "type": "choice",
+      "required": true,
+      "text": "During the past 4 weeks, have you been outside your home but in its immediate vicinity (porch, terrace, balcony, stairwell, garage, yard, or driveway)?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "No"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Yes"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "lsm_q5",
+      "type": "choice",
+      "required": true,
+      "text": "During the past 4 weeks, have you been outdoors in your home's nearby surroundings/neighborhood, other than in your own yard?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "No"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Yes"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "lsm_q6",
+      "type": "choice",
+      "required": true,
+      "text": "During the past 4 weeks, have you been farther away than your home surroundings but still within your own municipality?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "No"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Yes"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "lsm_q7",
+      "type": "choice",
+      "required": true,
+      "text": "During the past 4 weeks, have you been outside your own municipality?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "No"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Yes"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "668fe5a8-0286-4260-bb57-eb9be1e015e8"
+}

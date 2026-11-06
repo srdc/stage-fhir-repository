@@ -1,0 +1,74 @@
+{
+  "resourceType": "ValueSet",
+  "id": "gps-components",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/gps-components",
+  "name": "GpsComponents",
+  "title": "Gps Components",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "STAGE ValueSet from the ValueSets sheet of FHIR_profiles.xlsx (WP7 profiling).",
+  "compose": {
+    "include": [
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "56816-2",
+            "display": "Coordinates"
+          },
+          {
+            "code": "LP262707-5",
+            "display": "Sedentary activity"
+          },
+          {
+            "code": "101691-4",
+            "display": "Duration of physical activity"
+          }
+        ]
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "concept": [
+          {
+            "code": "246132006",
+            "display": "Distance"
+          },
+          {
+            "code": "277753008",
+            "display": "Farthest distance from home"
+          },
+          {
+            "code": "870597004",
+            "display": "Speed"
+          }
+        ]
+      },
+      {
+        "system": "http://stage-healthyaging.eu/fhir/CodeSystem/gps-component-code",
+        "concept": [
+          {
+            "code": "visit-order",
+            "display": "Locations visiting order"
+          },
+          {
+            "code": "num-transition",
+            "display": "Number of location transitions"
+          },
+          {
+            "code": "location-variance",
+            "display": "Location variance"
+          },
+          {
+            "code": "num-unique-location",
+            "display": "Number of unique locations"
+          },
+          {
+            "code": "time-home",
+            "display": "Time spent at home"
+          }
+        ]
+      }
+    ]
+  }
+}

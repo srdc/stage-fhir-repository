@@ -1,0 +1,17 @@
+{
+   "resourceType": "SearchParameter",
+   "id" : "Goal-target-code",
+   "url": "http://kroniq.srdc.com.tr/fhir/SearchParameter/Goal-target-code",
+   "name": "target-code",
+   "status": "active",
+   "publisher": "SRDC Corp.",
+   "code": "target-code",
+   "base": ["Goal"],
+   "type": "token",
+   "description": "Target code of Goal",
+   "xpath": "f:Goal/f:target/f:measure",
+   "xpathUsage": "normal",
+   "target": [
+      "Goal"
+   ]
+}

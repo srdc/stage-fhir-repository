@@ -1,0 +1,43 @@
+{
+  "resourceType": "ValueSet",
+  "id": "shc-score2",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/shc-score2",
+  "name": "ShcScore2",
+  "title": "SCORE2 service - codes for Smart Health Cards",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "Codes of the data the \"score2\" CDS service uses: the credentialValueSet of $health-cards-issue for its Smart Health Card.",
+  "compose": {
+    "include": [
+      {
+        "system": "http://srdc.com.tr/custom",
+        "concept": [
+          {
+            "code": "score2-region"
+          }
+        ]
+      },
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "2093-3"
+          },
+          {
+            "code": "2085-9"
+          },
+          {
+            "code": "8480-6"
+          },
+          {
+            "code": "55284-4"
+          },
+          {
+            "code": "72166-2"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "resourceType": "ValueSet",
+  "id": "life-event-type",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/life-event-type",
+  "name": "LifeEventType",
+  "title": "Life Event Type",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "STAGE ValueSet from the ValueSets sheet of FHIR_profiles.xlsx (WP7 profiling).",
+  "compose": {
+    "include": [
+      {
+        "system": "https://stage-healthyageing.eu/CodeSystem/life-events-type",
+        "concept": [
+          {
+            "code": "personal",
+            "display": "Personal Growth"
+          },
+          {
+            "code": "health",
+            "display": "Health & Wellbeing"
+          },
+          {
+            "code": "social",
+            "display": "Social & Relationships"
+          },
+          {
+            "code": "career",
+            "display": "Career & Education"
+          },
+          {
+            "code": "lifestyle",
+            "display": "Lifestyle & Living"
+          }
+        ]
+      }
+    ]
+  }
+}

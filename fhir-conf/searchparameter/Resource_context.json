@@ -1,0 +1,33 @@
+{
+  "resourceType": "SearchParameter",
+  "id": "Resource-context",
+  "url": "http://kroniq.srdc.com.tr/fhir/SearchParameter/Resource-context",
+  "name": "context",
+  "status": "active",
+  "publisher": "SRDC Corp.",
+  "code": "context",
+  "base": [
+    "Goal",
+    "FamilyMemberHistory",
+    "CarePlan",
+    "MedicationRequest",
+    "ServiceRequest",
+    "CommunicationRequest",
+    "Appointment",
+    "Condition",
+    "Observation",
+    "MedicationStatement",
+    "Procedure",
+    "RiskAssessment",
+    "DiagnosticReport",
+    "Media",
+    "Immunization",
+    "QuestionnaireResponse"
+  ],
+  "type": "reference",
+  "description": "Context search parameter for related resources for EpisodeOfCare (R4 removes the context element)",
+  "expression": "Resource.extension('http://kroniq.srdc.com.tr/fhir/StructureDefinition/context').valueReference",
+  "target": [
+    "EpisodeOfCare"
+  ]
+}

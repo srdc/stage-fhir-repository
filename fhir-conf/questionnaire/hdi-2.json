@@ -1,0 +1,863 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en",
+  "status": "active",
+  "date": "2025-03-04T17:35:23.781Z",
+  "code": [
+    {
+      "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-code",
+      "code": "hdi-2",
+      "display": "Healthy Diet Index - Part 2"
+    }
+  ],
+  "meta": {
+    "tag": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-category",
+        "code": "patient"
+      }
+    ]
+  },
+  "subjectType": [
+    "Patient"
+  ],
+  "title": "Healthy Diet Index - Part 2",
+  "description": "A questionnaire evaluating the HDI_Ravitsemusnavigaattorin kysely 16.1.2025.",
+  "item": [
+    {
+      "linkId": "diet_q1",
+      "type": "choice",
+      "required": true,
+      "text": "How much fruit and berries do you usually eat?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "3 portions per day or more"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "2 portions per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "1 portion per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "4-6 portions per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "1–3 portions per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "Less than 1 portion per week or none"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q2",
+      "type": "choice",
+      "required": true,
+      "text": "How much vegetables and root vegetables do you usually eat?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "3 portions per day or more"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "2 portions per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "1 portion per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "4-6 portions per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "1–3 portions per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "Less than 1 portion per week or none"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q3",
+      "type": "choice",
+      "required": true,
+      "text": "How much legumes, such as beans, lentils, chickpeas, or soybeans, do you usually eat?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "2 portions or more per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1 portion per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "4-6 portions per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "1–3 portions per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "Less than 1 portion per week or none"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q4",
+      "type": "choice",
+      "required": true,
+      "text": "How many slices of rye bread, crispbread, or sourdough bread do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A10",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q5",
+      "type": "choice",
+      "required": true,
+      "text": "How many slices of other whole grain and high-fiber bread do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A10",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q6",
+      "type": "choice",
+      "required": true,
+      "text": "How many slices of low-fiber bread do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A10",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q7",
+      "type": "choice",
+      "required": true,
+      "text": "How many deciliters of cooked porridge do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A10",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q8",
+      "type": "choice",
+      "required": true,
+      "text": "How many deciliters of breakfast cereals do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A10",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q9",
+      "type": "choice",
+      "required": true,
+      "text": "How many deciliters of muesli do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A10",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q10",
+      "type": "choice",
+      "required": true,
+      "text": "How many slices of traditional sweet rolls do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A10",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q11",
+      "type": "choice",
+      "required": true,
+      "text": "What fat do you usually use on your bread?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "Margarine or plant stanol/sterol margarine with 55–80% fat (e.g., Becel Gold, Flora Original, Keiju Rypsi, Benecol, Keiju Alentaja, Heart-Labelled Oivariini) or plant oils (e.g., rapeseed or olive oil)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Margarine or plant stanol/sterol margarine with 30–40% fat (e.g., Light Becel, Flora Lower Fat, Light Keiju, Becel ProActiv Light, Benecol Light)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Butter-plant oil mix (e.g., Oivariini, Ingmariini, Dellariini, LightLevi, butter and oil blend)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Butter."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "None."
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q12",
+      "type": "choice",
+      "required": true,
+      "text": "Do you usually use salad dressing?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "I use plant oils (e.g., olive oil, rapeseed oil, flaxseed oil) or plant oil-based dressing (e.g., French, mustard, or mayonnaise)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "I use juice-based dressing."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "I use sour cream, cream cheese, yogurt, or similar vegan-based products for dressing."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "I do not use salad dressing."
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q13",
+      "type": "choice",
+      "required": true,
+      "text": "What fat is usually used for cooking at home?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "Plant oil or liquid plant oil-based products (e.g., rapeseed oil, olive oil, or bottled margarine like Keiju liquid)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Margarine or plant stanol/sterol margarine with 55–80% fat (e.g., Flora, Becel, Keiju, Rainbow, Kultarypsi, Benecol, Becel ProActiv, Keiju Alentaja)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Household or baking margarine (e.g., Sunnuntai, Pirkka baking margarine)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Butter-plant oil mix (e.g., Oivariini, Ingmariini, Dellariini, or butter and oil blend)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "Butter."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "None / No cooking at home."
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q14",
+      "type": "choice",
+      "required": true,
+      "text": "What cream or cream-like products are usually used for cooking at home?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "Plant-based cream (e.g., Flora Ruoka, Pirkka, Kotimaista), soy cream (e.g., Alpro Cooking), or oat cream (e.g., Planti Cooking Original, Oatly iMat)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Cooking yogurt (e.g., Arla Lempi, Salakis Turkish yogurt)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Cooking cream, light cream, light sour cream, low-fat sour cream, or vegan sour cream or crème fraîche (e.g., Oatly iMat Fraiche, Juustoportti Kaurakevi, Planti Cooking Fraiche)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Whipping cream, heavy cream, coconut milk, coconut cream, sour cream, or crème fraîche, or vegan whipping cream alternatives (e.g., Valio Oddlygood Easy Whipping, Fazer Aito Vispi, Alpro Whipping)."
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "None / No cooking at home."
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "diet_q15",
+      "type": "choice",
+      "required": true,
+      "text": "How much do you usually eat of unsalted and unflavored nuts, seeds, and almonds, or spreads made from them (e.g., peanut butter or tahini)?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "2 portions or more per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1 portion per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "4-6 portions per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "1–3 portions per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "Less than 1 portion per week or none"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "68e52e6c-94d8-4d84-9776-eda1940e3008"
+}

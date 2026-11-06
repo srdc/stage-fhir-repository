@@ -1,0 +1,275 @@
+{
+  "resourceType": "ValueSet",
+  "id": "liva-goal",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/liva-goal",
+  "name": "LivaGoal",
+  "title": "LIVA Goal Targets",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "Clinical concepts targeted by LIVA goals (liva-goal-valueset.xlsx, WP7 profiling); the intervention is given as a designation.",
+  "compose": {
+    "include": [
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "85354-9",
+            "display": "Blood pressure panel",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Reduce blood pressure"
+              }
+            ]
+          },
+          {
+            "code": "29463-7",
+            "display": "Body weight",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Reduce weight"
+              }
+            ]
+          },
+          {
+            "code": "41950-7",
+            "display": "Number of steps in 24 hour Measured",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Increase daily steps"
+              }
+            ]
+          },
+          {
+            "code": "93832-4",
+            "display": "Total sleep duration",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Increase nightly sleep time"
+              }
+            ]
+          },
+          {
+            "code": "2339-0",
+            "display": "Glucose [Mass/volume] in Blood",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Reduce blood sugar"
+              }
+            ]
+          },
+          {
+            "code": "4548-4",
+            "display": "Hemoglobin A1c/Hemoglobin.total in Blood",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Reduce HbA1c"
+              }
+            ]
+          },
+          {
+            "code": "2093-3",
+            "display": "Cholesterol [Mass/volume] in Serum or Plasma",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Reduce cholesterol"
+              }
+            ]
+          },
+          {
+            "code": "2085-9",
+            "display": "HDL Cholesterol [Mass/volume] in Serum or Plasma",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Set HDL target"
+              }
+            ]
+          },
+          {
+            "code": "2089-1",
+            "display": "LDL Cholesterol [Mass/volume] in Serum or Plasma",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Reduce LDL"
+              }
+            ]
+          },
+          {
+            "code": "2571-8",
+            "display": "Triglyceride [Mass/volume] in Serum or Plasma",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Reduce triglycerides"
+              }
+            ]
+          },
+          {
+            "code": "8280-0",
+            "display": "Waist Circumference",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Reduce waist circumference"
+              }
+            ]
+          },
+          {
+            "code": "74013-4",
+            "display": "Alcoholic drinks per week",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Reduce alcohol intake"
+              }
+            ]
+          },
+          {
+            "code": "72166-2",
+            "display": "Tobacco smoking status",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Stop Smoking"
+              }
+            ]
+          },
+          {
+            "code": "61357-0",
+            "display": "Adherence to diet",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Follow a diet program"
+              }
+            ]
+          },
+          {
+            "code": "72514-3",
+            "display": "Pain severity - 0-10 verbal numeric rating [Score] - Reported",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Record daily pain"
+              }
+            ]
+          },
+          {
+            "code": "68516-4",
+            "display": "Exercise adherence",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Assign an exercise program"
+              }
+            ]
+          },
+          {
+            "code": "72238-9",
+            "display": "Medication adherence",
+            "designation": [
+              {
+                "language": "en",
+                "use": {
+                  "system": "http://snomed.info/sct",
+                  "code": "900000000000013009",
+                  "display": "Synonym"
+                },
+                "value": "Track medicine usage"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

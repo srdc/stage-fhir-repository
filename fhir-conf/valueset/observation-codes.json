@@ -1,0 +1,57 @@
+{
+  "resourceType": "ValueSet",
+  "id": "observation-codes",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/observation-codes",
+  "name": "ObservationCodes",
+  "title": "Observation Codes",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "STAGE ValueSet from the ValueSets sheet of FHIR_profiles.xlsx (WP7 profiling).",
+  "compose": {
+    "include": [
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "29463-7",
+            "display": "Body Weight"
+          },
+          {
+            "code": "56086-2",
+            "display": "Waist Circumference"
+          }
+        ]
+      },
+      {
+        "system": "http://stage-healthyaging.eu/fhir/CodeSystem/observation-code",
+        "concept": [
+          {
+            "code": "gps",
+            "display": "GPS"
+          },
+          {
+            "code": "spatial-memory-test",
+            "display": "Spatial Memory Test"
+          },
+          {
+            "code": "stroop-test",
+            "display": "Stroop Test"
+          },
+          {
+            "code": "pvt",
+            "display": "Psychomotor Vigilance Test (PVT)"
+          },
+          {
+            "code": "routine-events",
+            "display": "Routine Events"
+          },
+          {
+            "code": "life-events",
+            "display": "Life Events"
+          }
+        ]
+      }
+    ]
+  }
+}

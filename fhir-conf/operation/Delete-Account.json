@@ -1,0 +1,36 @@
+{
+  "resourceType": "OperationDefinition",
+  "id": "delete-account",
+  "url": "http://kroniq.srdc.com.tr/fhir/OperationDefinition/delete-account",
+  "version": "1.0",
+  "name": "srdc.kroniq.fhir.operation.DeleteAccount",
+  "status": "active",
+  "kind": "operation",
+  "publisher": "SRDC Corp.",
+  "contact": [
+    {
+      "name": "System Administrator",
+      "telecom": [
+        {
+          "system": "email",
+          "value": "mustafa@srdc.com.tr"
+        }
+      ]
+    }
+  ],
+  "date": "2018-08-07",
+  "description": "Kroniq operation for registering patients to the system",
+  "code": "delete-account",
+  "system": false,
+  "type": false,
+  "instance": true,
+  "resource" : ["Patient","RelatedPerson","Practitioner"],
+  "parameter": [{
+    "name": "deleteRelatedResources",
+    "use": "in",
+    "min": 0,
+    "max": "1",
+    "documentation": "Delete the related Condition, Observation, etc. resources as well",
+    "type": "boolean"
+  }]
+}

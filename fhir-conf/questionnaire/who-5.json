@@ -1,0 +1,249 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en",
+  "status": "active",
+  "date": "2025-03-04T17:35:23.781Z",
+  "code": [
+    {
+      "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-code",
+      "code": "who-5",
+      "display": "WHO-5 Well-Being Index"
+    }
+  ],
+  "meta": {
+    "tag": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-category",
+        "code": "patient"
+      }
+    ]
+  },
+  "subjectType": [
+    "Patient"
+  ],
+  "title": "WHO-5 Well-Being Index",
+  "description": "A short questionnaire measuring subjective well-being.",
+  "item": [
+    {
+      "linkId": "who5_q1",
+      "type": "choice",
+      "required": true,
+      "text": "I have felt cheerful and in good spirits",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "At no time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Some of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Less than half of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "More than half of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "Most of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "All of the time"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "who5_q2",
+      "type": "choice",
+      "required": true,
+      "text": "I have felt calm and relaxed.",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "At no time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Some of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Less than half of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "More than half of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "Most of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "All of the time"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "who5_q3",
+      "type": "choice",
+      "required": true,
+      "text": "I have felt active and vigorous.",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "At no time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Some of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Less than half of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "More than half of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "Most of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "All of the time"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "who5_q4",
+      "type": "choice",
+      "required": true,
+      "text": "I woke up feeling fresh and rested.",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "At no time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Some of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Less than half of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "More than half of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "Most of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "All of the time"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "who5_q5",
+      "type": "choice",
+      "required": true,
+      "text": "My daily life has been filled with things that interest me.",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "At no time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Some of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Less than half of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "More than half of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "Most of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "All of the time"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "c447034d-9a80-4523-b86b-3fbad9cffdd6"
+}

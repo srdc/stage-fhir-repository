@@ -1,0 +1,271 @@
+{
+  "resourceType": "CompartmentDefinition",
+  "id": "patient",
+  "url": "http://kroniq.srdc.com.tr/fhir/CompartmentDefinition/patient",
+  "version": "4.0.1",
+  "name": "Kroniq FHIR compartment definition for Patient",
+  "status": "active",
+  "date": "2022-11-22T10:30:00+03:00",
+  "publisher": "SRDC Corp",
+  "description": "There is an instance of the patient compartment for each patient resource, and the identity of the compartment is the same as the patient. When a patient is linked to another patient, all the records associated with the linked patient are in the compartment associated with the target of the link.. The set of resources associated with a particular patient",
+  "code": "Patient",
+  "search": true,
+  "resource": [
+    {
+      "code": "AdverseEvent",
+      "param": [
+        "subject"
+      ]
+    },
+    {
+      "code": "AllergyIntolerance",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "Appointment",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "AppointmentResponse",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "AuditEvent"
+    },
+    {
+      "code": "Binary"
+    },
+    {
+      "code": "Bundle"
+    },
+    {
+      "code": "CapabilityStatement"
+    },
+    {
+      "code": "CarePlan",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "CareTeam",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "CodeSystem"
+    },
+    {
+      "code": "CompartmentDefinition"
+    },
+    {
+      "code": "Composition",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "ConceptMap"
+    },
+    {
+      "code": "Condition",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "Consent",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "Device",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "DeviceRequest",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "DiagnosticReport",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "DocumentReference",
+      "param": [
+        "subject",
+        "author"
+      ]
+    },
+    {
+      "code": "Encounter",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "EpisodeOfCare",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "FamilyMemberHistory",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "Goal",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "HealthcareService"
+    },
+    {
+      "code": "Immunization",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "Location"
+    },
+    {
+      "code": "Media"
+    },
+    {
+      "code": "Medication"
+    },
+    {
+      "code": "MedicationAdministration",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "MedicationDispense",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "MedicationRequest",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "MedicationStatement",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "NutritionOrder",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "Observation",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "OperationDefinition"
+    },
+    {
+      "code": "Organization"
+    },
+    {
+      "code": "Parameters"
+    },
+    {
+      "code": "Patient",
+      "param": [
+        "link"
+      ]
+    },
+    {
+      "code": "Practitioner"
+    },
+    {
+      "code": "PractitionerRole"
+    },
+    {
+      "code": "Procedure",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "Questionnaire"
+    },
+    {
+      "code": "QuestionnaireResponse",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "RelatedPerson",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "RequestGroup",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "RiskAssessment",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "SearchParameter"
+    },
+    {
+      "code": "ServiceRequest",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "StructureDefinition"
+    },
+    {
+      "code": "Subscription"
+    },
+    {
+      "code": "Task",
+      "param": [
+        "patient"
+      ]
+    },
+    {
+      "code": "ValueSet"
+    }
+  ]
+}

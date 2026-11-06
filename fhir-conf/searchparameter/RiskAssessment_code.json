@@ -1,0 +1,17 @@
+{
+   "resourceType": "SearchParameter",
+   "id" : "RiskAssessment-code",
+   "url": "http://kroniq.srdc.com.tr/fhir/SearchParameter/RiskAssessment-code",
+   "name": "code",
+   "status": "active",
+   "publisher": "SRDC Corp.",
+   "code": "code",
+   "base": ["RiskAssessment"],
+   "type": "token",
+   "description": "Target code of Goal",
+   "xpath": "f:RiskAssessment/f:code",
+   "xpathUsage": "normal",
+   "target": [
+      "RiskAssessment"
+   ]
+}

@@ -1,0 +1,917 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en",
+  "status": "active",
+  "date": "2025-03-04T17:35:23.781Z",
+  "code": [
+    {
+      "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-code",
+      "code": "hdi-4",
+      "display": "Healthy Diet Index - Part 4"
+    }
+  ],
+  "meta": {
+    "tag": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-category",
+        "code": "patient"
+      }
+    ]
+  },
+  "subjectType": [
+    "Patient"
+  ],
+  "title": "Healthy Diet Index - Part 4",
+  "description": "A questionnaire evaluating the HDI_Ravitsemusnavigaattorin kysely 16.1.2025.",
+  "item": [
+    {
+      "linkId": "tea_cups_day",
+      "type": "choice",
+      "required": true,
+      "text": "How many cups of tea do you usually drink per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "TEA0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "TEA1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "TEA2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "TEA3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "TEA4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "TEA5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "TEA6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "TEA7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "TEA8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "TEA9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "TEA10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "coffee_cups_day",
+      "type": "choice",
+      "required": true,
+      "text": "How many cups of coffee do you usually drink per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "COF0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "COF1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "COF2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "COF3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "COF4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "COF5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "COF6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "COF7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "COF8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "COF9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "COF10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "water_glasses_day",
+      "type": "choice",
+      "required": true,
+      "text": "How many glasses of water do you usually drink per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "WAT0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WAT1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WAT2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WAT3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WAT4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WAT5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WAT6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WAT7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WAT8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WAT9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WAT10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "sugary_drinks_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many cans or bottles of sugary soft drinks or energy drinks do you drink on average per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "SDR0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SDR1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SDR2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SDR3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SDR4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SDR5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SDR6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SDR7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SDR8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SDR9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SDR10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "sugar_free_drinks_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many cans or bottles of sugar-free soft drinks or energy drinks do you drink on average per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "SFD0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SFD1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SFD2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SFD3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SFD4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SFD5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SFD6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SFD7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SFD8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SFD9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SFD10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "full_juice_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many glasses of full juice do you drink on average per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "FJU0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "FJU1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "FJU2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "FJU3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "FJU4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "FJU5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "FJU6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "FJU7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "FJU8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "FJU9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "FJU10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "sugary_juice_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many glasses of sugary juice do you drink on average per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "SJU0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SJU1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SJU2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SJU3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SJU4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SJU5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SJU6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SJU7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SJU8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SJU9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SJU10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "non_alcoholic_drinks_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many cans or bottles of non-alcoholic beer, cider, wine, or Long Drink do you drink on average per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "NAD0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "NAD1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "NAD2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "NAD3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "NAD4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "NAD5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "NAD6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "NAD7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "NAD8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "NAD9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "NAD10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "low_alcohol_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many cans or bottles of low-alcohol beer, mild wine, cider, or Long Drink with alcohol up to 4.7% do you drink on average per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "LAW0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LAW1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LAW2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LAW3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LAW4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LAW5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LAW6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LAW7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LAW8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LAW9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "LAW10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "high_alcohol_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many cans or bottles of strong beer, strong cider, wine, or Long Drink with alcohol over 4.7% do you drink on average per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "HAW0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "HAW1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "HAW2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "HAW3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "HAW4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "HAW5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "HAW6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "HAW7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "HAW8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "HAW9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "HAW10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "wine_glasses_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many glasses of wine do you drink on average per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "WIN0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WIN1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WIN2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WIN3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WIN4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WIN5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WIN6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WIN7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WIN8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WIN9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "WIN10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "strong_drinks_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many servings of strong alcoholic drinks, such as vodka, whiskey, or cognac, do you drink on average per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "SAD0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SAD1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SAD2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SAD3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SAD4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SAD5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SAD6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SAD7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SAD8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SAD9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SAD10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "feaccfbd-9baf-4ac7-b319-9dec5043d299"
+}

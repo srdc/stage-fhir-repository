@@ -1,0 +1,115 @@
+{
+  "resourceType": "ValueSet",
+  "id": "shc-smart",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/shc-smart",
+  "name": "ShcSmart",
+  "title": "SMART score service - codes for Smart Health Cards",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "Codes of the data the \"smart\" CDS service uses: the credentialValueSet of $health-cards-issue for its Smart Health Card.",
+  "compose": {
+    "include": [
+      {
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "concept": [
+          {
+            "code": "E10"
+          },
+          {
+            "code": "E11"
+          },
+          {
+            "code": "I60"
+          },
+          {
+            "code": "I61"
+          },
+          {
+            "code": "I62"
+          },
+          {
+            "code": "I63"
+          },
+          {
+            "code": "I64"
+          },
+          {
+            "code": "I65"
+          },
+          {
+            "code": "I66"
+          },
+          {
+            "code": "I67"
+          },
+          {
+            "code": "I68"
+          },
+          {
+            "code": "I69"
+          },
+          {
+            "code": "G45"
+          },
+          {
+            "code": "G46"
+          },
+          {
+            "code": "I20"
+          },
+          {
+            "code": "I21"
+          },
+          {
+            "code": "I22"
+          },
+          {
+            "code": "I25.1"
+          },
+          {
+            "code": "I71"
+          },
+          {
+            "code": "I70"
+          },
+          {
+            "code": "I72"
+          },
+          {
+            "code": "I73"
+          },
+          {
+            "code": "I74"
+          }
+        ]
+      },
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "2093-3"
+          },
+          {
+            "code": "2085-9"
+          },
+          {
+            "code": "8480-6"
+          },
+          {
+            "code": "55284-4"
+          },
+          {
+            "code": "1988-5"
+          },
+          {
+            "code": "33914-3"
+          },
+          {
+            "code": "72166-2"
+          }
+        ]
+      }
+    ]
+  }
+}

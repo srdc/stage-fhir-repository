@@ -1,0 +1,93 @@
+{
+  "resourceType": "ValueSet",
+  "id": "shc-advance",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/shc-advance",
+  "name": "ShcAdvance",
+  "title": "ADVANCE service - codes for Smart Health Cards",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "Codes of the data the \"advance\" CDS service uses: the credentialValueSet of $health-cards-issue for its Smart Health Card.",
+  "compose": {
+    "include": [
+      {
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "concept": [
+          {
+            "code": "I48"
+          },
+          {
+            "code": "H34"
+          },
+          {
+            "code": "H35"
+          },
+          {
+            "code": "H36"
+          },
+          {
+            "code": "E10.3"
+          },
+          {
+            "code": "E11.3"
+          },
+          {
+            "code": "E13.3"
+          },
+          {
+            "code": "E10"
+          },
+          {
+            "code": "E11"
+          }
+        ]
+      },
+      {
+        "system": "http://www.whocc.no/atc",
+        "concept": [
+          {
+            "code": "C02"
+          },
+          {
+            "code": "C03"
+          },
+          {
+            "code": "C07"
+          },
+          {
+            "code": "C08"
+          },
+          {
+            "code": "C09"
+          }
+        ]
+      },
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "4548-4"
+          },
+          {
+            "code": "32294-1"
+          },
+          {
+            "code": "2093-3"
+          },
+          {
+            "code": "2085-9"
+          },
+          {
+            "code": "8480-6"
+          },
+          {
+            "code": "55284-4"
+          },
+          {
+            "code": "8462-4"
+          }
+        ]
+      }
+    ]
+  }
+}

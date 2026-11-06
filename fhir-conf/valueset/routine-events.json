@@ -1,0 +1,48 @@
+{
+  "resourceType": "ValueSet",
+  "id": "routine-events",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/routine-events",
+  "name": "RoutineEvents",
+  "title": "Routine Events",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "STAGE ValueSet from the ValueSets sheet of FHIR_profiles.xlsx (WP7 profiling).",
+  "compose": {
+    "include": [
+      {
+        "system": "http://stage-healthyaging.eu/fhir/CodeSystem/routine-event-code",
+        "concept": [
+          {
+            "code": "bedtime",
+            "display": "Bedtime"
+          },
+          {
+            "code": "light-off-time",
+            "display": "Light-off time"
+          },
+          {
+            "code": "wake-up-time",
+            "display": "Wake-up time"
+          },
+          {
+            "code": "first-meal-time",
+            "display": "First meal time"
+          },
+          {
+            "code": "last-meal-time",
+            "display": "Last meal time"
+          },
+          {
+            "code": "work-start-time",
+            "display": "Time of starting working"
+          },
+          {
+            "code": "work-end-time",
+            "display": "Time of finishing working"
+          }
+        ]
+      }
+    ]
+  }
+}

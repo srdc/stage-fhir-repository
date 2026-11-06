@@ -1,0 +1,94 @@
+{
+  "resourceType": "OperationDefinition",
+  "id": "account-details",
+  "url": "http://kroniq.srdc.com.tr/fhir/OperationDefinition/account-details",
+  "version": "1.0",
+  "name": "srdc.kroniq.fhir.operation.AccountDetails",
+  "status": "active",
+  "kind": "operation",
+  "publisher": "SRDC Corp.",
+  "contact": [
+    {
+      "name": "System Administrator",
+      "telecom": [
+        {
+          "system": "email",
+          "value": "mustafa@srdc.com.tr"
+        }
+      ]
+    }
+  ],
+  "date": "2018-08-07",
+  "description": "Kroniq operation for retrieving patient info with onauth account details",
+  "code": "account-details",
+  "system": false,
+  "type": false,
+  "instance": true,
+  "resource" : ["Patient"],
+  "parameter": [
+    {
+      "name": "username",
+      "use": "out",
+      "min": 0,
+      "max": "1",
+      "documentation": "Username of the user",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "use": "out",
+      "min": 0,
+      "max": "1",
+      "documentation": "Email of the user",
+      "type": "string"
+    },
+    {
+      "name": "patient",
+      "use": "out",
+      "min": 0,
+      "max": "1",
+      "documentation": "Patient resource",
+      "type": "Patient"
+    },
+    {
+      "name": "relatedPersonUsername",
+      "use": "out",
+      "min": 0,
+      "max": "1",
+      "documentation": "Username of the related person",
+      "type": "string"
+    },
+    {
+      "name": "relatedPersonEmail",
+      "use": "out",
+      "min": 0,
+      "max": "1",
+      "documentation": "Email of the related person",
+      "type": "string"
+    },
+    {
+      "name": "relatedPersonRole",
+      "use": "out",
+      "min": 0,
+      "max": "*",
+      "documentation": "Email of the related person",
+      "type": "string"
+    },
+    {
+      "name": "relatedPerson",
+      "use": "out",
+      "min": 0,
+      "max": "1",
+      "documentation": "RelatedPerson resource",
+      "type": "RelatedPerson"
+    },
+    {
+      "name": "person",
+      "use": "out",
+      "min": 0,
+      "max": "1",
+      "documentation": "Person resource",
+      "type": "Person"
+    }
+  ]
+}

@@ -1,0 +1,386 @@
+{
+  "resourceType": "ValueSet",
+  "id": "shc-qrisk3",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/shc-qrisk3",
+  "name": "ShcQrisk3",
+  "title": "QRISK3 service - codes for Smart Health Cards",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "Codes of the data the \"qrisk3\" CDS service uses: the credentialValueSet of $health-cards-issue for its Smart Health Card.",
+  "compose": {
+    "include": [
+      {
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "concept": [
+          {
+            "code": "I48"
+          },
+          {
+            "code": "M06.9"
+          },
+          {
+            "code": "E10"
+          },
+          {
+            "code": "E11"
+          },
+          {
+            "code": "M32"
+          },
+          {
+            "code": "F20"
+          },
+          {
+            "code": "F31"
+          },
+          {
+            "code": "F32.1"
+          },
+          {
+            "code": "F32.2"
+          },
+          {
+            "code": "F32.3"
+          },
+          {
+            "code": "N52"
+          },
+          {
+            "code": "G43"
+          },
+          {
+            "code": "I00"
+          },
+          {
+            "code": "I01"
+          },
+          {
+            "code": "I02"
+          },
+          {
+            "code": "I05"
+          },
+          {
+            "code": "I06"
+          },
+          {
+            "code": "I07"
+          },
+          {
+            "code": "I08"
+          },
+          {
+            "code": "I09"
+          },
+          {
+            "code": "I10"
+          },
+          {
+            "code": "I11"
+          },
+          {
+            "code": "I12"
+          },
+          {
+            "code": "I13"
+          },
+          {
+            "code": "I15"
+          },
+          {
+            "code": "I16"
+          },
+          {
+            "code": "I20"
+          },
+          {
+            "code": "I21"
+          },
+          {
+            "code": "I22"
+          },
+          {
+            "code": "I23"
+          },
+          {
+            "code": "I24"
+          },
+          {
+            "code": "I25"
+          },
+          {
+            "code": "I26"
+          },
+          {
+            "code": "I27"
+          },
+          {
+            "code": "I28"
+          },
+          {
+            "code": "I30"
+          },
+          {
+            "code": "I31"
+          },
+          {
+            "code": "I32"
+          },
+          {
+            "code": "I33"
+          },
+          {
+            "code": "I34"
+          },
+          {
+            "code": "I35"
+          },
+          {
+            "code": "I36"
+          },
+          {
+            "code": "I37"
+          },
+          {
+            "code": "I38"
+          },
+          {
+            "code": "I39"
+          },
+          {
+            "code": "I40"
+          },
+          {
+            "code": "I41"
+          },
+          {
+            "code": "I42"
+          },
+          {
+            "code": "I43"
+          },
+          {
+            "code": "I44"
+          },
+          {
+            "code": "I45"
+          },
+          {
+            "code": "I46"
+          },
+          {
+            "code": "I47"
+          },
+          {
+            "code": "I49"
+          },
+          {
+            "code": "I50"
+          },
+          {
+            "code": "I51"
+          },
+          {
+            "code": "I52"
+          },
+          {
+            "code": "I60"
+          },
+          {
+            "code": "I61"
+          },
+          {
+            "code": "I62"
+          },
+          {
+            "code": "I63"
+          },
+          {
+            "code": "I65"
+          },
+          {
+            "code": "I66"
+          },
+          {
+            "code": "I67"
+          },
+          {
+            "code": "I68"
+          },
+          {
+            "code": "I69"
+          },
+          {
+            "code": "I70"
+          },
+          {
+            "code": "I71"
+          },
+          {
+            "code": "I72"
+          },
+          {
+            "code": "I73"
+          },
+          {
+            "code": "I74"
+          },
+          {
+            "code": "I75"
+          },
+          {
+            "code": "I76"
+          },
+          {
+            "code": "I77"
+          },
+          {
+            "code": "I78"
+          },
+          {
+            "code": "I79"
+          },
+          {
+            "code": "I80"
+          },
+          {
+            "code": "I81"
+          },
+          {
+            "code": "I82"
+          },
+          {
+            "code": "I83"
+          },
+          {
+            "code": "I85"
+          },
+          {
+            "code": "I86"
+          },
+          {
+            "code": "I87"
+          },
+          {
+            "code": "I88"
+          },
+          {
+            "code": "I89"
+          },
+          {
+            "code": "I95"
+          },
+          {
+            "code": "I96"
+          },
+          {
+            "code": "I97"
+          },
+          {
+            "code": "I99"
+          }
+        ]
+      },
+      {
+        "system": "http://www.whocc.no/atc",
+        "concept": [
+          {
+            "code": "A10BH52"
+          },
+          {
+            "code": "C10BX05"
+          },
+          {
+            "code": "C10BX09"
+          },
+          {
+            "code": "C10BA06"
+          },
+          {
+            "code": "C10BA09"
+          },
+          {
+            "code": "C10BX16"
+          },
+          {
+            "code": "C10BA07"
+          },
+          {
+            "code": "C10BX17"
+          },
+          {
+            "code": "C10BX10"
+          },
+          {
+            "code": "C10BX07"
+          },
+          {
+            "code": "C10BX14"
+          },
+          {
+            "code": "C10BX13"
+          },
+          {
+            "code": "H02AB"
+          },
+          {
+            "code": "S02BA"
+          },
+          {
+            "code": "H02B"
+          },
+          {
+            "code": "N05A"
+          },
+          {
+            "code": "C02"
+          },
+          {
+            "code": "C03"
+          },
+          {
+            "code": "C07"
+          },
+          {
+            "code": "C08"
+          },
+          {
+            "code": "C09"
+          }
+        ]
+      },
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "39156-5"
+          },
+          {
+            "code": "2093-3"
+          },
+          {
+            "code": "2085-9"
+          },
+          {
+            "code": "8480-6"
+          },
+          {
+            "code": "55284-4"
+          },
+          {
+            "code": "72166-2"
+          }
+        ]
+      },
+      {
+        "system": "http://srdc.com.tr/custom",
+        "concept": [
+          {
+            "code": "qrisk3-ethnicity"
+          }
+        ]
+      }
+    ]
+  }
+}

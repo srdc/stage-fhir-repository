@@ -1,0 +1,56 @@
+{
+  "resourceType": "ValueSet",
+  "id": "questionnaire",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/questionnaire",
+  "name": "Questionnaire",
+  "title": "Questionnaire",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "STAGE ValueSet from the ValueSets sheet of FHIR_profiles.xlsx (WP7 profiling).",
+  "compose": {
+    "include": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-code",
+        "concept": [
+          {
+            "code": "physical-activity-level",
+            "display": "Physical Activity Level"
+          },
+          {
+            "code": "falls",
+            "display": "Falls"
+          },
+          {
+            "code": "fear-of-falling",
+            "display": "Fear of Falling"
+          },
+          {
+            "code": "life-space-mobility",
+            "display": "Life Space Mobility"
+          },
+          {
+            "code": "pvt",
+            "display": "Psychomotor Vigilance Task"
+          },
+          {
+            "code": "rrk",
+            "display": "Ravitsemusnavigaattorin Ruokavalioindeksi-kysely"
+          },
+          {
+            "code": "spatial-memory-test",
+            "display": "Spatial Memory Test"
+          },
+          {
+            "code": "stroop-test",
+            "display": "Stroop Test"
+          },
+          {
+            "code": "who-5",
+            "display": "WHO-5 Well-Being Inde"
+          }
+        ]
+      }
+    ]
+  }
+}

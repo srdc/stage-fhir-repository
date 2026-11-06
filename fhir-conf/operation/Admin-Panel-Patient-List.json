@@ -1,0 +1,62 @@
+{
+  "resourceType": "OperationDefinition",
+  "id": "admin-panel-patient-list",
+  "url": "http://kroniq.srdc.com.tr/fhir/OperationDefinition/admin-panel-patient-list",
+  "version": "1.0",
+  "name": "srdc.kroniq.fhir.operation.AdminPanelPatientList",
+  "status": "active",
+  "kind": "operation",
+  "publisher": "SRDC Corp.",
+  "contact": [
+    {
+      "name": "System Administrator",
+      "telecom": [
+        {
+          "system": "email",
+          "value": "mustafa@srdc.com.tr"
+        }
+      ]
+    }
+  ],
+  "date": "2018-08-07",
+  "description": "Kroniq operation for retrieving patients with onauth accounts and careplans",
+  "code": "admin-panel-patient-list",
+  "system": false,
+  "type": true,
+  "instance": false,
+  "resource" : ["Patient"],
+  "parameter": [
+    {
+      "name": "_page",
+      "use": "in",
+      "min": 0,
+      "max": "1",
+      "documentation": "Page",
+      "type": "integer"
+    },
+    {
+      "name": "_count",
+      "use": "in",
+      "min": 0,
+      "max": "1",
+      "documentation": "Patient count to be returned (if not all=true, default=10)",
+      "type": "integer"
+    },
+    {
+      "name": "all",
+      "use": "in",
+      "min": 0,
+      "max": "1",
+      "documentation": "Return all patients at once",
+      "type": "boolean"
+    },
+    {
+      "name": "return",
+      "use": "out",
+      "min": 1,
+      "max": "1",
+      "documentation": "Bundle of patients, accounts and care plans",
+      "type": "Bundle"
+    }
+  ]
+}

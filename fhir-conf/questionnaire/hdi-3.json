@@ -1,0 +1,1039 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en",
+  "status": "active",
+  "date": "2025-03-04T17:35:23.781Z",
+  "code": [
+    {
+      "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-code",
+      "code": "hdi-3",
+      "display": "Healthy Diet Index - Part 3"
+    }
+  ],
+  "meta": {
+    "tag": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-category",
+        "code": "patient"
+      }
+    ]
+  },
+  "subjectType": [
+    "Patient"
+  ],
+  "title": "Healthy Diet Index - Part 3",
+  "description": "A questionnaire evaluating the HDI_Ravitsemusnavigaattorin kysely 16.1.2025.",
+  "item": [
+    {
+      "linkId": "grains_whole_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many deciliters of cooked whole grain pasta, rice, barley, oats, noodles, couscous, bulgur, or quinoa do you usually eat per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "GWH0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH10",
+            "display": "10"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH11",
+            "display": "11"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH12",
+            "display": "12"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH13",
+            "display": "13"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH14",
+            "display": "14"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH15",
+            "display": "15"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH16",
+            "display": "16"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH17",
+            "display": "17"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH18",
+            "display": "18"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH19",
+            "display": "19"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWH20+",
+            "display": "20 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "grains_white_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many deciliters of cooked white pasta, rice, noodles, couscous, or millet do you usually eat per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "GWW0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW10",
+            "display": "10"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW11",
+            "display": "11"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW12",
+            "display": "12"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW13",
+            "display": "13"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW14",
+            "display": "14"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW15",
+            "display": "15"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW16",
+            "display": "16"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW17",
+            "display": "17"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW18",
+            "display": "18"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW19",
+            "display": "19"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "GWW20+",
+            "display": "20 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "potatoes_boiled_baked_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many servings of boiled or baked potatoes do you usually eat per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "PBB0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBB1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBB2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBB3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBB4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBB5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBB6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBB7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBB8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBB9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBB10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "potatoes_mashed_fried_week",
+      "type": "choice",
+      "required": true,
+      "text": "How many servings of mashed potatoes or fried potatoes do you usually eat per week?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "PMF0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PMF1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PMF2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PMF3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PMF4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PMF5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PMF6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PMF7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PMF8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PMF9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PMF10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dairy_low_fat_day",
+      "type": "choice",
+      "required": true,
+      "text": "How many deciliters of fat-free or low-fat dairy products, such as fat-free milk, skimmed milk, buttermilk, yogurt, viili, quark, or cottage cheese (with a fat content of up to 1%), do you use per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "DLF0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DLF1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DLF2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DLF3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DLF4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DLF5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DLF6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DLF7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DLF8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DLF9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DLF10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dairy_medium_fat_day",
+      "type": "choice",
+      "required": true,
+      "text": "How many deciliters of medium-fat dairy products, such as light milk, A-buttermilk, light viili, quark, yogurt, or cottage cheese (with fat content greater than 1%, but less than 3%), do you use per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "DMF0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DMF1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DMF2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DMF3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DMF4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DMF5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DMF6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DMF7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DMF8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DMF9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DMF10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dairy_full_fat_day",
+      "type": "choice",
+      "required": true,
+      "text": "How many deciliters of full-fat dairy products, such as full milk, regular viili, Greek yogurt, or Bulgarian yogurt (with fat content of at least 3%), do you use per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "DFF0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DFF1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DFF2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DFF3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DFF4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DFF5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DFF6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DFF7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DFF8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DFF9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "DFF10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "plant_based_fortified_day",
+      "type": "choice",
+      "required": true,
+      "text": "How many deciliters of plant-based drinks or yogurt, which are fortified with nutrients, do you use per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "PBF0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBF1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBF2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBF3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBF4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBF5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBF6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBF7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBF8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBF9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "PBF10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "cheese_low_fat_day",
+      "type": "choice",
+      "required": true,
+      "text": "How many slices of low-fat cheese, with fat content not exceeding 17%, do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "CLF0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CLF1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CLF2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CLF3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CLF4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CLF5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CLF6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CLF7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CLF8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CLF9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CLF10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "cheese_fatty_day",
+      "type": "choice",
+      "required": true,
+      "text": "How many slices of fatty cheese, with fat content exceeding 17%, do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "CFF0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CFF1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CFF2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CFF3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CFF4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CFF5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CFF6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CFF7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CFF8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CFF9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "CFF10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "vegan_cheese_day",
+      "type": "choice",
+      "required": true,
+      "text": "How many slices of vegan cheese-like products do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "VCH0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "VCH1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "VCH2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "VCH3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "VCH4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "VCH5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "VCH6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "VCH7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "VCH8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "VCH9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "VCH10+",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "sweets_pastries_frequency",
+      "type": "choice",
+      "required": true,
+      "text": "How much sweet pastries, ice cream, puddings, or chocolate do you usually eat?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "SWF1",
+            "display": "2 or more servings per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SWF2",
+            "display": "1 serving per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SWF3",
+            "display": "4–6 servings per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SWF4",
+            "display": "1–3 servings per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "SWF5",
+            "display": "Less than 1 serving per week or none at all"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "added_sugar_frequency",
+      "type": "choice",
+      "required": true,
+      "text": "How much sugar, honey, or sweets do you usually consume?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "ASF1",
+            "display": "2 or more servings per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "ASF2",
+            "display": "1 serving per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "ASF3",
+            "display": "4–6 servings per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "ASF4",
+            "display": "1–3 servings per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "ASF5",
+            "display": "Less than 1 serving per week or none at all"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "f071a911-a4ae-43b2-9d98-ea705acc952e"
+}

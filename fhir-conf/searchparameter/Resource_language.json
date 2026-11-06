@@ -1,0 +1,19 @@
+{
+   "resourceType": "SearchParameter",
+   "id" : "Resource-language",
+   "url": "http://kroniq.srdc.com.tr/fhir/SearchParameter/Resource-language",
+   "name": "_language",
+   "status": "active",
+   "publisher": "SRDC Corp.",
+   "code": "language",
+   "base": [
+      "Resource"
+   ],
+   "type": "token",
+   "description": "Language of the resource",
+   "xpath": "f:Resource/f:language",
+   "xpathUsage": "normal",
+   "target": [
+      "Resource"
+   ]
+}

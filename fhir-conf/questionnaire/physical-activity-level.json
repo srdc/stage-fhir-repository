@@ -1,0 +1,205 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en",
+  "status": "active",
+  "date": "2025-03-04T17:35:23.781Z",
+  "code": [
+    {
+      "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-code",
+      "code": "physical-activity-level",
+      "display": "Physical Activity Level"
+    }
+  ],
+  "meta": {
+    "tag": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-category",
+        "code": "patient"
+      }
+    ]
+  },
+  "subjectType": [
+    "Patient"
+  ],
+  "title": "Physical Activity Survey",
+  "description": "A questionnaire assessing the frequency and duration of physical activity.",
+  "item": [
+    {
+      "linkId": "pa_q1",
+      "type": "choice",
+      "required": true,
+      "text": "How often do you do light exercise (no sweating or getting out of breath) in your leisure time?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "Once a month or less"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "2-3 times a month"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Once a week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "2-3 times a week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4-6 times a week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "Daily"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "pa_q2",
+      "type": "choice",
+      "required": true,
+      "text": "How often do you do brisk exercise (you get out of breath and sweat at least mildly) in your leisure time?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "Once a month or less"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "2-3 times a month"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Once a week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "2-3 times a week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4-6 times a week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "Daily"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "pa_q3",
+      "type": "choice",
+      "required": true,
+      "text": "How long do you do light exercise (no sweating or getting out of breath) at any one time?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "None"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Less than 20 minutes"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "20-39 minutes"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "40-59 minutes"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "1-1.5 hours"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "More than 1.5 hours"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "pa_q4",
+      "type": "choice",
+      "required": true,
+      "text": "How long do you do brisk exercise (you get out of breath and sweat at least mildly) at any one time?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "None"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Less than 20 minutes"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "20-39 minutes"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "40-59 minutes"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "1-1.5 hours"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "More than 1.5 hours"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "df1ad95a-3ecd-4888-ba3d-127fd1b293dd"
+}

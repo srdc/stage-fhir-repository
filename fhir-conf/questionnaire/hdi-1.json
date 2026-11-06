@@ -1,0 +1,831 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en",
+  "status": "active",
+  "date": "2025-03-04T17:35:23.781Z",
+  "code": [
+    {
+      "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-code",
+      "code": "hdi-1",
+      "display": "Healthy Diet Index - Part 1"
+    }
+  ],
+  "meta": {
+    "tag": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-category",
+        "code": "patient"
+      }
+    ]
+  },
+  "subjectType": [
+    "Patient"
+  ],
+  "title": "Healthy Diet Index - Part 1",
+  "description": "A questionnaire evaluating the HDI_Ravitsemusnavigaattorin kysely 16.1.2025.",
+  "item": [
+    {
+      "linkId": "meals_q1",
+      "type": "choice",
+      "required": true,
+      "text": "On how many days a week do you usually eat breakfast?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "I don't eat"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1–3 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "4–6 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Every day"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "meals_q2",
+      "type": "choice",
+      "required": true,
+      "text": "On how many days a week do you usually eat lunch?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "I don't eat"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1–3 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "4–6 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Every day"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "meals_q3",
+      "type": "choice",
+      "required": true,
+      "text": "On how many days a week do you usually eat dinner or supper?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "I don't eat"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1–3 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "4–6 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Every day"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "meals_q4",
+      "type": "choice",
+      "required": true,
+      "text": "On how many days a week do you usually eat a morning snack?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "I don't eat"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1–3 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "4–6 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Every day"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "meals_q5",
+      "type": "choice",
+      "required": true,
+      "text": "On how many days a week do you usually eat an afternoon snack?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "I don't eat"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1–3 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "4–6 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Every day"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "meals_q6",
+      "type": "choice",
+      "required": true,
+      "text": "On how many days a week do you usually eat an evening snack?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "I don't eat"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1–3 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "4–6 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Every day"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "meals_q7",
+      "type": "choice",
+      "required": true,
+      "text": "On how many days a week do you usually eat other snacks?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "I don't eat"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1–3 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "4–6 days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Every day"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dishes_q8",
+      "type": "choice",
+      "required": true,
+      "text": "How many times a week do you usually eat Vegetarian dishes per week as main course?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dishes_q9",
+      "type": "choice",
+      "required": true,
+      "text": "How many times a week do you usually eat Fish dishes per week as main course?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dishes_q10",
+      "type": "choice",
+      "required": true,
+      "text": "How many times a week do you usually eat Chicken or poultry dishes per week as main course?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dishes_q11",
+      "type": "choice",
+      "required": true,
+      "text": "How many times a week do you usually eat Meat dishes per week as main course?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dishes_q12",
+      "type": "choice",
+      "required": true,
+      "text": "How many times a week do you usually eat Sausage dishes per week as main course?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "dishes_q13",
+      "type": "choice",
+      "required": true,
+      "text": "How often do you usually eat fast food-type meals?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "1 portion or more per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "4–6 portions per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "1–3 portions per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "1–3 portions per month"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "Less than 1 portion per month or not at all"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "meat_q14",
+      "type": "choice",
+      "required": true,
+      "text": "How many slices of deli meat do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A10",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "meat_q15",
+      "type": "choice",
+      "required": true,
+      "text": "How many slices of sausage do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A10",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "meat_q16",
+      "type": "choice",
+      "required": true,
+      "text": "How many pieces of sausages or an equivalent amount of cooked sausage or grilled sausage do you usually eat per day?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "0"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "2"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "3"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "4"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A5",
+            "display": "5"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A6",
+            "display": "6"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A7",
+            "display": "7"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A8",
+            "display": "8"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A9",
+            "display": "9"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A10",
+            "display": "10 or more"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "meat_q17",
+      "type": "choice",
+      "required": true,
+      "text": "How many eggs do you usually eat per day, for example, boiled or fried?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "2 or more eggs per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "1 egg per day"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "4–6 eggs per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "1–3 eggs per week"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A4",
+            "display": "Less than 1 egg per week or none at all"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "83809398-4897-4b3b-9793-2bfe22e91834"
+}

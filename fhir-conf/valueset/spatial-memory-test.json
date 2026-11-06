@@ -1,0 +1,37 @@
+{
+  "resourceType": "ValueSet",
+  "id": "spatial-memory-test",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/spatial-memory-test",
+  "name": "SpatialMemoryTest",
+  "title": "Spatial Memory Test",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "STAGE ValueSet from the ValueSets sheet of FHIR_profiles.xlsx (WP7 profiling).",
+  "compose": {
+    "include": [
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "101691-4",
+            "display": "Execution duration"
+          }
+        ]
+      },
+      {
+        "system": "http://stage-healthyaging.eu/fhir/CodeSystem/spatial-memory-test-variables",
+        "concept": [
+          {
+            "code": "num-attempts",
+            "display": "# of attempts"
+          },
+          {
+            "code": "correct",
+            "display": "# correct elements"
+          }
+        ]
+      }
+    ]
+  }
+}

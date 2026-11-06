@@ -1,0 +1,40 @@
+{
+  "resourceType": "ValueSet",
+  "id": "pvt",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/pvt",
+  "name": "Pvt",
+  "title": "Pvt",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "STAGE ValueSet from the ValueSets sheet of FHIR_profiles.xlsx (WP7 profiling).",
+  "compose": {
+    "include": [
+      {
+        "system": "http://stage-healthy-aging.eu/fhir/CodeSystem/pvt-variables",
+        "concept": [
+          {
+            "code": "false-starts",
+            "display": "# of errors of commission (false starts)"
+          },
+          {
+            "code": "avg-response-time",
+            "display": "Average reaction time"
+          },
+          {
+            "code": "lapses",
+            "display": "# of errors of omissions (lapses)"
+          },
+          {
+            "code": "timeout",
+            "display": "Average time out"
+          },
+          {
+            "code": "repetition-duration",
+            "display": "Execution duration of each repetition"
+          }
+        ]
+      }
+    ]
+  }
+}

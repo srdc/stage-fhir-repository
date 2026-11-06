@@ -1,0 +1,55 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en",
+  "status": "active",
+  "date": "2025-03-04T17:35:23.781Z",
+  "code": [
+    {
+      "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-code",
+      "code": "share",
+      "display": "SHARE"
+    }
+  ],
+  "meta": {
+    "tag": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-category",
+        "code": "patient"
+      }
+    ]
+  },
+  "subjectType": [
+    "Patient"
+  ],
+  "title": "SHARE",
+  "description": "A brief questionnaire assessing feelings of loneliness.",
+  "item": [
+    {
+      "linkId": "share_q1",
+      "type": "choice",
+      "required": true,
+      "text": "How much of the time do you feel lonely?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "Often"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Some of the time"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Hardly ever or never"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "30b48622-dd57-421c-9af1-90da6a309dac"
+}

@@ -1,0 +1,61 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en",
+  "status": "active",
+  "date": "2025-03-04T17:35:23.781Z",
+  "code": [
+    {
+      "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-code",
+      "code": "fear-of-falling",
+      "display": "Fear of Falling"
+    }
+  ],
+  "meta": {
+    "tag": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-category",
+        "code": "patient"
+      }
+    ]
+  },
+  "subjectType": [
+    "Patient"
+  ],
+  "title": "Fear of Falls Assessment",
+  "description": "A questionnaire assessing fear of falling.",
+  "item": [
+    {
+      "linkId": "fof_q1",
+      "type": "choice",
+      "required": true,
+      "text": "Are you afraid of falling?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "Never"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Occasionally"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "Often"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Constantly"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "252b0a5b-f328-40ee-8f2b-81b212e6298e"
+}

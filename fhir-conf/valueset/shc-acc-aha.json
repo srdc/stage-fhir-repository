@@ -1,0 +1,69 @@
+{
+  "resourceType": "ValueSet",
+  "id": "shc-acc-aha",
+  "url": "http://stage-healthyaging.eu/fhir/ValueSet/shc-acc-aha",
+  "name": "ShcAccAha",
+  "title": "ACC/AHA Service - codes for Smart Health Cards",
+  "status": "active",
+  "date": "2026-10-04",
+  "publisher": "STAGE",
+  "description": "Codes of the data the \"acc_aha\" CDS service uses: the credentialValueSet of $health-cards-issue for its Smart Health Card.",
+  "compose": {
+    "include": [
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "2093-3"
+          },
+          {
+            "code": "2085-9"
+          },
+          {
+            "code": "8480-6"
+          },
+          {
+            "code": "55284-4"
+          },
+          {
+            "code": "72166-2"
+          },
+          {
+            "code": "46463-6"
+          }
+        ]
+      },
+      {
+        "system": "http://www.whocc.no/atc",
+        "concept": [
+          {
+            "code": "C02"
+          },
+          {
+            "code": "C03"
+          },
+          {
+            "code": "C07"
+          },
+          {
+            "code": "C08"
+          },
+          {
+            "code": "C09"
+          }
+        ]
+      },
+      {
+        "system": "http://hl7.org/fhir/sid/icd-10",
+        "concept": [
+          {
+            "code": "E10"
+          },
+          {
+            "code": "E11"
+          }
+        ]
+      }
+    ]
+  }
+}

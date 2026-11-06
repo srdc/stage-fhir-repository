@@ -1,0 +1,110 @@
+{
+  "resourceType": "OperationDefinition",
+  "id": "distinct-pages",
+  "url": "http://kroniq.srdc.com.tr/fhir/OperationDefinition/distinct-pages",
+  "version": "1.0",
+  "name": "srdc.kroniq.fhir.operation.DistinctPages",
+  "status": "active",
+  "kind": "operation",
+  "publisher": "SRDC Corp.",
+  "contact": [
+    {
+      "name": "System Administrator",
+      "telecom": [
+        {
+          "system": "email",
+          "value": "mustafa@srdc.com.tr"
+        }
+      ]
+    }
+  ],
+  "date": "2018-08-07",
+  "description": "Kroniq operation to query distinct coded resources",
+  "code": "distinct-pages",
+  "system": false,
+  "type": true,
+  "instance": true,
+  "resource" : ["Condition", "MedicationStatement", "AllergyIntolerance", "Encounter", "Observation", "Procedure", "Immunization", "RiskAssessment"],
+  "parameter": [
+    {
+      "name": "subject",
+      "use": "in",
+      "min": 1,
+      "max": "1",
+      "documentation": "Subject of the resource",
+      "type": "string"
+    },
+    {
+      "name": "codePath",
+      "use": "in",
+      "min": 1,
+      "max": "1",
+      "documentation": "Relative path to sort the resources",
+      "type": "string"
+    },
+    {
+      "name": "dateParam",
+      "use": "in",
+      "min": 1,
+      "max": "1",
+      "documentation": "Relative path to sort the resources",
+      "type": "string"
+    },
+    {
+      "name": "sortParam",
+      "use": "in",
+      "min": 0,
+      "max": "1",
+      "documentation": "Relative path to sort the resources",
+      "type": "string"
+    },
+    {
+      "name": "sortDirection",
+      "use": "in",
+      "min": 0,
+      "max": "1",
+      "documentation": "Relative path to sort the resources",
+      "type": "string"
+    },
+    {
+      "name": "_page",
+      "use": "in",
+      "min": 0,
+      "max": "1",
+      "documentation": "Page number",
+      "type": "unsignedInt"
+    },
+    {
+      "name": "_count",
+      "use": "in",
+      "min": 0,
+      "max": "1",
+      "documentation": "Resource count per page",
+      "type": "unsignedInt"
+    },
+    {
+      "name": "_all",
+      "use": "in",
+      "min": 0,
+      "max": "1",
+      "documentation": "Get all resources without pagination",
+      "type": "boolean"
+    },
+    {
+      "name": "queryParams",
+      "use": "in",
+      "min": 0,
+      "max": "1",
+      "documentation": "Query parameters of the related resource",
+      "type": "Parameters"
+    },
+    {
+      "name": "return",
+      "use": "out",
+      "min": 1,
+      "max": "1",
+      "documentation": "Bundle of distinct coded resources",
+      "type": "Bundle"
+    }
+  ]
+}

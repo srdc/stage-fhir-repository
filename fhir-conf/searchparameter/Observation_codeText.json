@@ -1,0 +1,17 @@
+{
+   "resourceType": "SearchParameter",
+   "id" : "Observation-codeText",
+   "url": "http://kroniq.srdc.com.tr/fhir/SearchParameter/Observation-codeText",
+   "name": "codeText",
+   "status": "active",
+   "publisher": "SRDC Corp.",
+   "code": "codeText",
+   "base": ["Observation"],
+   "type": "string",
+   "description": "Code text/display of the Observation",
+   "xpath": "f:Observation/f:code/f:coding/f:display|f:Observation/f:code/f:text",
+   "xpathUsage": "normal",
+   "target": [
+      "Observation"
+   ]
+}

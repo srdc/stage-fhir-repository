@@ -1,0 +1,93 @@
+{
+  "resourceType": "Questionnaire",
+  "language": "en",
+  "status": "active",
+  "date": "2025-03-04T17:35:23.781Z",
+  "code": [
+    {
+      "system": "http://loinc.org",
+      "code": "55758-7",
+      "display": "PHQ-2"
+    }
+  ],
+  "meta": {
+    "tag": [
+      {
+        "system": "https://stage-healthy-aging.eu/fhir/CodeSystem/questionnaire-category",
+        "code": "patient"
+      }
+    ]
+  },
+  "subjectType": [
+    "Patient"
+  ],
+  "title": "PHQ-2 Mood Check",
+  "description": "A brief 2-question screener for depressive symptoms over the past two weeks.",
+  "item": [
+    {
+      "linkId": "phq2_q1",
+      "type": "choice",
+      "required": true,
+      "text": "Over the last two weeks, how often have you been bothered by little interest or pleasure in doing things?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "Not at all"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Several days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "More than half the days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Nearly every day"
+          }
+        }
+      ]
+    },
+    {
+      "linkId": "phq2_q2",
+      "type": "choice",
+      "required": true,
+      "text": "Over the last two weeks, how often have you been bothered by feeling down, depressed, or hopeless?",
+      "answerOption": [
+        {
+          "valueCoding": {
+            "code": "A0",
+            "display": "Not at all"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A1",
+            "display": "Several days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A2",
+            "display": "More than half the days"
+          }
+        },
+        {
+          "valueCoding": {
+            "code": "A3",
+            "display": "Nearly every day"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "febe18c7-81d4-420f-bb9c-948428268e19"
+}
