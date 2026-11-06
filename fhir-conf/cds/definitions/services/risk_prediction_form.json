@@ -1,0 +1,9 @@
+{
+  "hook": "execute",
+  "title": "Risk Prediction Form prefill service",
+  "description": "",
+  "id": "risk_prediction_form",
+  "prefetch": {
+    "patient": "Patient/{{context.patientId}}"
+  }
+}
