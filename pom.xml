@@ -16,22 +16,21 @@
     <maven.compiler.target>11</maven.compiler.target>
 
     <!-- plugin versions -->
-    <scala.maven.plugin.version>3.4.1</scala.maven.plugin.version>
+    <scala.maven.plugin.version>4.8.1</scala.maven.plugin.version>
     <jar.plugin.version>3.1.0</jar.plugin.version>
     <surefire.plugin.version>2.19.1</surefire.plugin.version>
     <spotify.docker.plugin.version>0.4.3</spotify.docker.plugin.version>
-    <jackson.version>2.9.6</jackson.version>
+    <jackson.version>2.16.1</jackson.version>
 
     <!-- dependency versions -->
-    <scala.version>2.12.8</scala.version>
-    <scala.binary.version>2.12</scala.binary.version>
+    <scala.version>2.13.10</scala.version>
+    <scala.binary.version>2.13</scala.binary.version>
     <specs2.version>4.10.5</specs2.version>
     <logback.logstash.encoder.version>5.3</logback.logstash.encoder.version>
-    <onfhir.version>3.2-SNAPSHOT</onfhir.version>
-    <akka-http.version>10.2.0</akka-http.version>
-    <akka.version>2.6.8</akka.version>
-    <json4s.version>4.0.3</json4s.version>
-    <nimbus.version>9.31</nimbus.version>
+    <onfhir.version>3.4.1-SNAPSHOT</onfhir.version>
+    <akka-http.version>10.5.3</akka-http.version>
+    <akka.version>2.8.5</akka.version>
+    <json4s.version>3.7.0-M11</json4s.version>
 
   </properties>
 
@@ -161,31 +160,36 @@
       <version>${scala.version}</version>
     </dependency>
 
-    <!-- FHIR repository: the onFHIR 3.2 (Scala 2.12) line with the SMART Health Cards changes (mvn install it first) -->
+    <!-- FHIR repository: the onFHIR 3.4.1 (Scala 2.13) line with the SMART Health Cards changes (mvn install it first) -->
     <dependency>
       <groupId>io.onfhir</groupId>
-      <artifactId>onfhir-server-r4</artifactId>
+      <artifactId>onfhir-server-r4_${scala.binary.version}</artifactId>
       <version>${onfhir.version}</version>
     </dependency>
     <dependency>
       <groupId>io.onfhir</groupId>
-      <artifactId>onfhir-common</artifactId>
+      <artifactId>onfhir-common_${scala.binary.version}</artifactId>
       <version>${onfhir.version}</version>
     </dependency>
     <dependency>
       <groupId>io.onfhir</groupId>
-      <artifactId>onfhir-core</artifactId>
+      <artifactId>onfhir-core_${scala.binary.version}</artifactId>
       <version>${onfhir.version}</version>
     </dependency>
     <dependency>
       <groupId>io.onfhir</groupId>
-      <artifactId>onfhir-operations</artifactId>
+      <artifactId>onfhir-operations_${scala.binary.version}</artifactId>
+      <version>${onfhir.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.onfhir</groupId>
+      <artifactId>onfhir-r4_${scala.binary.version}</artifactId>
       <version>${onfhir.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-scala_2.12</artifactId>
+      <artifactId>jackson-module-scala_${scala.binary.version}</artifactId>
       <version>${jackson.version}</version>
     </dependency>
 
@@ -197,15 +201,14 @@
 
     <dependency>
       <groupId>org.json4s</groupId>
-      <artifactId>json4s-native_2.12</artifactId>
+      <artifactId>json4s-native_${scala.binary.version}</artifactId>
       <version>${json4s.version}</version>
     </dependency>
 
-    <!-- JWT token generation -->
     <dependency>
-      <groupId>com.nimbusds</groupId>
-      <artifactId>nimbus-jose-jwt</artifactId>
-      <version>${nimbus.version}</version>
+      <groupId>org.json4s</groupId>
+      <artifactId>json4s-jackson_${scala.binary.version}</artifactId>
+      <version>${json4s.version}</version>
     </dependency>
 
     <!--Testing toolkits for Akka-->
@@ -224,13 +227,13 @@
     <!-- Unit Testing -->
     <dependency>
       <groupId>org.specs2</groupId>
-      <artifactId>specs2-core_2.12</artifactId>
+      <artifactId>specs2-core_${scala.binary.version}</artifactId>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.specs2</groupId>
-      <artifactId>specs2-junit_2.12</artifactId>
+      <artifactId>specs2-junit_${scala.binary.version}</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>

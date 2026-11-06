@@ -3,9 +3,8 @@ package srdc.stage.fhir.operation
 import akka.http.scaladsl.model.StatusCodes
 import io.onfhir.Onfhir
 import io.onfhir.api.model.{FHIROperationRequest, FHIROperationResponse}
-import io.onfhir.api.parsers.FHIRSearchParameterValueParser
+import io.onfhir.config.IFhirConfigurationManager
 import io.onfhir.api.service.{FHIROperationHandlerService, FHIRSearchService}
-import io.onfhir.db.ResourceManager
 import io.onfhir.exception.{InternalServerException, NotFoundException}
 import io.onfhir.util.JsonFormatter.formats
 import org.json4s.JObject
@@ -15,15 +14,14 @@ import srdc.stage.fhir.util.FHIRResourceTypes
 
 import scala.concurrent.Future
 
-class AccountDetails extends FHIROperationHandlerService  {
+class AccountDetails(fhirConfigurationManager: IFhirConfigurationManager) extends FHIROperationHandlerService(fhirConfigurationManager) {
   private val logger: Logger = LoggerFactory.getLogger("Operation[$account-details]")
 
   implicit val actorSystem = Onfhir.actorSystem
-  override implicit val executionContext = actorSystem.dispatcher
 
   def getRelatedPerson(patientId: String) = {
     val searchService = new FHIRSearchService()
-    val searchParams = FHIRSearchParameterValueParser.parseSearchParameters(FHIRResourceTypes.RELATED_PERSON, Map(
+    val searchParams = fhirConfigurationManager.fhirSearchParameterValueParser.parseSearchParameters(FHIRResourceTypes.RELATED_PERSON, Map(
       "patient" -> List(s"${FHIRResourceTypes.PATIENT}/${patientId}"),
       "active" -> List("true")
     ))
@@ -33,7 +31,7 @@ class AccountDetails extends FHIROperationHandlerService  {
         val relatedPerson = (entry \ "resource").extract[JObject]
         val id = (relatedPerson \ "id").extract[String]
         logger.debug(s"Related person found: RelatedPerson/${id}. Searching linked Person...")
-        val personSearchParams = FHIRSearchParameterValueParser.parseSearchParameters(FHIRResourceTypes.PERSON, Map(
+        val personSearchParams = fhirConfigurationManager.fhirSearchParameterValueParser.parseSearchParameters(FHIRResourceTypes.PERSON, Map(
           "link" -> List(s"${FHIRResourceTypes.RELATED_PERSON}/${id}")
         ))
         searchService.searchAndReturnBundle(FHIRResourceTypes.PERSON, personSearchParams) map { personBundle =>
@@ -133,7 +131,7 @@ class AccountDetails extends FHIROperationHandlerService  {
   }
 
   private def getPatient(id: String) = {
-    ResourceManager.getResource(FHIRResourceTypes.PATIENT, id, excludeExtraFields = true) map {
+    fhirConfigurationManager.resourceManager.getResource(FHIRResourceTypes.PATIENT, id, excludeExtraFields = true) map {
       case Some(resource) =>
         resource
       case _ =>

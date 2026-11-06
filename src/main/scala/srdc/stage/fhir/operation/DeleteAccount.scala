@@ -3,14 +3,12 @@ package srdc.stage.fhir.operation
 import akka.http.scaladsl.model.StatusCodes
 import io.onfhir.Onfhir
 import io.onfhir.api.model.{FHIROperationRequest, FHIROperationResponse}
-import io.onfhir.api.parsers.FHIRSearchParameterValueParser
+import io.onfhir.config.IFhirConfigurationManager
 import io.onfhir.api.service.{FHIROperationHandlerService, FHIRSearchService}
 import io.onfhir.api.util.FHIRUtil
-import io.onfhir.db.ResourceManager
 import io.onfhir.exception.{InternalServerException, NotFoundException}
 import io.onfhir.util.JsonFormatter.formats
 import org.json4s.JsonAST.JField
-import org.json4s.MonadicJValue.jvalueToMonadic
 import org.json4s.{JArray, JObject}
 import org.slf4j.{Logger, LoggerFactory}
 import srdc.stage.fhir.model.fhir.Bundle
@@ -19,12 +17,11 @@ import srdc.stage.fhir.util.FHIRResourceTypes
 
 import scala.concurrent.Future
 
-class DeleteAccount extends FHIROperationHandlerService {
+class DeleteAccount(fhirConfigurationManager: IFhirConfigurationManager) extends FHIROperationHandlerService(fhirConfigurationManager) {
 
   val logger: Logger = LoggerFactory.getLogger("Operation[$delete-account]")
 
   implicit val actorSystem = Onfhir.actorSystem
-  override implicit val executionContext = actorSystem.dispatcher
 
   override def executeOperation(operationName: String, operationRequest: FHIROperationRequest, resourceType: Option[String], resourceId: Option[String]): Future[FHIROperationResponse] = {
     if (resourceType.get == FHIRResourceTypes.RELATED_PERSON) {
@@ -39,7 +36,7 @@ class DeleteAccount extends FHIROperationHandlerService {
   }
 
   def unlinkRelatedPerson(resourceId: String): Future[FHIROperationResponse] = {
-    val personSearchParams = FHIRSearchParameterValueParser.parseSearchParameters(FHIRResourceTypes.PERSON, Map(
+    val personSearchParams = fhirConfigurationManager.fhirSearchParameterValueParser.parseSearchParameters(FHIRResourceTypes.PERSON, Map(
       "link" -> List(s"${FHIRResourceTypes.RELATED_PERSON}/${resourceId}")
     ))
     new FHIRSearchService().searchAndReturnBundle(FHIRResourceTypes.PERSON, personSearchParams) flatMap { personBundle =>
@@ -54,7 +51,7 @@ class DeleteAccount extends FHIROperationHandlerService {
               JArray(links.extract[List[JObject]].filter(link => (link \ "target" \ "reference").extract[String]
                 != s"${FHIRResourceTypes.RELATED_PERSON}/${resourceId}")))
           }).asInstanceOf[JObject]
-          ResourceManager.updateResource(FHIRResourceTypes.PERSON, (person \ "id").extract[String], updatedPerson,
+          fhirConfigurationManager.resourceManager.updateResource(FHIRResourceTypes.PERSON, (person \ "id").extract[String], updatedPerson,
             ((person \ "meta" \ "versionId").extract[String].toLong, person)) map {
             case (_, _, _) =>
               new FHIROperationResponse(StatusCodes.OK)
@@ -67,7 +64,7 @@ class DeleteAccount extends FHIROperationHandlerService {
   }
 
   def deleteResource(resourceType: String, resourceId: String): Future[Unit] = {
-    ResourceManager.getResource(resourceType, resourceId).flatMap {
+    fhirConfigurationManager.resourceManager.getResource(resourceType, resourceId).flatMap {
       case None =>
         logger.debug("no document with given identifier, return 204 - No Content...")
         Future.apply()
@@ -78,7 +75,7 @@ class DeleteAccount extends FHIROperationHandlerService {
         } else {
           logger.debug("insert a new and empty document indicating that current document is deleted...")
           val currentVersion = FHIRUtil.extractVersionFromResource(foundResource)
-          ResourceManager.deleteResource(resourceType, resourceId, currentVersion -> foundResource)
+          fhirConfigurationManager.resourceManager.deleteResource(resourceType, resourceId, currentVersion -> foundResource)
             .map(_._1) map {newVersion =>
             logger.debug("Empty document inserted...")
           }
@@ -105,7 +102,7 @@ class DeleteAccount extends FHIROperationHandlerService {
 
     Future.sequence(
       resourceTypes.map(rtype => {
-        val params = FHIRSearchParameterValueParser.parseSearchParameters(rtype,
+        val params = fhirConfigurationManager.fhirSearchParameterValueParser.parseSearchParameters(rtype,
           if(customParams.contains(rtype)) Map(customParams(rtype) -> List(s"Patient/$resourceId"))
           else Map("subject" -> List(s"Patient/$resourceId")))
         searchService.searchAndReturnBundle(rtype, params) flatMap { bundleResource => {

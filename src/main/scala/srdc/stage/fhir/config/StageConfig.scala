@@ -18,6 +18,5 @@ object StageConfig {
 
   // AUTH configuration begin
   lazy val AUTHZ_SERVER_URL: String = config.getString("fhir.authorization.authz-server-url")
-  lazy val AUTHZ_METHOD: String = config.getString("fhir.authorization.method")
   // AUTH configuration end
 }

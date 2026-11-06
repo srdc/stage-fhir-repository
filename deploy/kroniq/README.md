@@ -16,7 +16,7 @@ Apps (smart-apps container, port 7700): https://kroniq.srdc.com.tr/smart-apps/ri
 ## 1. Images
 
 ```
-cd ADLIFE/onfhir && mvn -pl onfhir-common,onfhir-core,onfhir-operations,onfhir-server-r4 -am -DskipTests install
+cd ADLIFE/onfhir && mvn -pl onfhir-common,onfhir-core,onfhir-operations,onfhir-r4,onfhir-server-r4 -am -DskipTests install
 cd STAGE/stage-fhir-repository && mvn clean install -DskipTests && docker build -t nexus.srdc.com.tr:18445/stage/fhir-repository .
 cd STAGE/shl-server && docker build -t nexus.srdc.com.tr:18445/stage/shl-server .
 cd STAGE/smart-apps && build-docker.bat

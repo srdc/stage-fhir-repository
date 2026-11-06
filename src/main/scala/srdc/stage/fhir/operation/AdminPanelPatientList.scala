@@ -5,6 +5,7 @@ import io.onfhir.Onfhir
 import io.onfhir.api.{FHIR_BUNDLE_TYPES, Resource}
 import io.onfhir.api.client.OnFhirLocalClient
 import io.onfhir.api.model.{FHIROperationRequest, FHIROperationResponse}
+import io.onfhir.config.IFhirConfigurationManager
 import io.onfhir.api.service.FHIROperationHandlerService
 import io.onfhir.api.util.FHIRUtil
 import io.onfhir.db.MongoDB
@@ -19,11 +20,10 @@ import srdc.stage.fhir.util.FHIRResourceTypes
 import scala.concurrent.Future
 import scala.util.Try
 
-class AdminPanelPatientList extends FHIROperationHandlerService {
+class AdminPanelPatientList(fhirConfigurationManager: IFhirConfigurationManager) extends FHIROperationHandlerService(fhirConfigurationManager) {
   private val logger: Logger = LoggerFactory.getLogger("Operation[$admin-panel-patient-list]")
 
   implicit val actorSystem = Onfhir.actorSystem
-  override implicit val executionContext = actorSystem.dispatcher
 
   private final val defaultCount = 10
 

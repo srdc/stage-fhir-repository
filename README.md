@@ -35,10 +35,10 @@ organisations with SMART Health Cards / Links.
 
 ## Build
 
-onFHIR must be the 3.2 (Scala 2.12) line with the SMART Health Cards changes (`ADLIFE/onfhir`, branch `smart-health-cards`):
+onFHIR must be the 3.4.1 (Scala 2.13) line with the SMART Health Cards changes (`ADLIFE/onfhir`, branch `smart-health-cards-2.13`):
 
 ```
-cd ../../ADLIFE/onfhir && mvn -pl onfhir-common,onfhir-core,onfhir-operations,onfhir-server-r4 -am -DskipTests install
+cd ../../ADLIFE/onfhir && mvn -pl onfhir-common,onfhir-core,onfhir-operations,onfhir-r4,onfhir-server-r4 -am -DskipTests install
 mvn clean install -DskipTests
 ```
 

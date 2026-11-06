@@ -2,7 +2,7 @@ package srdc.stage.fhir
 
 import io.onfhir.api.Resource
 import io.onfhir.api.util.FHIRUtil
-import io.onfhir.db.ResourceManager
+import io.onfhir.config.FhirConfigurationManager
 import io.onfhir.exception.InitializationException
 import org.json4s.JsonAST.{JObject, JString}
 import org.slf4j.{Logger, LoggerFactory}
@@ -35,15 +35,15 @@ object StageInitializer {
       return
     }
     val byId: Map[String, Resource] = ofType.map(r => FHIRUtil.extractIdFromResource(r) -> r).toMap
-    val job = ResourceManager.getResourcesWithIds(resourceType, byId.keySet, excludeExtraFields = true).flatMap(existingResources => {
+    val job = FhirConfigurationManager.resourceManager.getResourcesWithIds(resourceType, byId.keySet, excludeExtraFields = true).flatMap(existingResources => {
       val existing = existingResources.map(r => FHIRUtil.extractIdFromResource(r) -> r).toMap
       val toCreate = byId.filterNot(r => existing.contains(r._1))
       val toUpdate = byId.filter(r => existing.get(r._1).exists(current => changed(r._2, current)))
-      val creation = if (toCreate.nonEmpty) ResourceManager.createResources(resourceType, toCreate).map(_ => ()) else Future.successful(())
+      val creation = if (toCreate.nonEmpty) FhirConfigurationManager.resourceManager.createResources(resourceType, toCreate).map(_ => ()) else Future.successful(())
       creation.flatMap(_ =>
         Future.sequence(toUpdate.toSeq.map { case (id, resource) =>
           val current = existing(id)
-          ResourceManager.updateResource(resourceType, id, resource, FHIRUtil.extractVersionFromResource(current) -> current)
+          FhirConfigurationManager.resourceManager.updateResource(resourceType, id, resource, FHIRUtil.extractVersionFromResource(current) -> current)
         })
       ).map(_ => logger.info(s"$resourceType: ${toCreate.size} created, ${toUpdate.size} updated, ${byId.size - toCreate.size - toUpdate.size} unchanged."))
     }).recover {

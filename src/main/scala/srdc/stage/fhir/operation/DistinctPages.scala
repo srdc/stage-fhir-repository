@@ -3,12 +3,11 @@ package srdc.stage.fhir.operation
 import akka.http.scaladsl.model.StatusCodes
 import io.onfhir.api.{FHIR_BUNDLE_FIELDS, FHIR_BUNDLE_TYPES, FHIR_COMMON_FIELDS, FHIR_DATA_TYPES, FHIR_EXTRA_FIELDS, FHIR_METHOD_NAMES, FHIR_PARAMETER_TYPES}
 import io.onfhir.api.model.{FHIROperationRequest, FHIROperationResponse, FHIRResponse, OutcomeIssue, Parameter}
-import io.onfhir.api.parsers.FHIRSearchParameterValueParser
 import io.onfhir.api.service.FHIROperationHandlerService
 import io.onfhir.api.util.FHIRUtil
-import io.onfhir.config.FhirConfigurationManager.fhirConfig
-import io.onfhir.db.{MongoDB, ResourceManager}
-import io.onfhir.db.BsonTransformer._
+import io.onfhir.config.IFhirConfigurationManager
+import io.onfhir.db.MongoDB
+import io.onfhir.db.OnFhirBsonTransformer._
 import io.onfhir.exception.{BadRequestException, NotImplementedException}
 import org.json4s.JsonAST.{JArray, JObject}
 import org.json4s.{DefaultFormats, Formats}
@@ -28,7 +27,7 @@ import scala.util.Try
 /**
  * Created by mustafa on 07.08.2018.
  */
-class DistinctPages extends FHIROperationHandlerService {
+class DistinctPages(fhirConfigurationManager: IFhirConfigurationManager) extends FHIROperationHandlerService(fhirConfigurationManager) {
   private val logger: Logger = LoggerFactory.getLogger("Operation[$distinct-page]")
 
   private final var defaultCount = 10
@@ -67,7 +66,7 @@ class DistinctPages extends FHIROperationHandlerService {
             val paramValue = (param \ "valueString").extract[String]
             paramName -> paramValue
           }).groupBy(_._1).map(i => i._1 -> i._2.map(_._2))).toOption
-        }.map(res => FHIRSearchParameterValueParser.parseSearchParameters(rtype, res.toMap)).getOrElse(List.empty)
+        }.map(res => fhirConfigurationManager.fhirSearchParameterValueParser.parseSearchParameters(rtype, res.toMap)).getOrElse(List.empty)
 
         getCodes(rtype, subject, codePath, resourceQueryParams) flatMap { seq =>
           val futureMap = seq flatMap { code =>
@@ -134,6 +133,7 @@ class DistinctPages extends FHIROperationHandlerService {
     }
 
   private def resolveAllParameterPaths(resourceType: String, parameterName: String): (String, Seq[String]) = {
+    val fhirConfig = fhirConfigurationManager.fhirConfig
     val searchParameterResourceConf = fhirConfig.resourceQueryParameters(resourceType).get(parameterName)
     val searchParameterCommonConf = fhirConfig.commonQueryParameters.get(parameterName)
     val searchParameterConf = (searchParameterResourceConf, searchParameterCommonConf) match {
@@ -164,18 +164,37 @@ class DistinctPages extends FHIROperationHandlerService {
 
   def getCodes(resourceType: String, subject: String, codePath: String, resourceQueryParams: List[Parameter]): Future[Map[String, Seq[String]]] = {
     // First, arrange the compartment query
-    val compartmentParam = FHIRSearchParameterValueParser.constructCompartmentSearchParameter("Patient", extractPatientId(subject), resourceType)
+    val compartmentParam = fhirConfigurationManager.fhirSearchParameterValueParser.constructCompartmentSearchParameter("Patient", extractPatientId(subject), resourceType)
 
     // Append it to search parameters
     val queryParams = List(compartmentParam) ++ resourceQueryParams
 
-    ResourceManager.constructQuery(resourceType, queryParams).flatMap {
+    constructFilter(resourceType, queryParams).flatMap {
       case finalQuery => {
         val collection = MongoDB.getCollection(resourceType)
         distinctInPathOrder(collection, finalQuery.get, codePath.split(",").toList, List(), Map())
       }
 
     }
+  }
+
+  /**
+   * The Mongo filter of the given (compartment + resource) search parameters. Parameters that onFHIR resolves with
+   * aggregation stages (chained, reverse chained, some special ones) cannot be used with distinct/find queries.
+   */
+  private def constructFilter(resourceType: String, queryParams: List[Parameter]): Future[Option[conversions.Bson]] = Future {
+    val (query, filteringStages) = fhirConfigurationManager.resourceManager.constructQueryNew(resourceType, queryParams)
+    if (filteringStages.nonEmpty)
+      throw new NotImplementedException(Seq(
+        OutcomeIssue(
+          FHIRResponse.SEVERITY_CODES.ERROR,
+          FHIRResponse.OUTCOME_CODES.NOT_SUPPORTED,
+          None,
+          Some("Chained, reverse chained or aggregation based search parameters are not supported in queryParams of $distinct-pages"),
+          Nil
+        )
+      ))
+    query
   }
 
   private def distinctInPathOrder(collection: MongoCollection[Document], filter: conversions.Bson,
@@ -210,12 +229,12 @@ class DistinctPages extends FHIROperationHandlerService {
                 resourceQueryParams: List[Parameter], excludeCodes: List[String]): Future[Option[JObject]] = {
 
     // First, arrange the compartment query
-    val compartmentParam = FHIRSearchParameterValueParser.constructCompartmentSearchParameter("Patient", extractPatientId(subject), resourceType)
+    val compartmentParam = fhirConfigurationManager.fhirSearchParameterValueParser.constructCompartmentSearchParameter("Patient", extractPatientId(subject), resourceType)
 
     // Append it to search parameters
     val queryParams = List(compartmentParam) ++ resourceQueryParams
 
-    ResourceManager.constructQuery(resourceType, queryParams).flatMap {
+    constructFilter(resourceType, queryParams).flatMap {
       case finalQuery => {
         val collection = MongoDB.getCollection(resourceType)
 
@@ -241,7 +260,7 @@ class DistinctPages extends FHIROperationHandlerService {
 
     logger.debug(s"Returning ${results.size} resources from ${resources.size} ...")
 
-    val entries = results.map(result => FHIRUtil.createBundleEntry(result, FHIR_BUNDLE_TYPES.SEARCH_SET, false, false))
+    val entries = results.map(result => fhirConfigurationManager.fhirServerUtil.createBundleEntry(result, FHIR_BUNDLE_TYPES.SEARCH_SET, false, false))
 
     val bundle = if (all) {
       FHIRUtil.createBundle(FHIR_BUNDLE_TYPES.SEARCH_SET, List(), entries, resources.length, None)
