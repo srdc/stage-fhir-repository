@@ -23,7 +23,7 @@
     <jackson.version>2.16.1</jackson.version>
 
     <!-- dependency versions -->
-    <scala.version>2.13.10</scala.version>
+    <scala.version>2.13.16</scala.version>
     <scala.binary.version>2.13</scala.binary.version>
     <specs2.version>4.10.5</specs2.version>
     <logback.logstash.encoder.version>5.3</logback.logstash.encoder.version>
@@ -31,6 +31,10 @@
     <akka-http.version>10.5.3</akka-http.version>
     <akka.version>2.8.5</akka.version>
     <json4s.version>3.7.0-M11</json4s.version>
+    <onfhir.cds.version>1.1-SNAPSHOT</onfhir.cds.version>
+    <scalate.version>1.9.7</scalate.version>
+    <zxing.version>3.3.0</zxing.version>
+    <poi.version>5.2.3</poi.version>
 
   </properties>
 
@@ -186,6 +190,44 @@
       <artifactId>onfhir-r4_${scala.binary.version}</artifactId>
       <version>${onfhir.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.onfhir</groupId>
+      <artifactId>onfhir-path_${scala.binary.version}</artifactId>
+      <version>${onfhir.version}</version>
+    </dependency>
+
+    <!-- CDS Hooks services (srdc.smartcds, formerly the smart-cds project): onfhir-cds (ADLIFE/onfhir-cds, mvn install
+         it first), templates (Scalate), QR codes of the SMART Health Cards (ZXing) and Excel files (Apache POI) -->
+    <dependency>
+      <groupId>io.onfhir</groupId>
+      <artifactId>onfhir-cds</artifactId>
+      <version>${onfhir.cds.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scalatra.scalate</groupId>
+      <artifactId>scalate-core_${scala.binary.version}</artifactId>
+      <version>${scalate.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>core</artifactId>
+      <version>${zxing.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>javase</artifactId>
+      <version>${zxing.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>${poi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>${poi.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
@@ -240,6 +282,23 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- Keep the versions onFHIR resolves on its own: Apache POI (commons-compress, commons-codec) and Scalate (JNA,
+           through scala-compiler) would downgrade them -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>1.27.1</version>
+      </dependency>
+      <dependency>
+        <groupId>net.java.dev.jna</groupId>
+        <artifactId>jna</artifactId>
+        <version>5.15.0</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.17.1</version>
+      </dependency>
 
       <!--Testing toolkits for Akka-->
       <dependency>

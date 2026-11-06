@@ -3,12 +3,12 @@ package srdc.smartcds.cds.service
 import io.onfhir.api.Resource
 import io.onfhir.api.parsers.FHIRSearchParameterValueParser
 import io.onfhir.api.util.ResourceChecker
+import io.onfhir.config.FhirConfigurationManager
 import io.onfhir.cds.api.model.CdsResponse
 import io.onfhir.cds.service.{BaseCdsService, CdsServiceContext, CdsServiceRequest}
 import io.onfhir.util.JsonFormatter.convertToJson2
 import org.json4s.DefaultFormats
 import org.json4s.JsonAST.{JArray, JObject}
-import srdc.smartcds.config.SmartCdsConfig
 import srdc.smartcds.util.CdsPrefetchUtil
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -17,8 +17,8 @@ import scala.util.Try
 class InMemorySearchService(cdsServiceContext: CdsServiceContext) extends BaseCdsService(cdsServiceContext) {
   implicit val formats: DefaultFormats.type = DefaultFormats
 
-  private val resourceChecker = new ResourceChecker(SmartCdsConfig.fhirServerConfig.get)
-  private val searchParameterValueParser = new FHIRSearchParameterValueParser(SmartCdsConfig.fhirServerConfig.get)
+  private val resourceChecker = new ResourceChecker(FhirConfigurationManager.fhirConfig)
+  private val searchParameterValueParser = new FHIRSearchParameterValueParser(FhirConfigurationManager.fhirConfig)
   /**
    * @param cdsServiceRequest Request should include the ID of the requested service
    * @param ex

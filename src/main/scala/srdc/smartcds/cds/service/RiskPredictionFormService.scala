@@ -1,6 +1,7 @@
 package srdc.smartcds.cds.service
 
 import akka.actor.ActorSystem
+import io.onfhir.Onfhir
 import akka.http.scaladsl.model.StatusCodes
 import io.onfhir.cds.api.model.CdsResponse
 import io.onfhir.cds.model.CdsException
@@ -26,7 +27,7 @@ class RiskPredictionFormService(cdsServiceContext: CdsServiceContext)
   extends BaseCdsService(cdsServiceContext) {
 
   implicit val formats: DefaultFormats.type = DefaultFormats
-  implicit val system: ActorSystem = ActorSystem("RiskPredictionFormService")
+  implicit val system: ActorSystem = Onfhir.actorSystem // the actor system of the hosting onFHIR server
 
   override def executeCds(
                            cdsServiceRequest: CdsServiceRequest

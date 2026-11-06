@@ -2,8 +2,10 @@
 
 An [onFHIR](https://onfhir.io) R4 repository for STAGE, simplified from `adlife-fhir-repository`: no ADLIFE / CarePath /
 HS Monitor configurations, CDS services or custom operations, only what the STAGE apps use, plus SMART Health Cards
-issuing (`Patient/[id]/$health-cards-issue`). CDS stays in `smart-cds`, which works with either repository: it takes the
-FHIR server and token from each CDS request.
+issuing (`Patient/[id]/$health-cards-issue`) and the STAGE CDS Hooks services, served by the same server under
+`<server>/cds-hooks/cds-services`. The CDS services were the separate `smart-cds` project (imported here with its history
+from its `onfhir-feast-integration` branch); they use this server's FHIR configuration and, for prefetch requests
+without a `fhirServer`, read the data from this server in-process.
 
 It can run as two separate repositories, STAGE and EHR (own port, database and signing key), to demonstrate sharing data between
 organisations with SMART Health Cards / Links.
@@ -19,8 +21,10 @@ organisations with SMART Health Cards / Links.
 | `fhir-conf/questionnaire/` | STAGE questionnaires (WHO-5, life space mobility, ...), stored at startup |
 | `fhir-conf/valueset/` | STAGE ValueSets, stored at startup (see below) |
 | `fhir-conf/*.json` | onAuth / SMART metadata, `jwks.json` (STAGE keys) and `jwks-ehr.json` (EHR keys) |
+| `fhir-conf/cds/` | CDS Hooks service and hook definitions, concept definitions and card templates (`definitions/`), bundles and ValueSets the services read (`bundle/`, `valueset/`) |
 | `scripts/generate_valuesets.py` | Regenerates `fhir-conf/valueset` |
-| `src/main/scala` | Boot, the four operations, startup storage of ValueSets / Questionnaires |
+| `src/main/scala/srdc/stage/fhir` | Boot, the four operations, startup storage of ValueSets / Questionnaires |
+| `src/main/scala/srdc/smartcds` | CDS Hooks services (formerly `smart-cds`), `SmartCdsModule` builds their route |
 
 ### ValueSets
 
@@ -28,18 +32,20 @@ organisations with SMART Health Cards / Links.
 
 - the *ValueSets* sheet of `Documents/WP7/profiling/FHIR_profiles.xlsx`;
 - `Documents/WP7/profiling/liva-goal-valueset.xlsx` (`liva-goal`; the intervention name is a designation);
-- the smart-cds CDS services: one `shc-<service>` ValueSet per service with the codes of the data it uses, the
+- the CDS services (`fhir-conf/cds`): one `shc-<service>` ValueSet per service with the codes of the data it uses, the
   `credentialValueSet` of its Smart Health Card (`http://stage-healthyaging.eu/fhir/ValueSet/shc-<service>`; the
   smart-apps use them when `healthCardValueSetBaseUrl` is set to `http://stage-healthyaging.eu/fhir/ValueSet/`);
-- `smart-cds/valueset` (copied as is).
+- `fhir-conf/cds/valueset` (copied as is).
 
 ## Build
 
-onFHIR must be the 3.4.1 (Scala 2.13) line with the SMART Health Cards changes (`ADLIFE/onfhir`, branch `smart-health-cards-2.13`):
+onFHIR must be the 3.4.1 (Scala 2.13) line with the SMART Health Cards changes (`ADLIFE/onfhir`, branch
+`smart-health-cards-2.13`), and onfhir-cds its Scala 2.13 version (`ADLIFE/onfhir-cds`, branch `onfhir-cds-2.13-stage`):
 
 ```
 cd ../../ADLIFE/onfhir && mvn -pl onfhir-common,onfhir-core,onfhir-operations,onfhir-r4,onfhir-server-r4 -am -DskipTests install
-mvn clean install -DskipTests
+cd ../onfhir-cds && mvn -DskipTests install
+cd ../../STAGE/stage-fhir-repository && mvn clean install -DskipTests
 ```
 
 ## Secrets (not in git)
@@ -49,7 +55,8 @@ Gitignored, to be provided on each machine (keep them out of commits):
 - `fhir-conf/jwks.json`, `fhir-conf/jwks-ehr.json`: the private EC keys signing the SMART Health Cards;
 - `fhir-conf/protected-resource-server-metadata.json`: the onAuth client registration of the repository
   (see `fhir-conf/protected-resource-server-metadata.example.json`);
-- `fhir-conf/secrets.conf`: other secret settings, e.g. the HS256 secret of the onAuth access tokens
+- `fhir-conf/secrets.conf`: other secret settings, e.g. the HS256 secret of the onAuth access tokens and the client
+  secret of the LLM service (`ask_llm`)
   (see `fhir-conf/secrets.conf.example`); included by `application.conf` and `application-docker.conf`.
 
 ## Run (MongoDB on localhost:27017, from this folder)

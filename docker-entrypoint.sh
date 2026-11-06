@@ -1,6 +1,7 @@
 #!/bin/bash
 
-JAVA_CMD="java -Xms256m -Xmx3g -jar "
+# FHIR repository and the CDS Hooks services (the standalone smart-cds ran with -Xmx4g)
+JAVA_CMD="java -Xms256m -Xmx4g -jar "
 
 # Configure FHIR repository ROOT URL (after deployment and proxies)
 if [ ! -z "$FHIR_ROOT_URL" ]; then

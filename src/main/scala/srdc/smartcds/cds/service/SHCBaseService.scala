@@ -3,6 +3,7 @@ package srdc.smartcds.cds.service
 import io.onfhir.api.Resource
 import io.onfhir.api.parsers.FHIRSearchParameterValueParser
 import io.onfhir.api.util.ResourceChecker
+import io.onfhir.config.FhirConfigurationManager
 import io.onfhir.cds.api.model.CdsResponse
 import io.onfhir.cds.service.{BaseCdsService, CdsServiceContext, CdsServiceRequest}
 import org.json4s.JValue
@@ -15,8 +16,8 @@ import scala.util.Try
 
 abstract class SHCBaseService(cdsServiceContext: CdsServiceContext) extends BaseCdsService(cdsServiceContext) {
 
-  protected val resourceChecker = new ResourceChecker(SmartCdsConfig.fhirServerConfig.get)
-  protected val searchParameterValueParser = new FHIRSearchParameterValueParser(SmartCdsConfig.fhirServerConfig.get)
+  protected val resourceChecker = new ResourceChecker(FhirConfigurationManager.fhirConfig)
+  protected val searchParameterValueParser = new FHIRSearchParameterValueParser(FhirConfigurationManager.fhirConfig)
 
   /**
    * Id of the service to be overridden in the extending class

@@ -2,7 +2,6 @@ package srdc.smartcds.config
 
 import com.typesafe.config.{Config, ConfigFactory}
 import io.onfhir.cds.api.model.CdsServiceDefinition
-import io.onfhir.config.FhirServerConfig
 
 import scala.concurrent.duration.{FiniteDuration, MILLISECONDS}
 import scala.util.Try
@@ -23,7 +22,6 @@ object SmartCdsConfig {
   lazy val valueSetsPath: Option[String] = Try(config.getString("app.kroniq-valuesets-path")).toOption
 
   var cdsServiceDefinitions: Map[String, CdsServiceDefinition] = Map.empty
-  var fhirServerConfig: Option[FhirServerConfig] = None
 
   // EpisodeOfCare.extension urls
   final val STATUS_TO_BE_SET: String = "http://kroniq.srdc.com.tr/fhir/StructureDefinition/status-to-be-set"
