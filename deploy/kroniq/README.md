@@ -35,7 +35,7 @@ cd STAGE/smart-apps && build-docker.bat
 - Secrets are not in git: put `fhir-conf/jwks.json`, `fhir-conf/jwks-ehr.json`,
   `fhir-conf/protected-resource-server-metadata.json` and `fhir-conf/secrets.conf` (see `fhir-conf/secrets.conf.example`)
   into `REPO_DIR`
-- Copy (or check out) this repository on the server: the compose file mounts `fhir-conf/` and `application-docker.conf`
+- Copy (or check out) this repository on the server: the compose file mounts `fhir-conf/`, `cds-conf/` and `application-docker.conf`
   from `../../`. Then in this folder: `docker compose --env-file .env up -d`
 - smart-apps: `docker compose up -d` in `smart-apps/docker` (port 7700).
 - nginx: replace the `/stage-fhir` and `/stage-shl` locations with those of `nginx-locations.conf` (adds `/ehr` and

@@ -4,12 +4,12 @@ import akka.http.scaladsl.server.Route
 import io.onfhir.Onfhir
 import io.onfhir.operation.FhirOperationHandlerFactory
 import io.onfhir.r4.config.FhirR4Configurator
-import srdc.smartcds.SmartCdsModule
+import srdc.stage.cds.SmartCdsModule
 
 /**
  * STAGE FHIR Repository: onFHIR R4 with the STAGE conformance resources (fhir-conf), a few account/admin operations
  * and SMART Health Cards issuing ($health-cards-issue, one of the default onFHIR operations), plus the STAGE CDS Hooks
- * services (srdc.smartcds, formerly the smart-cds project) under /cds-hooks
+ * services (srdc.stage.cds, formerly the smart-cds project) under /cds-hooks
  */
 object Boot extends App {
 

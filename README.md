@@ -21,10 +21,10 @@ organisations with SMART Health Cards / Links.
 | `fhir-conf/questionnaire/` | STAGE questionnaires (WHO-5, life space mobility, ...), stored at startup |
 | `fhir-conf/valueset/` | STAGE ValueSets, stored at startup (see below) |
 | `fhir-conf/*.json` | onAuth / SMART metadata, `jwks.json` (STAGE keys) and `jwks-ehr.json` (EHR keys) |
-| `fhir-conf/cds/` | CDS Hooks service and hook definitions, concept definitions and card templates (`definitions/`), bundles and ValueSets the services read (`bundle/`, `valueset/`) |
+| `cds-conf/` | CDS Hooks service and hook definitions, concept definitions and card templates (`definitions/`), bundles and ValueSets the services read (`bundle/`, `valueset/`) |
 | `scripts/generate_valuesets.py` | Regenerates `fhir-conf/valueset` |
 | `src/main/scala/srdc/stage/fhir` | Boot, the four operations, startup storage of ValueSets / Questionnaires |
-| `src/main/scala/srdc/smartcds` | CDS Hooks services (formerly `smart-cds`), `SmartCdsModule` builds their route |
+| `src/main/scala/srdc/stage/cds` | CDS Hooks services (formerly `smart-cds`), `SmartCdsModule` builds their route |
 
 ### ValueSets
 
@@ -32,10 +32,10 @@ organisations with SMART Health Cards / Links.
 
 - the *ValueSets* sheet of `Documents/WP7/profiling/FHIR_profiles.xlsx`;
 - `Documents/WP7/profiling/liva-goal-valueset.xlsx` (`liva-goal`; the intervention name is a designation);
-- the CDS services (`fhir-conf/cds`): one `shc-<service>` ValueSet per service with the codes of the data it uses, the
+- the CDS services (`cds-conf`): one `shc-<service>` ValueSet per service with the codes of the data it uses, the
   `credentialValueSet` of its Smart Health Card (`http://stage-healthyaging.eu/fhir/ValueSet/shc-<service>`; the
   smart-apps use them when `healthCardValueSetBaseUrl` is set to `http://stage-healthyaging.eu/fhir/ValueSet/`);
-- `fhir-conf/cds/valueset` (copied as is).
+- `cds-conf/valueset` (copied as is).
 
 ## Build
 

@@ -196,7 +196,7 @@
       <version>${onfhir.version}</version>
     </dependency>
 
-    <!-- CDS Hooks services (srdc.smartcds, formerly the smart-cds project): onfhir-cds (ADLIFE/onfhir-cds, mvn install
+    <!-- CDS Hooks services (srdc.stage.cds, formerly the smart-cds project): onfhir-cds (ADLIFE/onfhir-cds, mvn install
          it first), templates (Scalate), QR codes of the SMART Health Cards (ZXing) and Excel files (Apache POI) -->
     <dependency>
       <groupId>io.onfhir</groupId>

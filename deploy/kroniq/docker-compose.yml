@@ -3,7 +3,7 @@
 # EHR is the second repository for the xShare (SMART Health Cards/Links) tests.
 #   docker compose --env-file .env up -d
 # Replaces the old compose (stage-repo + stage-repo-mongo): same network, resource limits, MongoDB container and volume.
-# fhir-conf (keys, metadata, ValueSets...) and application-docker.conf of this repository are mounted from REPO_DIR
+# fhir-conf (keys, metadata, ValueSets...), cds-conf (CDS Hooks definitions and data) and application-docker.conf of this repository are mounted from REPO_DIR
 # (.env), so the private keys never go into an image.
 name: stage-fhir
 
@@ -36,6 +36,12 @@ x-fhir: &fhir
     - type: bind
       source: ${REPO_DIR}/fhir-conf
       target: /repo/fhir-conf
+      read_only: true
+      bind:
+        create_host_path: false
+    - type: bind
+      source: ${REPO_DIR}/cds-conf
+      target: /repo/cds-conf
       read_only: true
       bind:
         create_host_path: false

@@ -3,12 +3,12 @@ Generates the STAGE ValueSets of fhir-conf/valueset:
 
 - the ValueSets of the "ValueSets" sheet of FHIR_profiles.xlsx (WP7 profiling)
 - the LIVA goal ValueSet of liva-goal-valueset.xlsx (WP7 profiling)
-- one "shc-<service>" ValueSet per CDS service (fhir-conf/cds, formerly smart-cds): the codes of the data the service fetches, used as the
+- one "shc-<service>" ValueSet per CDS service (cds-conf, formerly smart-cds): the codes of the data the service fetches, used as the
   credentialValueSet of $health-cards-issue when a Smart Health Card is made for that service (the same codes the
   smart-apps health card profiles compute: prefetch code filters resolved from the onfhir.cds configuration, or the
   concept definition codes when a filter has no configured codes)
 
-The ValueSets of fhir-conf/cds/valueset are copied as they are.
+The ValueSets of cds-conf/valueset are copied as they are.
 
 Usage (from the STAGE folder, needs openpyxl):
   python stage-fhir-repository/scripts/generate_valuesets.py
@@ -25,7 +25,7 @@ import openpyxl
 STAGE = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 PROFILING = os.path.join(STAGE, 'Documents', 'WP7', 'profiling')
 REPOSITORY = os.path.join(STAGE, 'stage-fhir-repository')
-CDS = os.path.join(REPOSITORY, 'fhir-conf', 'cds')
+CDS = os.path.join(REPOSITORY, 'cds-conf')
 OUT = os.path.join(REPOSITORY, 'fhir-conf', 'valueset')
 
 CANONICAL_BASE = 'http://stage-healthyaging.eu/fhir/ValueSet/'
@@ -232,4 +232,4 @@ if __name__ == '__main__':
     liva_goal_value_set()
     print('liva-goal-valueset.xlsx: liva-goal')
     print('CDS services:', service_value_sets())
-    print('fhir-conf/cds/valueset:', copy_cds_value_sets())
+    print('cds-conf/valueset:', copy_cds_value_sets())
