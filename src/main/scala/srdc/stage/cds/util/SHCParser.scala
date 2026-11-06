@@ -5,7 +5,7 @@ import com.nimbusds.jose.crypto.ECDSAVerifier
 import com.nimbusds.jose.jwk.{ECKey, JWKSet}
 import com.nimbusds.jose.util.Base64URL
 import org.json4s.JValue
-import srdc.stage.cds.config.SmartCdsConfig
+import srdc.stage.cds.config.CdsConfig
 import srdc.stage.cds.util.Json4sFormatter._
 
 import java.net.URL
@@ -23,7 +23,7 @@ object SHCParser {
     val Array(h, p, s) = shc.split("\\.").map(new Base64URL(_))
     val jws = new JWSObject(h, p, s)
     val card = inflate(jws.getPayload.toBytes).parseJson
-    if (SmartCdsConfig.shcStrictSignatureVerification) {
+    if (CdsConfig.shcStrictSignatureVerification) {
       val issuer = (card \ "iss").extract[String]
       val jwkSet = JWKSet.load(new URL(issuer.stripSuffix("/") + "/.well-known/jwks"))
       val verifier = new ECDSAVerifier(jwkSet.getKeyByKeyId(jws.getHeader.getKeyID).asInstanceOf[ECKey].toPublicJWK)

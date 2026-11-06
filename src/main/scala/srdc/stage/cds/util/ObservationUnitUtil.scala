@@ -1,6 +1,6 @@
 package srdc.stage.cds.util
 
-import srdc.stage.cds.config.SmartCdsConfig
+import srdc.stage.cds.config.CdsConfig
 import srdc.stage.cds.model.fhir.Quantity
 import srdc.stage.cds.util.UnitConceptEnum.UnitConceptEnum
 
@@ -19,7 +19,7 @@ object ObservationUnitUtil {
    * @return
    */
   def getDefaultUnit(concept: UnitConceptEnum): String = {
-    Try(SmartCdsConfig.ruleUnits.getString(concept)).getOrElse("")
+    Try(CdsConfig.ruleUnits.getString(concept)).getOrElse("")
   }
 
   /**

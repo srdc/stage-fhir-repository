@@ -23,7 +23,7 @@ object Wp6ModelFeatures {
   // Systolic/diastolic blood pressure keep the automated and manual UK Biobank fields separate (unlike the
   // old questionnaire's single synthetic "sbp"/"dbp" field) - prefer the automated reading, falling back to
   // the manual one, mirroring the existing SystolicBP/DiastolicBP combination already used for
-  // risk_prediction_form (see SmartCdsConfig.sbpCodes/dbpCodes).
+  // risk_prediction_form (see CdsConfig.sbpCodes/dbpCodes).
   final val SYSTOLIC_BP_AUTOMATED = "4080"
   final val SYSTOLIC_BP_MANUAL = "93"
   final val DIASTOLIC_BP_AUTOMATED = "4079"

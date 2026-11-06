@@ -4,7 +4,7 @@ import akka.http.scaladsl.server.Route
 import io.onfhir.Onfhir
 import io.onfhir.operation.FhirOperationHandlerFactory
 import io.onfhir.r4.config.FhirR4Configurator
-import srdc.stage.cds.SmartCdsModule
+import srdc.stage.cds.CdsModule
 
 /**
  * STAGE FHIR Repository: onFHIR R4 with the STAGE conformance resources (fhir-conf), a few account/admin operations
@@ -24,7 +24,7 @@ object Boot extends App {
   // CDS Hooks services. Onfhir.apply takes the route up front, but the CDS services need the FHIR
   // configuration, which onFHIR initializes in its constructor: the route is built after Onfhir.apply (below) and
   // passed here deferred. It runs on onFHIR's actor system.
-  lazy val cdsRoute: Route = SmartCdsModule.route("cds-hooks")(Onfhir.actorSystem)
+  lazy val cdsRoute: Route = CdsModule.route("cds-hooks")(Onfhir.actorSystem)
 
   // Initialize onFHIR for R4
   val onfhir = Onfhir.apply(

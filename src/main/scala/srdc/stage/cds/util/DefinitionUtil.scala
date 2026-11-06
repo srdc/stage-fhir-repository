@@ -1,6 +1,6 @@
 package srdc.stage.cds.util
 
-import srdc.stage.cds.config.SmartCdsConfig
+import srdc.stage.cds.config.CdsConfig
 import org.json4s.JsonAST.{JArray, JField, JNothing, JObject, JString}
 import srdc.stage.cds.util.Json4sFormatter._
 
@@ -13,8 +13,8 @@ object DefinitionUtil {
   /** Read the concept definitions from files */
   {
     try {
-      println(s"definitions ${SmartCdsConfig.conceptDefinitionsPath.get}")
-      val definitions = new java.io.File(SmartCdsConfig.conceptDefinitionsPath.get).listFiles.filter(_.getName.endsWith(".json"))
+      println(s"definitions ${CdsConfig.conceptDefinitionsPath.get}")
+      val definitions = new java.io.File(CdsConfig.conceptDefinitionsPath.get).listFiles.filter(_.getName.endsWith(".json"))
       println(definitions.length)
       for (definitionPath <- definitions) {
         val source = Source.fromFile(definitionPath)(scala.io.Codec("UTF-8"))

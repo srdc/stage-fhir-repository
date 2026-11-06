@@ -1,6 +1,6 @@
 package srdc.stage.cds.util
 
-import srdc.stage.cds.config.SmartCdsConfig
+import srdc.stage.cds.config.CdsConfig
 import srdc.stage.cds.model.fhir.{Bundle, ValueSet}
 import org.json4s.JNothing
 import org.json4s.JsonAST.{JObject, JString}
@@ -19,7 +19,7 @@ object ValueSetUtil {
   /** Read bundles from files */
   {
     try {
-      val bundles = new java.io.File(SmartCdsConfig.bundlesPath.get).listFiles.filter(_.getName.endsWith(".json"))
+      val bundles = new java.io.File(CdsConfig.bundlesPath.get).listFiles.filter(_.getName.endsWith(".json"))
       for (bundlePath <- bundles) {
         val source = Source.fromFile(bundlePath)(scala.io.Codec("UTF-8"))
         val bundleObject = source.mkString.parseJson.asInstanceOf[JObject]
@@ -42,7 +42,7 @@ object ValueSetUtil {
   /** Read value sets from files */
   {
     try {
-      val valuesets = new java.io.File(SmartCdsConfig.valueSetsPath.get).listFiles.filter(_.getName.endsWith(".json"))
+      val valuesets = new java.io.File(CdsConfig.valueSetsPath.get).listFiles.filter(_.getName.endsWith(".json"))
       for (valuesetPath <- valuesets) {
         val source = Source.fromFile(valuesetPath)(scala.io.Codec("UTF-8"))
         val vsObject = source.mkString.parseJson.asInstanceOf[JObject]

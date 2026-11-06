@@ -7,7 +7,7 @@ import org.json4s._
 
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import srdc.stage.cds.cds.client.MLModelClient
+import srdc.stage.cds.client.MLModelClient
 import srdc.stage.cds.config.LlmConfig
 import srdc.stage.cds.model.fhir.{Answer, QuestionnaireResponse}
 

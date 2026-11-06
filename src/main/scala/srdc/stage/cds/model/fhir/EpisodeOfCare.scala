@@ -1,6 +1,6 @@
 package srdc.stage.cds.model.fhir
 
-import srdc.stage.cds.config.SmartCdsConfig
+import srdc.stage.cds.config.CdsConfig
 import srdc.stage.cds.util.EpisodeType.EpisodeType
 import srdc.stage.cds.util.FHIRStatus.FHIRStatus
 import srdc.stage.cds.util.{EpisodeType, JsonClass}
@@ -35,11 +35,11 @@ final case class EpisodeOfCare(resourceType: String,
   }
 
   def getStatusToBeSet: Option[FHIRStatus] = {
-    Try(extension.get.find(_.url == SmartCdsConfig.STATUS_TO_BE_SET).get.valueString.get).toOption
+    Try(extension.get.find(_.url == CdsConfig.STATUS_TO_BE_SET).get.valueString.get).toOption
   }
 
   def getEpisodeTypeToContinue: EpisodeType = {
-    Try(extension.get.find(_.url == SmartCdsConfig.EPISODE_TYPE_TO_CONTINUE).get.valueString.get).getOrElse(getType)
+    Try(extension.get.find(_.url == CdsConfig.EPISODE_TYPE_TO_CONTINUE).get.valueString.get).getOrElse(getType)
   }
 
   def getPeriodStart: String = {

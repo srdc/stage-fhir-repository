@@ -24,7 +24,7 @@ organisations with SMART Health Cards / Links.
 | `cds-conf/` | CDS Hooks service and hook definitions, concept definitions and card templates (`definitions/`), bundles and ValueSets the services read (`bundle/`, `valueset/`) |
 | `scripts/generate_valuesets.py` | Regenerates `fhir-conf/valueset` |
 | `src/main/scala/srdc/stage/fhir` | Boot, the four operations, startup storage of ValueSets / Questionnaires |
-| `src/main/scala/srdc/stage/cds` | CDS Hooks services (formerly `smart-cds`), `SmartCdsModule` builds their route |
+| `src/main/scala/srdc/stage/cds` | CDS Hooks services (formerly `smart-cds`), `CdsModule` builds their route |
 
 ### ValueSets
 
