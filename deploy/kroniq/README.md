@@ -13,6 +13,10 @@ EHR is the second repository for the xShare (SMART Health Cards/Links) tests; it
 Apps (smart-apps container, port 7700): https://kroniq.srdc.com.tr/smart-apps/risk-prediction/, …/qrisk3/,
 …/dashboard/ (login clients "STAGE" with a patient context and "EHR" for clinicians without a patient).
 
+CDS Hooks services: each repository serves them under its FHIR base, https://kroniq.srdc.com.tr/stage-fhir/cds-hooks and
+…/ehr/cds-hooks (no own nginx location); they replace the smart-cds container (/smart-cds). `deploy/testing` runs
+this deployment locally on https://stage.testing.eu.
+
 ## 1. Images
 
 ```

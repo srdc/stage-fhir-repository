@@ -1,0 +1,199 @@
+# Local simulation of the STAGE server on https://stage.testing.eu (127.0.0.1 in the Windows hosts file), with the same
+# paths as https://kroniq.srdc.com.tr (deploy/kroniq): STAGE and EHR repositories (FHIR + CDS Hooks), SHL servers,
+# onAuth and the smart-apps, behind an nginx with a mkcert certificate. See README.md.
+#   ./setup.sh                      (once: certificate, onAuth configuration, .env)
+#   docker compose up -d
+# fhir-conf, cds-conf and application-docker.conf of this repository are mounted (the private keys never go into an
+# image); setup.sh writes the stage.testing.eu variants of the host specific files into ./local (gitignored).
+name: stage-testing
+
+volumes:
+  mongo-data:
+  onauth-redis-data:
+  stage-shl-data:
+  shl-ehr-data:
+
+networks:
+  stage-testing:
+
+x-fhir: &fhir
+  image: ${FHIR_IMAGE:-stage/fhir-repository:testing}
+  depends_on:
+    - mongo
+  volumes:
+    - type: bind
+      source: ../../fhir-conf
+      target: /repo/fhir-conf
+      read_only: true
+    - type: bind
+      source: ../../cds-conf
+      target: /repo/cds-conf
+      read_only: true
+    - type: bind
+      source: ../../application-docker.conf
+      target: /repo/application-docker.conf
+      read_only: true
+    - type: bind
+      source: ./application-testing.conf
+      target: /testing/application-testing.conf
+      read_only: true
+    - type: bind
+      source: ./local/fhir-conf
+      target: /testing/fhir-conf
+      read_only: true
+  extra_hosts:
+    # the ML services (shap-client, fhir-rag-med, onfhir-feast) if they run on the host
+    - host.docker.internal:host-gateway
+  restart: unless-stopped
+  networks:
+    - stage-testing
+
+x-shl: &shl
+  image: ${SHL_IMAGE:-nexus.srdc.com.tr:18445/stage/shl-server:latest}
+  restart: unless-stopped
+  networks:
+    - stage-testing
+
+services:
+  mongo:
+    image: library/mongo:4.4
+    container_name: stage-testing-mongo
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      # for inspecting the data (mongosh mongodb://127.0.0.1:27117)
+      - 127.0.0.1:27117:27017
+    restart: unless-stopped
+    networks:
+      - stage-testing
+
+  stage-fhir:
+    <<: *fhir
+    container_name: stage-testing-stage-fhir
+    environment:
+      - APP_CONF_FILE=/testing/application-testing.conf
+      - DB_HOST=mongo
+      - DB_NAME=stage
+      - FHIR_ROOT_URL=https://stage.testing.eu/stage-fhir
+      - AUTHZ_SERVER_ROOT_URL=https://stage.testing.eu/stage-onauth/api/smart
+      - JWKS_PATH=/repo/fhir-conf/jwks.json
+      - SHC_SIGNING_KEY_ID=Fd_ncCoG4zYPoNit-tYEQ4YLQzraKqQ-kH1r8PN9TW0
+      - ML_SERVICE_URL=${ML_SERVICE_URL:-http://host.docker.internal:8001}
+      - LLM_SERVICE_URL=${LLM_SERVICE_URL:-http://host.docker.internal:8000}
+      - ONFHIR_FEAST_URL=${ONFHIR_FEAST_URL:-http://host.docker.internal:8085/onfhir-feast/api}
+    ports:
+      # direct access, bypassing nginx (same port as deploy/kroniq)
+      - 127.0.0.1:7702:8080
+
+  ehr-fhir:
+    <<: *fhir
+    container_name: stage-testing-ehr-fhir
+    environment:
+      - APP_CONF_FILE=/testing/application-testing.conf
+      - DB_HOST=mongo
+      - DB_NAME=ehr
+      - FHIR_ROOT_URL=https://stage.testing.eu/ehr
+      - AUTHZ_SERVER_ROOT_URL=https://stage.testing.eu/stage-onauth/api/smart
+      - JWKS_PATH=/repo/fhir-conf/jwks-ehr.json
+      - SHC_SIGNING_KEY_ID=ctJZJqbAj5pk3kj3DRR2woQgIu-fXVH5hTQm8skB880
+      - ML_SERVICE_URL=${ML_SERVICE_URL:-http://host.docker.internal:8001}
+      - LLM_SERVICE_URL=${LLM_SERVICE_URL:-http://host.docker.internal:8000}
+      - ONFHIR_FEAST_URL=${ONFHIR_FEAST_URL:-http://host.docker.internal:8085/onfhir-feast/api}
+    ports:
+      - 127.0.0.1:7707:8080
+
+  stage-shl:
+    <<: *shl
+    container_name: stage-testing-stage-shl
+    environment:
+      - NODE_ENV=production
+      - PUBLIC_BASE_URL=https://stage.testing.eu/stage-shl
+      - TRUST_PROXY=1
+    volumes:
+      - stage-shl-data:/home/node/app/shc
+
+  shl-ehr:
+    <<: *shl
+    container_name: stage-testing-shl-ehr
+    environment:
+      - NODE_ENV=production
+      - PUBLIC_BASE_URL=https://stage.testing.eu/shl-ehr
+      - TRUST_PROXY=1
+    volumes:
+      - shl-ehr-data:/home/node/app/shc
+
+  onauth-redis:
+    image: library/redis:5.0
+    container_name: stage-testing-onauth-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - onauth-redis-data:/data
+    restart: unless-stopped
+    networks:
+      - stage-testing
+
+  stage-onauth:
+    image: ${ONAUTH_IMAGE:-nexus.srdc.com.tr:18445/stage/onauth:latest}
+    container_name: stage-testing-onauth
+    depends_on:
+      - mongo
+      - onauth-redis
+    environment:
+      - DB_HOST=mongo
+      - REDIS_HOST=onauth-redis
+      # written by setup.sh from stage-onauth/conf (realm smart, host stage.testing.eu)
+      - APP_CONF_FILE=/sps/conf/application-testing.conf
+      # smart context resolution reads the patients from the STAGE repository
+      - FHIR_HOST=http://stage-fhir:8080/fhir
+      - AUDIT_HOST=http://stage-fhir:8080/fhir
+      - ONAUTH_SERVER_NAME=stage.testing.eu
+      - ONAUTH_SERVER_PATH=stage-onauth
+      - ONAUTH_SERVER_PROTOCOL=https
+      - DOCKER_CONTAINER_HOST=stage-onauth
+      - REDIRECT_MANAGER_RELATIVE=true
+    volumes:
+      - type: bind
+        source: ./local/onauth
+        target: /sps
+    restart: unless-stopped
+    networks:
+      - stage-testing
+
+  smart-apps:
+    image: ${SMART_APPS_IMAGE:-srdc/smart-apps:testing}
+    container_name: stage-testing-smart-apps
+    environment:
+      - SERVER_NAME=stage.testing.eu
+      - SERVER_PATH=/smart-apps/
+    restart: unless-stopped
+    networks:
+      - stage-testing
+
+  nginx:
+    image: library/nginx:1.27
+    container_name: stage-testing-nginx
+    depends_on:
+      - stage-fhir
+      - ehr-fhir
+      - stage-shl
+      - shl-ehr
+      - stage-onauth
+      - smart-apps
+    volumes:
+      - type: bind
+        source: ./nginx/stage.testing.eu.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+      - type: bind
+        source: ./local/certs
+        target: /etc/nginx/certs
+        read_only: true
+    ports:
+      - 127.0.0.1:443:443
+      - 127.0.0.1:80:80
+    restart: unless-stopped
+    networks:
+      stage-testing:
+        # the containers reach the public host name through nginx as well
+        aliases:
+          - stage.testing.eu

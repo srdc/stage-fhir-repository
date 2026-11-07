@@ -62,7 +62,9 @@ object CdsSecurity extends CdsCorsHandler {
       securityConfig.flatMap(c => Try(c.getStringList("fhir-server-aliases").asScala.toSeq).toOption).getOrElse(Nil))
       .map(normalize).toSet
 
-  private def normalize(url: String): String = url.trim.stripSuffix("/").toLowerCase
+  // localhost and 127.0.0.1 are the same host (e.g. root-url http://127.0.0.1:8080/fhir, apps on http://localhost:8080/fhir)
+  private def normalize(url: String): String =
+    url.trim.stripSuffix("/").toLowerCase.replaceFirst("^(?<scheme>https?://)localhost(?<rest>[:/]|$)", "${scheme}127.0.0.1${rest}")
 
   private val FhirId = "^[A-Za-z0-9\\-.]{1,64}$".r
 
