@@ -1,11 +1,11 @@
 package srdc.stage.cds
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.server.Directives.{pathPrefixTest, withRequestTimeout}
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import io.onfhir.api.client.OnFhirLocalClient
 import io.onfhir.cds.OnFhirCds
-import io.onfhir.config.FhirConfigurationManager
+import io.onfhir.config.{FhirConfigurationManager, OnfhirConfig}
 import srdc.stage.cds.CdsServiceFactory
 import srdc.stage.cds.config.CdsConfig
 
@@ -18,11 +18,15 @@ import scala.concurrent.duration.{DurationInt, FiniteDuration}
  * The services use the FHIR configuration of this server (FhirConfigurationManager) for their in-memory FHIR search,
  * and prefetch requests without a fhirServer go to this server in-process (OnFhirLocalClient). When the FHIR API is
  * access controlled, CdsSecurity checks the service calls and sends their prefetch reads through the FHIR API instead.
+ *
+ * Served at <server>/cds-hooks and under the FHIR base, <server>/fhir/cds-hooks, i.e. <fhir.root-url>/cds-hooks: behind a
+ * proxy that publishes only the FHIR base (e.g. /stage-fhir -> :7702/fhir), the CDS services of each repository are at
+ * <public FHIR URL>/cds-hooks, and the apps find them from the FHIR server they are logged in to.
  */
 object CdsModule {
 
   /**
-   * Builds the CDS Hooks route (<basePath>/cds-services/...). Call once, after onFHIR has been initialized
+   * Builds the CDS Hooks route ([<server.base-uri>/]<basePath>/cds-services/...). Call once, after onFHIR has been initialized
    * (Onfhir.apply has returned): the service implementations read the FHIR configuration when they are created.
    *
    * @param basePath       Path segment of the CDS Hooks endpoints (not a URL)
@@ -38,8 +42,15 @@ object CdsModule {
     // The server tries this route first for every request: change the timeout only for the CDS paths
     // (withRequestTimeout takes effect even if the inner route rejects the request)
     val securedCdsRoute = CdsSecurity.secure(basePath)(cdsRoute)
-    pathPrefixTest(basePath) {
-      withRequestTimeout(requestTimeout)(securedCdsRoute)
-    }
+    val timedCdsRoute = withRequestTimeout(requestTimeout)(securedCdsRoute)
+    pathPrefixTest(separateOnSlashes(basePath)) {
+      timedCdsRoute
+    } ~
+      // <fhir base>/cds-hooks: the FHIR base is consumed, the CDS route sees /cds-hooks/...
+      pathPrefix(separateOnSlashes(OnfhirConfig.baseUri)) {
+        pathPrefixTest(separateOnSlashes(basePath)) {
+          timedCdsRoute
+        }
+      }
   }
 }
