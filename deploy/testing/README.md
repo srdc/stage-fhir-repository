@@ -46,6 +46,7 @@ cd stage-fhir-repository && mvn package -DskipTests && docker build -t stage/fhi
 # apps (Node 20; libraries first, then the apps as in build-docker.bat:
 #   npx ng build <app> --configuration production --base-href /smart-apps/<path>/ --deploy-url /smart-apps/<path>/
 # for qrisk2 (path qrisk), qrisk3, advance, acc_aha, score (score2), shc-generator, risk-prediction, dashboard)
+# Git Bash: export MSYS_NO_PATHCONV=1 first, or it turns --base-href /smart-apps/... into C:/Program Files/Git/smart-apps/...
 cd smart-apps
 npx ng build cds-hooks && npx ng build ui-components && npx ng build common
 npx ng build risk-prediction --configuration production --base-href /smart-apps/risk-prediction/ --deploy-url /smart-apps/risk-prediction/
