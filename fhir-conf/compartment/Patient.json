@@ -99,6 +99,12 @@
       ]
     },
     {
+      "code": "DeviceUseStatement",
+      "param": [
+        "subject"
+      ]
+    },
+    {
       "code": "DiagnosticReport",
       "param": [
         "patient"
