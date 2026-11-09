@@ -12,6 +12,11 @@ volumes:
   onauth-redis-data:
   stage-shl-data:
   shl-ehr-data:
+  rag-redis-data:
+  rag-chroma:
+  rag-hf-cache:
+  feast-output-data:
+  postgres-data:
 
 networks:
   stage-testing:
@@ -42,7 +47,7 @@ x-fhir: &fhir
       target: /testing/fhir-conf
       read_only: true
   extra_hosts:
-    # the ML services (shap-client, fhir-rag-med, onfhir-feast) if they run on the host
+    # the ML services, if they run on the host instead (ML_SERVICE_URL etc. in .env)
     - host.docker.internal:host-gateway
   restart: unless-stopped
   networks:
@@ -78,9 +83,11 @@ services:
       - AUTHZ_SERVER_ROOT_URL=https://stage.testing.eu/stage-onauth/api/smart
       - JWKS_PATH=/repo/fhir-conf/jwks.json
       - SHC_SIGNING_KEY_ID=Fd_ncCoG4zYPoNit-tYEQ4YLQzraKqQ-kH1r8PN9TW0
-      - ML_SERVICE_URL=${ML_SERVICE_URL:-http://host.docker.internal:8001}
-      - LLM_SERVICE_URL=${LLM_SERVICE_URL:-http://host.docker.internal:8000}
-      - ONFHIR_FEAST_URL=${ONFHIR_FEAST_URL:-http://host.docker.internal:8085/onfhir-feast/api}
+      - ML_SERVICE_URL=${ML_SERVICE_URL:-http://shap-client:8001}
+      - LLM_SERVICE_URL=${LLM_SERVICE_URL:-http://fhir-rag-med:8000}
+      - ONFHIR_FEAST_URL=${ONFHIR_FEAST_URL:-http://onfhir-feast:8085/onfhir-feast/api}
+      # onfhir-feast data source of this repository (local/onfhir-feast/application.conf)
+      - ONFHIR_FEAST_DATA_SOURCE_ID=stageFhir
     ports:
       # direct access, bypassing nginx (same port as deploy/kroniq)
       - 127.0.0.1:7702:8080
@@ -96,9 +103,10 @@ services:
       - AUTHZ_SERVER_ROOT_URL=https://stage.testing.eu/stage-onauth/api/smart
       - JWKS_PATH=/repo/fhir-conf/jwks-ehr.json
       - SHC_SIGNING_KEY_ID=ctJZJqbAj5pk3kj3DRR2woQgIu-fXVH5hTQm8skB880
-      - ML_SERVICE_URL=${ML_SERVICE_URL:-http://host.docker.internal:8001}
-      - LLM_SERVICE_URL=${LLM_SERVICE_URL:-http://host.docker.internal:8000}
-      - ONFHIR_FEAST_URL=${ONFHIR_FEAST_URL:-http://host.docker.internal:8085/onfhir-feast/api}
+      - ML_SERVICE_URL=${ML_SERVICE_URL:-http://shap-client:8001}
+      - LLM_SERVICE_URL=${LLM_SERVICE_URL:-http://fhir-rag-med:8000}
+      - ONFHIR_FEAST_URL=${ONFHIR_FEAST_URL:-http://onfhir-feast:8085/onfhir-feast/api}
+      - ONFHIR_FEAST_DATA_SOURCE_ID=ehrFhir
     ports:
       - 127.0.0.1:7707:8080
 
@@ -155,6 +163,104 @@ services:
       - type: bind
         source: ./local/onauth
         target: /sps
+    restart: unless-stopped
+    networks:
+      - stage-testing
+
+  # ML services of the CDS services, from their checkouts next to this repository (mounted read-only, so a restart picks
+  # up changes): shap-client (risk prediction, SHAP), fhir-rag-med (LLM explanations, chat), onfhir-feast (features)
+  shap-client:
+    image: ${SHAP_CLIENT_IMAGE:-stage/shap-client:testing}
+    container_name: stage-testing-shap-client
+    volumes:
+      - type: bind
+        source: ${SHAP_CLIENT_DIR:-../../../shap-client}
+        target: /app
+        read_only: true
+    restart: unless-stopped
+    networks:
+      - stage-testing
+
+  rag-redis:
+    image: library/redis:7-alpine
+    container_name: stage-testing-rag-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - rag-redis-data:/data
+    restart: unless-stopped
+    networks:
+      - stage-testing
+
+  fhir-rag-med:
+    # built from the fhir-rag-med checkout (docker build -t fhir-rag-med .); its src is mounted over the image's
+    image: ${FHIR_RAG_MED_IMAGE:-fhir-rag-med:latest}
+    container_name: stage-testing-fhir-rag-med
+    depends_on:
+      - rag-redis
+    environment:
+      - PYTHONPATH=/app
+      - REDIS_URL=redis://rag-redis:6379/0
+    volumes:
+      - type: bind
+        source: ${FHIR_RAG_MED_DIR:-../../../../SRDC/fhir-rag-med}/src
+        target: /app/src
+        read_only: true
+      - type: bind
+        source: ${FHIR_RAG_MED_DIR:-../../../../SRDC/fhir-rag-med}/data/shap
+        target: /app/data/shap
+        read_only: true
+      - rag-chroma:/app/chroma
+      - rag-hf-cache:/root/.cache
+    restart: unless-stopped
+    networks:
+      - stage-testing
+
+  # PostgreSQL of the services (onfhir-feast: database onfhir_feast); password written by setup.sh
+  postgres:
+    image: library/postgres:16
+    container_name: stage-testing-postgres
+    environment:
+      - POSTGRES_DB=onfhir_feast
+      - POSTGRES_PASSWORD_FILE=/run/postgres.secret
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - type: bind
+        source: ./local/postgres.secret
+        target: /run/postgres.secret
+        read_only: true
+    ports:
+      # for inspecting the data (psql -h 127.0.0.1 -p 15432 -U postgres)
+      - 127.0.0.1:15432:5432
+    restart: unless-stopped
+    networks:
+      - stage-testing
+
+  onfhir-feast:
+    image: library/eclipse-temurin:11-jre
+    container_name: stage-testing-onfhir-feast
+    depends_on:
+      - postgres
+      - stage-fhir
+      - ehr-fhir
+      - stage-onauth
+    working_dir: /usr/local/onfhir-feast
+    command: java -Xms512m -Xmx4g -Dconfig.file=/testing/onfhir-feast/application.conf -jar onfhir-feast-standalone.jar
+    volumes:
+      # built in the onfhir-feast checkout (mvn package)
+      - type: bind
+        source: ${ONFHIR_FEAST_DIR:-../../../../SRDC/onfhir-feast}/onfhir-feast-server/target/onfhir-feast-standalone.jar
+        target: /usr/local/onfhir-feast/onfhir-feast-standalone.jar
+        read_only: true
+      - type: bind
+        source: ${ONFHIR_FEAST_DIR:-../../../../SRDC/onfhir-feast}/definitions
+        target: /usr/local/onfhir-feast/definitions
+        read_only: true
+      # written by setup.sh: the data sources of the repositories (with the stage-services secret)
+      - type: bind
+        source: ./local/onfhir-feast
+        target: /testing/onfhir-feast
+        read_only: true
+      - feast-output-data:/data/output-data
     restart: unless-stopped
     networks:
       - stage-testing
