@@ -96,7 +96,9 @@ test patients (synthetic, HTEST tagged) from `local/seed/` with a `stage-service
 
 - STAGE: the patients of realm smart's patient users: helen_wright (`6fd322a8-...`), ahmet_kilic (`pa01`) and
   john_wick (`pa-demo-01`), the last two copies of other test patients' records;
-- EHR: the ten test patients of the source (practitioner anna_svensson selects them);
+- EHR: the other seven test patients of the source (practitioner anna_svensson selects them). No record of a STAGE
+  patient is in EHR (same ids, or the source records of the copies), so they can be imported from STAGE into EHR
+  (xShare) in a demo;
 - STAGE, also: the feature extraction patients of the `fhir-path-feature-extraction` checkout (`FEATURE_EXTRACTION_DIR`),
   read from there on every load: the WP7 storyboard patients `sb-p1`..`sb-p4` (one per model stratum), `wp6-test-complete`
   and the profiles `123456`..`523456`. They have no realm users: a clinician (anna_svensson) opens them. To also remove what a demo run added, use its

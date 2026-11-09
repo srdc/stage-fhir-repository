@@ -10,7 +10,8 @@ Test patients of https://stage.testing.eu (see README.md).
       stage-services client of realm smart (setup.sh, local/stage-services.secret).
 
 STAGE gets the patients of the realm's patient users (Patient id = the user's patient id); users without a record in
-the source get a copy of another source patient's record. EHR gets all patients of the source (clinicians select them).
+the source get a copy of another source patient's record. EHR gets the other patients of the source (clinicians select
+them): no record of a STAGE patient is in EHR, so it can be imported from STAGE (xShare) in a demo.
 
 STAGE also gets the WP6/WP7 feature extraction patients of the fhir-path-feature-extraction checkout
 (FEATURE_EXTRACTION_DIR, default ../../../fhir-path-feature-extraction), as their transaction bundles (fixed ids, PUT):
@@ -45,6 +46,12 @@ STAGE_PATIENTS = [
     ('49d47569-6e48-49fa-b709-bfe13cffe084', 'pa01', ('Ahmet', 'Kilic'), 'male'),                  # ahmet_kilic
     ('295e1a06-5b7b-4176-9ecf-c482e4190f39', 'pa-demo-01', ('John', 'Wick'), 'male'),              # john_wick
 ]
+# Source patients whose records are in STAGE: not in EHR
+STAGE_SOURCE_PATIENTS = {source_id for source_id, _, _, _ in STAGE_PATIENTS}
+
+
+def in_ehr(bundle):
+    return bundle['entry'][0]['resource']['id'] not in STAGE_SOURCE_PATIENTS
 
 
 # Transaction bundles of the fhir-path-feature-extraction checkout, loaded into STAGE
@@ -123,7 +130,8 @@ def export(source):
     stage = []
     for source_id, patient_id, name, gender in STAGE_PATIENTS:
         stage.append(batch(renamed(patient_record(source, source_id), patient_id, name, gender)))
-    ehr = [batch(patient_record(source, p['id'])) for p in search_all(f'{source}/Patient?_count=500')]
+    ehr = [batch(patient_record(source, p['id'])) for p in search_all(f'{source}/Patient?_count=500')
+           if p['id'] not in STAGE_SOURCE_PATIENTS]
     for repository, bundles in (('stage', stage), ('ehr', ehr)):
         (SEED_DIR / f'{repository}.json').write_text(json.dumps(bundles, indent=1), encoding='utf-8')
         print(f'{repository}: {len(bundles)} patients, {sum(len(b["entry"]) for b in bundles)} resources')
@@ -151,7 +159,9 @@ def load():
     failed = 0
     for repository, base in REPOSITORIES.items():
         bundles = [batch(PRACTITIONERS)] + json.loads((SEED_DIR / f'{repository}.json').read_text(encoding='utf-8'))
-        if repository == 'stage':
+        if repository == 'ehr':
+            bundles = [b for b in bundles if in_ehr(b)]
+        else:
             bundles += [json.loads(p.read_text(encoding='utf-8')) for p in feature_extraction_bundles()]
         for bundle in bundles:
             request = urllib.request.Request(base, data=json.dumps(bundle).encode(), method='POST', headers={
