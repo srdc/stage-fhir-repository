@@ -11,8 +11,20 @@ with the same paths, so the apps, onAuth and the repositories behave as on https
 | `/stage-onauth` | onAuth (realm smart, database `stage_onauth`) |
 | `/smart-apps` | smart-apps (`/smart-apps/risk-prediction/`, `/qrisk3/`, `/dashboard/`) |
 
-MongoDB (`stage-testing-mongo`, 127.0.0.1:27117), PostgreSQL (`stage-testing-postgres`, 127.0.0.1:15432) and the data
-are separate from any other local setup (volumes of the `stage-testing` project).
+MongoDB (`stage-testing-mongo`, 127.0.0.1:27117), PostgreSQL (`stage-testing-postgres`, 127.0.0.1:15432), Redis
+(`stage-testing-redis`) and the data are separate from any other local setup (volumes of the `stage-testing` project).
+
+The services share one Redis and one PostgreSQL:
+
+| Store | Service | |
+|---|---|---|
+| Redis `stage-testing-redis` (7, AOF; no password, no published port) | onAuth | database 0 (onAuth cannot select another one; it flushes it when set up from scratch) |
+| | fhir-rag-med | database 1 (`REDIS_URL=redis://redis:6379/1`; session state, expiring after 6 h) |
+| PostgreSQL `stage-testing-postgres` (16) | onfhir-feast | database and login role `onfhir_feast` (password `local/postgres-onfhir_feast.secret`); the superuser (`local/postgres.secret`) only administers |
+
+`postgres-setup` (`postgres/databases.sh`) creates the services' databases and roles on every `docker compose up` and hands
+over objects created by another role; it exits when done. Another service gets a line there, a secret file in setup.sh
+and a mount. Do not set a Redis `maxmemory` eviction policy: it would also drop onAuth's sessions and tokens.
 
 The ML services of the CDS services run as containers too, from the checkouts next to this repository (mounted
 read-only, so `docker restart <container>` picks up code changes):
@@ -20,8 +32,8 @@ read-only, so `docker restart <container>` picks up code changes):
 | Container | Checkout (`.env` variable) | Used by |
 |---|---|---|
 | shap-client (`stage/shap-client:testing`: Python runtime only) | `STAGE/shap-client` (`SHAP_CLIENT_DIR`) | risk_prediction, risk_prediction_diseases |
-| fhir-rag-med (its own image, `src` mounted) + rag-redis | `SRDC/fhir-rag-med` (`FHIR_RAG_MED_DIR`) | shap_explain, ask_llm (calls its LLM provider on the internet) |
-| onfhir-feast (`onfhir-feast-standalone.jar` and `definitions` mounted) + postgres | `SRDC/onfhir-feast` (`ONFHIR_FEAST_DIR`) | risk_prediction_form, risk_prediction |
+| fhir-rag-med (its own image, `src` mounted), Redis database 1 | `SRDC/fhir-rag-med` (`FHIR_RAG_MED_DIR`) | shap_explain, ask_llm (calls its LLM provider on the internet) |
+| onfhir-feast (`onfhir-feast-standalone.jar` and `definitions` mounted), PostgreSQL database `onfhir_feast` | `SRDC/onfhir-feast` (`ONFHIR_FEAST_DIR`) | risk_prediction_form, risk_prediction |
 
 onfhir-feast reads the patients' data from the repositories (data sources `stageFhir` and `ehrFhir`) with a token of
 the client `stage-services` (client credentials, `user/*.read`), which `setup.sh` adds to the testing realm only. To use
@@ -36,7 +48,7 @@ services on the host instead, set `ML_SERVICE_URL`, `LLM_SERVICE_URL`, `ONFHIR_F
 - `./setup.sh`: writes `local/` (gitignored): the certificate, the onAuth metadata of stage.testing.eu for the
   repositories, the onAuth configuration with realm smart (redirect URIs of all the apps on stage.testing.eu, client
   `stage-services`), the onfhir-feast configuration and the generated secrets (`stage-services.secret`,
-  `postgres.secret`). Run it again after changing those sources.
+  `postgres.secret`, `postgres-onfhir_feast.secret`). Run it again after changing those sources.
 
 ## 2. Images
 
@@ -84,7 +96,7 @@ onAuth stores the realm on its first start only. After changing it (`./setup.sh`
 
 ```
 docker exec stage-testing-mongo mongo --quiet --eval 'db.getSiblingDB("stage_onauth").dropDatabase(); db.getSiblingDB("stage_onauth_smart").dropDatabase()'
-docker exec stage-testing-onauth-redis redis-cli FLUSHALL
+docker exec stage-testing-redis redis-cli -n 0 FLUSHDB    # onAuth's database only (not FLUSHALL: database 1 is fhir-rag-med's)
 docker restart stage-testing-onauth
 ```
 

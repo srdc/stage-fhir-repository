@@ -88,12 +88,14 @@ EOF
 # 5) onfhir-feast: one data source per repository (the ids the repositories send, ONFHIR_FEAST_DATA_SOURCE_ID), read
 #    through the containers' network with a read-only token of stage-services
 mkdir -p local/onfhir-feast
-# password of the postgres container (database onfhir_feast of onfhir-feast), generated once
+# passwords of the shared postgres container, generated once: its superuser, and onfhir-feast's own role (database
+# onfhir_feast; postgres/databases.sh creates both)
 [ -f local/postgres.secret ] || python -c "import secrets; print(secrets.token_urlsafe(24), end='')" > local/postgres.secret
+[ -f local/postgres-onfhir_feast.secret ] || python -c "import secrets; print(secrets.token_urlsafe(24), end='')" > local/postgres-onfhir_feast.secret
 python - <<'EOF'
 import pathlib
 secret = pathlib.Path('local/stage-services.secret').read_text().strip()
-postgres_password = pathlib.Path('local/postgres.secret').read_text().strip()
+postgres_password = pathlib.Path('local/postgres-onfhir_feast.secret').read_text().strip()
 source = '''  %s {
     id = "%s"
     interface = "fhir"
@@ -120,9 +122,10 @@ conf = ('# Written by setup.sh (holds the secret of the stage-services client)\n
         'include classpath("application.conf")\n\n'
         'onfhir-feast.server.root-url = "http://onfhir-feast:8085/onfhir-feast"\n'
         'onfhir-feast.etl.offline-repository.rootDir = "/data/output-data"\n'
-        '# jobs, datasets and the akka persistence of onfhir-feast: the postgres container\n'
+        '# jobs, datasets and the akka persistence of onfhir-feast: its database and role in the shared postgres\n'
         'slick-postgres.db.serverName = "postgres"\n'
         'slick-postgres.db.databaseName = "onfhir_feast"\n'
+        'slick-postgres.db.properties.user = "onfhir_feast"\n'
         'slick-postgres.db.properties.password = "%s"\n' % postgres_password +
         '# replaces the data sources of the default configuration\n'
         'onfhir-feast.etl.data-sources = null\n'

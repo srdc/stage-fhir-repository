@@ -9,9 +9,8 @@ name: stage-testing
 
 volumes:
   mongo-data:
-  onauth-redis-data:
+  redis-data:
   node-shl-data:
-  rag-redis-data:
   rag-chroma:
   rag-hf-cache:
   feast-output-data:
@@ -126,12 +125,18 @@ services:
     volumes:
       - node-shl-data:/home/node/app/shc
 
-  onauth-redis:
-    image: library/redis:5.0
-    container_name: stage-testing-onauth-redis
+  # Redis of the services, one database per service:
+  #   0  onAuth (realm-prefixed keys: sessions, tokens; onAuth has no setting for the database, and flushes it when set
+  #      up from scratch, onauth init-repositories = true)
+  #   1  fhir-rag-med (session:<user>:<session>, expiring after 6 h)
+  # No password (onAuth's client is not given one) and no published port: only the containers of this network reach it.
+  # No maxmemory: an eviction policy would also drop onAuth's sessions and tokens.
+  redis:
+    image: library/redis:7-alpine
+    container_name: stage-testing-redis
     command: redis-server --appendonly yes
     volumes:
-      - onauth-redis-data:/data
+      - redis-data:/data
     restart: unless-stopped
     networks:
       - stage-testing
@@ -143,10 +148,11 @@ services:
     container_name: stage-testing-onauth
     depends_on:
       - mongo
-      - onauth-redis
+      - redis
     environment:
       - DB_HOST=mongo
-      - REDIS_HOST=onauth-redis
+      # database 0 of the shared Redis
+      - REDIS_HOST=redis
       # written by setup.sh from stage-onauth/conf (realm smart, host stage.testing.eu)
       - APP_CONF_FILE=/sps/conf/application-testing.conf
       # smart context resolution reads the patients from the STAGE repository
@@ -179,25 +185,16 @@ services:
     networks:
       - stage-testing
 
-  rag-redis:
-    image: library/redis:7-alpine
-    container_name: stage-testing-rag-redis
-    command: redis-server --appendonly yes
-    volumes:
-      - rag-redis-data:/data
-    restart: unless-stopped
-    networks:
-      - stage-testing
-
   fhir-rag-med:
     # built from the fhir-rag-med checkout (docker build -t fhir-rag-med .); its src is mounted over the image's
     image: ${FHIR_RAG_MED_IMAGE:-fhir-rag-med:latest}
     container_name: stage-testing-fhir-rag-med
     depends_on:
-      - rag-redis
+      - redis
     environment:
       - PYTHONPATH=/app
-      - REDIS_URL=redis://rag-redis:6379/0
+      # database 1 of the shared Redis (0 is onAuth's)
+      - REDIS_URL=redis://redis:6379/1
     volumes:
       - type: bind
         source: ${FHIR_RAG_MED_DIR:-../../../../SRDC/fhir-rag-med}/src
@@ -213,12 +210,12 @@ services:
     networks:
       - stage-testing
 
-  # PostgreSQL of the services (onfhir-feast: database onfhir_feast); password written by setup.sh
+  # PostgreSQL of the services: one database and login role per service (postgres-setup, postgres/databases.sh); the
+  # superuser only administers it. Passwords written by setup.sh.
   postgres:
     image: library/postgres:16
     container_name: stage-testing-postgres
     environment:
-      - POSTGRES_DB=onfhir_feast
       - POSTGRES_PASSWORD_FILE=/run/postgres.secret
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -233,14 +230,42 @@ services:
     networks:
       - stage-testing
 
+  # creates (or updates) the services' databases and roles, then exits
+  postgres-setup:
+    image: library/postgres:16
+    container_name: stage-testing-postgres-setup
+    depends_on:
+      - postgres
+    entrypoint: ["sh", "/setup/databases.sh"]
+    volumes:
+      - type: bind
+        source: ./postgres/databases.sh
+        target: /setup/databases.sh
+        read_only: true
+      - type: bind
+        source: ./local/postgres.secret
+        target: /run/secrets/postgres
+        read_only: true
+      - type: bind
+        source: ./local/postgres-onfhir_feast.secret
+        target: /run/secrets/onfhir_feast
+        read_only: true
+    restart: "no"
+    networks:
+      - stage-testing
+
   onfhir-feast:
     image: library/eclipse-temurin:11-jre
     container_name: stage-testing-onfhir-feast
     depends_on:
-      - postgres
-      - stage-fhir
-      - ehr-fhir
-      - stage-onauth
+      postgres-setup:
+        condition: service_completed_successfully
+      stage-fhir:
+        condition: service_started
+      ehr-fhir:
+        condition: service_started
+      stage-onauth:
+        condition: service_started
     working_dir: /usr/local/onfhir-feast
     command: java -Xms512m -Xmx4g -Dconfig.file=/testing/onfhir-feast/application.conf -jar onfhir-feast-standalone.jar
     volumes:

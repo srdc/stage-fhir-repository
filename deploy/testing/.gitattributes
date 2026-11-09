@@ -1,0 +1,2 @@
+# shell scripts run in Linux containers (and Git Bash): keep LF on Windows checkouts (core.autocrlf)
+*.sh text eol=lf
