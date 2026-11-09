@@ -4,12 +4,15 @@ import akka.http.scaladsl.server.Route
 import io.onfhir.Onfhir
 import io.onfhir.operation.FhirOperationHandlerFactory
 import io.onfhir.r4.config.FhirR4Configurator
+import akka.http.scaladsl.server.Directives._
 import srdc.stage.cds.CdsModule
+import srdc.stage.shl.ShlModule
 
 /**
  * STAGE FHIR Repository: onFHIR R4 with the STAGE conformance resources (fhir-conf), a few account/admin operations
  * and SMART Health Cards issuing ($health-cards-issue, one of the default onFHIR operations), plus the STAGE CDS Hooks
- * services (srdc.stage.cds, formerly the smart-cds project) under /cds-hooks
+ * services (srdc.stage.cds, formerly the smart-cds project) under /cds-hooks and the SMART Health Links server
+ * (srdc.stage.shl, formerly the Node shl-server) under /shl
  */
 object Boot extends App {
 
@@ -26,6 +29,9 @@ object Boot extends App {
   // passed here deferred. It runs on onFHIR's actor system.
   lazy val cdsRoute: Route = CdsModule.route("cds-hooks")(Onfhir.actorSystem)
 
+  // SMART Health Links (links stored in the repository's database): built after Onfhir.apply as well
+  lazy val shlRoute: Route = ShlModule.route(Onfhir.actorSystem)
+
   // Initialize onFHIR for R4
   val onfhir = Onfhir.apply(
     fhirConfigurator = new FhirR4Configurator(),
@@ -35,11 +41,12 @@ object Boot extends App {
       if (io.onfhir.config.OnfhirConfig.authzConfig.authorizationMethod == io.onfhir.api.AUTHZ_METHOD_FHIR_ON_SMART)
         Some(new StageSmartAuthorizer)
       else None,
-    cdsRoute = Some(ctx => cdsRoute(ctx))
+    cdsRoute = Some(ctx => (cdsRoute ~ shlRoute)(ctx))
   )
 
   // Build the CDS module now, so that a problem in the CDS definitions stops the start-up instead of the first CDS call
   cdsRoute
+  shlRoute
 
   // Store the STAGE ValueSets and Questionnaires
   StageInitializer.registerStageResources()
