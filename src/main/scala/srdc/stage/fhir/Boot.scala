@@ -30,6 +30,11 @@ object Boot extends App {
   val onfhir = Onfhir.apply(
     fhirConfigurator = new FhirR4Configurator(),
     fhirOperationLibraries = Seq(new FhirOperationHandlerFactory(stageFhirOperations)),
+    // SMART authorization with patient scopes only for the Patient compartment (see StageSmartAuthorizer)
+    customAuthorizer =
+      if (io.onfhir.config.OnfhirConfig.authzConfig.authorizationMethod == io.onfhir.api.AUTHZ_METHOD_FHIR_ON_SMART)
+        Some(new StageSmartAuthorizer)
+      else None,
     cdsRoute = Some(ctx => cdsRoute(ctx))
   )
 

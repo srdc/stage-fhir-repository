@@ -40,6 +40,14 @@ STAGE_PATIENTS = [
 ]
 
 
+# Practitioner users of realm smart (the apps read the user's own record), in both repositories
+PRACTITIONERS = [
+    {'resourceType': 'Practitioner', 'id': '3c670b96-8657-4fe7-bc48-b4352a2b5284',  # anna_svensson
+     'identifier': [{'system': 'http://www.inera.se/TJANSTER--PROJEKT/HSA/', 'value': '3c670b96-8657-4fe7-bc48-b4352a2b5284'}],
+     'name': [{'family': 'Svensson', 'given': ['Anna']}]},
+]
+
+
 def get(url):
     with urllib.request.urlopen(urllib.request.Request(url, headers={'Accept': 'application/fhir+json'})) as r:
         return json.load(r)
@@ -122,7 +130,7 @@ def load():
     access_token = token(context)
     failed = 0
     for repository, base in REPOSITORIES.items():
-        bundles = json.loads((SEED_DIR / f'{repository}.json').read_text(encoding='utf-8'))
+        bundles = [batch(PRACTITIONERS)] + json.loads((SEED_DIR / f'{repository}.json').read_text(encoding='utf-8'))
         for bundle in bundles:
             request = urllib.request.Request(base, data=json.dumps(bundle).encode(), method='POST', headers={
                 'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/fhir+json',
@@ -132,8 +140,8 @@ def load():
             statuses = [e.get('response', {}).get('status', '') for e in response.get('entry', [])]
             errors = [s for s in statuses if not s.startswith('2')]
             failed += len(errors)
-            patient = bundle['entry'][0]['resource']['id']
-            print(f'{repository} Patient/{patient}: {len(statuses) - len(errors)} written'
+            first = bundle['entry'][0]['resource']
+            print(f'{repository} {first["resourceType"]}/{first["id"]}: {len(statuses) - len(errors)} written'
                   + (f', {len(errors)} failed ({", ".join(sorted(set(errors)))})' if errors else ''))
     return failed
 
