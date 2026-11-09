@@ -141,7 +141,9 @@ services:
       - stage-testing
 
   stage-onauth:
-    image: ${ONAUTH_IMAGE:-nexus.srdc.com.tr:18445/stage/onauth:latest}
+    # built from the stage-onauth checkout (docker build -t stage/onauth:testing .): its entrypoint points the
+    # onauth-manager paths to /stage-onauth, which the nexus image (2026-10-06) does not do yet
+    image: ${ONAUTH_IMAGE:-stage/onauth:testing}
     container_name: stage-testing-onauth
     depends_on:
       - mongo

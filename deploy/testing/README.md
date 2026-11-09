@@ -58,7 +58,10 @@ cd SRDC/fhir-rag-med && docker build -t fhir-rag-med .
 cd SRDC/onfhir-feast && mvn package -DskipTests   # onfhir-feast-server/target/onfhir-feast-standalone.jar
 ```
 
-onAuth and the SHL server: the kroniq images (`nexus.srdc.com.tr:18445/stage/onauth`, `.../stage/shl-server`); other
+onAuth: built from the stage-onauth checkout, `cd stage-onauth && docker build -t stage/onauth:testing .` (its
+entrypoint points onauth-manager's built-in `/onauth` paths to `/stage-onauth`; the nexus image of 2026-10-06 does not,
+and its login page then redirects to `/onauth/onauth-manager/...`). The SHL server: the kroniq image
+(`nexus.srdc.com.tr:18445/stage/shl-server`); other
 images via `.env` (`FHIR_IMAGE`, `SMART_APPS_IMAGE`, `ONAUTH_IMAGE`, `SHL_IMAGE`, `SHAP_CLIENT_IMAGE`,
 `FHIR_RAG_MED_IMAGE`).
 
