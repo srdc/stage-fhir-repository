@@ -91,11 +91,16 @@ def test_management_token_belongs_to_its_link(server):
     assert server.revoke(one['id'], two['managementToken']).status_code == 403
 
 
-# Link owners: only on servers with SHL_OWNER_JWKS_URL (onAuth); the local simulation has them disabled
+# Link owners: on servers that validate the users' access tokens (the repository with FHIR authorization; the Node server
+# with SHL_OWNER_JWKS_URL)
+
+def owners_enabled(server) -> bool:
+    return server.request('GET', '/shl/owned').status_code != 404
+
 
 def test_owned_links_disabled(server):
-    if os.environ.get('SHL_OWNER_TOKEN'):
-        pytest.skip('owners are enabled (SHL_OWNER_TOKEN is set)')
+    if owners_enabled(server):
+        pytest.skip('link owners are enabled on this server')
     response = server.request('GET', '/shl/owned', headers={'Authorization': 'Bearer x'})
     assert response.status_code == 404 and response.json() == {'error': 'Link owners are not enabled on this server.'}
     # a token sent when creating is ignored
@@ -111,6 +116,8 @@ def owner_tokens():
 
 
 def test_owned_links(server, owner_tokens):
+    if not owners_enabled(server):
+        pytest.skip('link owners are not enabled on this server')
     mine, theirs = owner_tokens
     owned = lambda token: server.request('GET', '/shl/owned', headers={'Authorization': 'Bearer ' + token} if token else {})
     assert owned(None).status_code == 401 and owned(None).json() == {'error': 'A valid access token is required.'}

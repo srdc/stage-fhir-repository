@@ -1,5 +1,6 @@
 # STAGE and EHR repositories on https://kroniq.srdc.com.tr, behind the host's nginx (see nginx-locations.conf).
-# Each: its own FHIR repository (database, SMART Health Card signing key, issuer = public root URL) and SHL server.
+# Each: its own FHIR repository (database, SMART Health Card signing key, issuer = public root URL), serving its CDS Hooks
+# services and SMART Health Links (/shl, links in its database) as well.
 # EHR is the second repository for the xShare (SMART Health Cards/Links) tests.
 #   docker compose --env-file .env up -d
 # Replaces the old compose (stage-repo + stage-repo-mongo): same network, resource limits, MongoDB container and volume.
@@ -12,8 +13,6 @@ volumes:
   vstagerepomongo:
     external: true
     name: ${STAGE_MONGO_VOLUME}
-  stage-shl-data:
-  shl-ehr-data:
 
 networks:
   stage-network:
@@ -55,17 +54,6 @@ x-fhir: &fhir
   networks:
     - stage-network
 
-x-shl: &shl
-  image: ${SHL_IMAGE}
-  restart: always
-  networks:
-    - stage-network
-  deploy:
-    resources:
-      limits:
-        cpus: "0.5"
-        memory: "512M"
-
 services:
   stage-repo-mongo:
     <<: *limits
@@ -90,6 +78,9 @@ services:
       - FHIR_ROOT_URL=${PUBLIC_HOST}${STAGE_FHIR_PATH}
       - JWKS_PATH=/repo/fhir-conf/jwks.json
       - SHC_SIGNING_KEY_ID=Fd_ncCoG4zYPoNit-tYEQ4YLQzraKqQ-kH1r8PN9TW0
+      # SMART Health Links: manifest URLs are built from it (nginx maps <path>/shl to <server>/shl; keep
+      # <base>/shl/<id>/m under 128 characters)
+      - SHL_PUBLIC_BASE_URL=${PUBLIC_HOST}${STAGE_SHL_PATH}
 
   ehr-fhir:
     <<: *fhir
@@ -103,29 +94,4 @@ services:
       - FHIR_ROOT_URL=${PUBLIC_HOST}${EHR_FHIR_PATH}
       - JWKS_PATH=/repo/fhir-conf/jwks-ehr.json
       - SHC_SIGNING_KEY_ID=ctJZJqbAj5pk3kj3DRR2woQgIu-fXVH5hTQm8skB880
-
-  stage-shl:
-    <<: *shl
-    container_name: stage-shl
-    ports:
-      - 127.0.0.1:${STAGE_SHL_PORT}:3000
-    environment:
-      - NODE_ENV=production
-      # manifest URLs in the links are built from it (keep under 128 characters with /shl/<id>/m)
-      - PUBLIC_BASE_URL=${PUBLIC_HOST}${STAGE_SHL_PATH}
-      # nginx on the host: client IPs from X-Forwarded-For (rate limits, passcode attempts)
-      - TRUST_PROXY=1
-    volumes:
-      - stage-shl-data:/home/node/app/shc
-
-  shl-ehr:
-    <<: *shl
-    container_name: shl-ehr
-    ports:
-      - 127.0.0.1:${EHR_SHL_PORT}:3000
-    environment:
-      - NODE_ENV=production
-      - PUBLIC_BASE_URL=${PUBLIC_HOST}${EHR_SHL_PATH}
-      - TRUST_PROXY=1
-    volumes:
-      - shl-ehr-data:/home/node/app/shc
+      - SHL_PUBLIC_BASE_URL=${PUBLIC_HOST}${EHR_SHL_PATH}

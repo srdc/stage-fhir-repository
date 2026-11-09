@@ -7,7 +7,7 @@ with the same paths, so the apps, onAuth and the repositories behave as on https
 |---|---|
 | `/stage-fhir` (FHIR, CDS Hooks under `/stage-fhir/cds-hooks`) | stage-fhir (`stage/fhir-repository:testing`, database `stage`, also on 127.0.0.1:7702) |
 | `/ehr` (FHIR, CDS Hooks under `/ehr/cds-hooks`) | ehr-fhir (database `ehr`, also on 127.0.0.1:7707) |
-| `/stage-shl`, `/shl-ehr` | SHL servers |
+| `/stage-shl/shl`, `/shl-ehr/shl` | SMART Health Links of stage-fhir and ehr-fhir (`<server>/shl`, links in each database's `shl_links`) |
 | `/stage-onauth` | onAuth (realm smart, database `stage_onauth`) |
 | `/smart-apps` | smart-apps (`/smart-apps/risk-prediction/`, `/qrisk3/`, `/dashboard/`) |
 
@@ -60,9 +60,8 @@ cd SRDC/onfhir-feast && mvn package -DskipTests   # onfhir-feast-server/target/o
 
 onAuth: built from the stage-onauth checkout, `cd stage-onauth && docker build -t stage/onauth:testing .` (its
 entrypoint points onauth-manager's built-in `/onauth` paths to `/stage-onauth`; the nexus image of 2026-10-06 does not,
-and its login page then redirects to `/onauth/onauth-manager/...`). The SHL server: the kroniq image
-(`nexus.srdc.com.tr:18445/stage/shl-server`); other
-images via `.env` (`FHIR_IMAGE`, `SMART_APPS_IMAGE`, `ONAUTH_IMAGE`, `SHL_IMAGE`, `SHAP_CLIENT_IMAGE`,
+and its login page then redirects to `/onauth/onauth-manager/...`). Other
+images via `.env` (`FHIR_IMAGE`, `SMART_APPS_IMAGE`, `ONAUTH_IMAGE`, `SHL_IMAGE` (the Node reference), `SHAP_CLIENT_IMAGE`,
 `FHIR_RAG_MED_IMAGE`).
 
 The apps' docker environments take the host from the page (`window.location.origin`), so the same image works on
@@ -131,3 +130,10 @@ docker exec stage-testing-nginx curl -s 'http://onfhir-feast:8085/onfhir-feast/a
 ```
 
 (Git Bash curl: add `--ssl-no-revoke` for the mkcert certificate.)
+
+SMART Health Links: the conformance tests in `shl-conformance/` (see its README), against the repository's SHL and, for
+comparison, the former Node shl-server (`docker compose --profile shl-reference up -d node-shl`, at /node-shl):
+
+```
+SHL_URL=https://stage.testing.eu/stage-shl SHL_REFERENCE_URL=https://stage.testing.eu/node-shl python -m pytest -q shl-conformance
+```

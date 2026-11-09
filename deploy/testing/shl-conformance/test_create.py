@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 import pytest
 
 from shl import (SAMPLE_BUNDLE, SAMPLE_PATIENT, SAMPLE_VC, Jwe, b64url_encode, decode_qr, decode_shlink,
-                 is_b64url_token, js_json)
+                 content_value, is_b64url_token, is_node)
 
 SHC = 'application/smart-health-card'
 FHIR = 'application/fhir+json'
@@ -36,17 +36,17 @@ def test_also_created_at_shl_root(server):
     assert response.status_code == 201 and response.json()['payload']['url'].endswith('/m')
 
 
-def test_shlink_encodes_the_payload_exactly(server):
-    """shlink:/ + base64url (no padding) of JSON.stringify(payload), in the order url, key, exp, flag, label"""
+def test_shlink_encodes_the_payload(server):
+    """shlink:/ + base64url (no padding) of the payload JSON; payload fields in the order url, key, exp, flag, label"""
     exp = int(time.time()) + 3600
     link = server.created({'shc': SAMPLE_VC, 'label': 'Yılmaz 😀', 'exp': exp, 'flag': 'L', 'passcode': '1234'})
     payload = link['payload']
     assert list(payload) == ['url', 'key', 'exp', 'flag', 'label']
     assert payload['exp'] == exp and payload['flag'] == 'LP'
     raw, decoded = decode_shlink(link['shlink'])
-    assert decoded == payload
-    assert raw == js_json(payload).encode('utf-8')
-    assert link['shlink'] == 'shlink:/' + b64url_encode(js_json(payload).encode('utf-8'))
+    assert decoded == payload and list(decoded) == list(payload)
+    encoded = link['shlink'][len('shlink:/'):]
+    assert not set(encoded) & set('=+/') and b64url_encode(raw) == encoded
 
 
 def test_qr_code(server):
@@ -70,8 +70,8 @@ def test_shc_file(server, shc):
     [file] = server.files(link)
     expected = {'verifiableCredential': [shc] if isinstance(shc, str) else shc if isinstance(shc, list) else shc['verifiableCredential']}
     assert file['contentType'] == SHC
-    assert file['plaintext'] == js_json(expected).encode('utf-8')
-    assert Jwe(file['jwe']).header_bytes == b'{"alg":"dir","enc":"A256GCM","cty":"application/smart-health-card"}'
+    assert json.loads(file['plaintext']) == expected
+    assert Jwe(file['jwe']).header == {'alg': 'dir', 'enc': 'A256GCM', 'cty': 'application/smart-health-card'}
 
 
 def test_files_in_order_and_content_types(server):
@@ -85,8 +85,8 @@ def test_files_in_order_and_content_types(server):
     files = server.files(link)
     assert [f['contentType'] for f in files] == [SHC, FHIR, FHIR, FHIR + ';fhirVersion=4.0.1', 'application/smart-api-access']
     assert [Jwe(f['jwe']).header['cty'] for f in files] == [f['contentType'] for f in files]
-    assert files[1]['plaintext'] == js_json(SAMPLE_BUNDLE).encode('utf-8')
-    assert files[3]['plaintext'] == js_json(SAMPLE_PATIENT).encode('utf-8')
+    assert json.loads(files[1]['plaintext']) == SAMPLE_BUNDLE
+    assert json.loads(files[3]['plaintext']) == SAMPLE_PATIENT
     assert files[4]['plaintext'] == b'{"aud":"x"}'
     # a new nonce for every encryption
     assert len({Jwe(f['jwe']).iv_b64 for f in files}) == len(files)
@@ -97,19 +97,28 @@ def test_single_fhir_resource(server):
     assert file['contentType'] == FHIR and json.loads(file['plaintext']) == SAMPLE_PATIENT
 
 
-def test_content_is_serialized_as_json_stringify(server):
-    """The Node server re-serializes the request JSON (JSON.stringify): numbers are normalized, e.g. a FHIR decimal 1.50
-    becomes 1.5 and integers beyond 2^53 lose precision. A replacement that keeps the original text differs here: this
-    test pins the Node behaviour; see README.md before changing it."""
-    raw = ('{"fhir":{"resourceType":"Observation","valueQuantity":{"value":1.50,"unit":"mmol/L"},"a":1.0,"b":1e21,'
-           '"c":1e-7,"d":-0,"e":12345678901234567890,"f":0.1,"g":2.50e2,"h":"Yılmaz 😀 </script> \\u2028",'
-           '"i":[true,false,null]}}').encode('utf-8')
-    response = server.create(raw=raw)
+TRICKY_JSON = ('{"resourceType":"Observation","valueQuantity":{"value":1.50,"unit":"mmol/L"},"a":1.0,"b":1e21,'
+               '"c":1e-7,"d":-0,"e":12345678901234567890,"f":0.1,"g":2.50e2,"h":"Yılmaz 😀 </script> \\u2028",'
+               '"i":[true,false,null],"j":{},"k":[]}')
+
+
+def test_content_keeps_its_json_values(server):
+    """Numbers, Unicode, escapes, empty objects and arrays: the shared file holds the same JSON values"""
+    response = server.create(raw=('{"fhir":' + TRICKY_JSON + '}').encode('utf-8'))
     assert response.status_code == 201
     [file] = server.files(response.json())
-    assert file['plaintext'].decode('utf-8') == (
-        '{"resourceType":"Observation","valueQuantity":{"value":1.5,"unit":"mmol/L"},"a":1,"b":1e+21,"c":1e-7,"d":0,'
-        '"e":12345678901234567000,"f":0.1,"g":250,"h":"Yılmaz 😀 </script>  ","i":[true,false,null]}')
+    assert content_value(file['plaintext']) == content_value(TRICKY_JSON.encode('utf-8'))
+    assert list(json.loads(file['plaintext'])) == list(json.loads(TRICKY_JSON))  # member order
+
+
+def test_fhir_decimals_keep_their_precision(server):
+    """FHIR decimals are shared as written (1.50 stays 1.50); the Node server rewrote them (1.5), see README.md"""
+    response = server.create(raw=('{"fhir":' + TRICKY_JSON + '}').encode('utf-8'))
+    if is_node(response):
+        pytest.skip('the Node shl-server re-serializes numbers (JSON.stringify)')
+    [file] = server.files(response.json())
+    text = file['plaintext'].decode('utf-8')
+    assert '"value":1.50' in text and '12345678901234567890' in text
 
 
 @pytest.mark.parametrize('requested,passcode,expected', [

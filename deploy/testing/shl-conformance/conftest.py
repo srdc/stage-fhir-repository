@@ -4,8 +4,7 @@ Configuration (environment variables):
   SHL_REFERENCE_URL  the Node shl-server to compare with (test_differential.py); skipped when not set
   SHL_CA_BUNDLE      CA file for TLS (default: the mkcert root of the local simulation)
   SHL_OWNER_TOKEN, SHL_OWNER_TOKEN_2
-                     access tokens of two different users, for the link owner tests (servers with SHL_OWNER_JWKS_URL)
-  SHL_FIXTURES       links created earlier on the Node server (fixtures.py), for test_existing_links.py
+                     access tokens of two different users of the repository, for the link owner tests
 """
 import os
 

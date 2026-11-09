@@ -1,6 +1,6 @@
 # Local simulation of the STAGE server on https://stage.testing.eu (127.0.0.1 in the Windows hosts file), with the same
-# paths as https://kroniq.srdc.com.tr (deploy/kroniq): STAGE and EHR repositories (FHIR + CDS Hooks), SHL servers,
-# onAuth and the smart-apps, behind an nginx with a mkcert certificate. See README.md.
+# paths as https://kroniq.srdc.com.tr (deploy/kroniq): STAGE and EHR repositories (FHIR, CDS Hooks and SMART Health
+# Links), onAuth and the smart-apps, behind an nginx with a mkcert certificate. See README.md.
 #   ./setup.sh                      (once: certificate, onAuth configuration, .env)
 #   docker compose up -d
 # fhir-conf, cds-conf and application-docker.conf of this repository are mounted (the private keys never go into an
@@ -10,8 +10,7 @@ name: stage-testing
 volumes:
   mongo-data:
   onauth-redis-data:
-  stage-shl-data:
-  shl-ehr-data:
+  node-shl-data:
   rag-redis-data:
   rag-chroma:
   rag-hf-cache:
@@ -88,6 +87,8 @@ services:
       - ONFHIR_FEAST_URL=${ONFHIR_FEAST_URL:-http://onfhir-feast:8085/onfhir-feast/api}
       # onfhir-feast data source of this repository (local/onfhir-feast/application.conf)
       - ONFHIR_FEAST_DATA_SOURCE_ID=stageFhir
+      # SMART Health Links of this repository: nginx maps /stage-shl/shl/... to <server>/shl/...
+      - SHL_PUBLIC_BASE_URL=https://stage.testing.eu/stage-shl
     ports:
       # direct access, bypassing nginx (same port as deploy/kroniq)
       - 127.0.0.1:7702:8080
@@ -107,28 +108,23 @@ services:
       - LLM_SERVICE_URL=${LLM_SERVICE_URL:-http://fhir-rag-med:8000}
       - ONFHIR_FEAST_URL=${ONFHIR_FEAST_URL:-http://onfhir-feast:8085/onfhir-feast/api}
       - ONFHIR_FEAST_DATA_SOURCE_ID=ehrFhir
+      - SHL_PUBLIC_BASE_URL=https://stage.testing.eu/shl-ehr
     ports:
       - 127.0.0.1:7707:8080
 
-  stage-shl:
+  # The former Node shl-server, replaced by the repositories' SMART Health Links: only as the reference of the
+  # conformance tests (shl-conformance, SHL_REFERENCE_URL=https://stage.testing.eu/node-shl).
+  #   docker compose --profile shl-reference up -d node-shl
+  node-shl:
     <<: *shl
-    container_name: stage-testing-stage-shl
+    container_name: stage-testing-node-shl
+    profiles: [shl-reference]
     environment:
       - NODE_ENV=production
-      - PUBLIC_BASE_URL=https://stage.testing.eu/stage-shl
+      - PUBLIC_BASE_URL=https://stage.testing.eu/node-shl
       - TRUST_PROXY=1
     volumes:
-      - stage-shl-data:/home/node/app/shc
-
-  shl-ehr:
-    <<: *shl
-    container_name: stage-testing-shl-ehr
-    environment:
-      - NODE_ENV=production
-      - PUBLIC_BASE_URL=https://stage.testing.eu/shl-ehr
-      - TRUST_PROXY=1
-    volumes:
-      - shl-ehr-data:/home/node/app/shc
+      - node-shl-data:/home/node/app/shc
 
   onauth-redis:
     image: library/redis:5.0
@@ -283,8 +279,6 @@ services:
     depends_on:
       - stage-fhir
       - ehr-fhir
-      - stage-shl
-      - shl-ehr
       - stage-onauth
       - smart-apps
     volumes:

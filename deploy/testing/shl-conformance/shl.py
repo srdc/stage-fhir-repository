@@ -2,8 +2,9 @@
 Client and checks for SMART Health Link servers (the Node shl-server and its replacement), used by the tests.
 
 Everything a server generates at random (link id, key, management token, file location tickets, the JWE nonce) differs
-between two runs, so "identical" means: the same HTTP contract (statuses, headers, JSON shapes and messages), the same
-shlink:/ encoding of the same payload, the same JWE header, and byte-identical decrypted file contents.
+between two runs. "The same" means: the same HTTP contract (statuses, headers, JSON shapes and messages), a shlink:/ that
+decodes to the payload, the same JWE parameters, and decrypted files with the same content: the same JSON values
+(content_value), not the same bytes.
 """
 import base64
 import io
@@ -27,9 +28,18 @@ def b64url_encode(data: bytes) -> str:
     return base64.urlsafe_b64encode(data).decode().rstrip('=')
 
 
-def js_json(value) -> str:
-    """JSON.stringify of a value without floats (dicts keep their order): what the Node server encrypts"""
-    return json.dumps(value, separators=(',', ':'), ensure_ascii=False)
+def content_value(plaintext: bytes):
+    """What a decrypted file means: its JSON value (numbers compared as numbers: 1.50 == 1.5), else its text"""
+    text = plaintext.decode('utf-8')
+    try:
+        return json.loads(text, parse_int=float, parse_float=float)
+    except ValueError:
+        return text
+
+
+def is_node(response) -> bool:
+    """Whether a response comes from the Node shl-server (Express)"""
+    return response.headers.get('X-Powered-By') == 'Express'
 
 
 def is_b64url_token(value, length=ID_LENGTH) -> bool:
@@ -68,14 +78,6 @@ class Jwe:
         # the protected header (as base64url ASCII) is the additional authenticated data
         return AESGCM(b64url_decode(key_b64)).decrypt(iv, b64url_decode(self.ciphertext_b64) + tag,
                                                       self.header_b64.encode('ascii'))
-
-
-def encrypt_jwe(plaintext: bytes, key_b64: str, content_type: str) -> str:
-    """A compact JWE as the Node server writes it (header {"alg":"dir","enc":"A256GCM","cty":...}), e.g. for legacy files"""
-    header = b64url_encode(js_json({'alg': 'dir', 'enc': 'A256GCM', 'cty': content_type}).encode())
-    iv = os.urandom(12)
-    sealed = AESGCM(b64url_decode(key_b64)).encrypt(iv, plaintext, header.encode('ascii'))
-    return '.'.join([header, '', b64url_encode(iv), b64url_encode(sealed[:-16]), b64url_encode(sealed[-16:])])
 
 
 def decode_shlink(shlink: str) -> tuple[bytes, dict]:

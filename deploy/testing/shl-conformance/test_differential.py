@@ -1,13 +1,14 @@
 """
 The server under test (SHL_URL) against the Node shl-server (SHL_REFERENCE_URL): the same requests, compared after
-removing what is random (ids, keys, tokens, nonces, times). Catches what the other tests do not pin down explicitly.
+removing what is random (ids, keys, tokens, nonces, times); files by their content (JSON values), not their bytes.
+Catches what the other tests do not pin down explicitly.
 """
 import json
 import time
 
 import pytest
 
-from shl import SAMPLE_BUNDLE, SAMPLE_PATIENT, SAMPLE_VC, Jwe, decode_qr, decode_shlink
+from shl import SAMPLE_BUNDLE, SAMPLE_PATIENT, SAMPLE_VC, Jwe, content_value, decode_qr, decode_shlink
 
 FUTURE = int(time.time()) + 86400
 
@@ -46,7 +47,7 @@ def observe_create(server, body):
         'keys': list(link),
         'payload': {**payload, 'url': payload['url'].replace(server.base, '<base>').replace(link['id'], '<id>'),
                     'key': len(payload['key'])},
-        'shlink-is-payload': raw_payload == json.dumps(payload, separators=(',', ':'), ensure_ascii=False).encode(),
+        'shlink-is-payload': json.loads(raw_payload) == payload,
         'qr': (text == link['shlink'], ec_level, size),
         'ownerBound': link['ownerBound'],
     })
@@ -59,12 +60,12 @@ def observe_files(server, link, passcode=None):
         response = server.request('GET', link['payload']['url'], params={'recipient': 'x'})
         jwe = Jwe(response.content.decode())
         return [{'status': response.status_code, 'type': response.headers['Content-Type'],
-                 'header': jwe.header_bytes, 'plaintext': jwe.decrypt(link['payload']['key'])}]
+                 'header': jwe.header, 'content': content_value(jwe.decrypt(link['payload']['key']))}]
     observed = []
     for limit in (None, 0):
         files = server.files(link, passcode=passcode, embedded_length_max=limit)
-        observed.append([{'contentType': f['contentType'], 'entry': sorted(f['entry']), 'header': Jwe(f['jwe']).header_bytes,
-                          'plaintext': f['plaintext']} for f in files])
+        observed.append([{'contentType': f['contentType'], 'entry': sorted(f['entry']), 'header': Jwe(f['jwe']).header,
+                          'content': content_value(f['plaintext'])} for f in files])
     return observed
 
 
@@ -100,7 +101,7 @@ def test_same_manifest_answers(server, reference, name):
 
 
 @pytest.mark.parametrize('path,method', [('/shl/' + 'A' * 43 + '/m', 'POST'), ('/shl/' + 'A' * 43 + '/m', 'GET'),
-                                         ('/shl/x/f/y', 'GET'), ('/shl/' + 'A' * 43, 'DELETE'), ('/shl/owned', 'GET')])
+                                         ('/shl/x/f/y', 'GET'), ('/shl/' + 'A' * 43, 'DELETE')])
 def test_same_answers_for_unknown_links(server, reference, path, method):
     def observe(target):
         response = target.request(method, path, json={'recipient': 'x'} if method == 'POST' else None)
