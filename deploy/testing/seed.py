@@ -11,7 +11,14 @@ Test patients of https://stage.testing.eu (see README.md).
 
 STAGE gets the patients of the realm's patient users (Patient id = the user's patient id); users without a record in
 the source get a copy of another source patient's record. EHR gets all patients of the source (clinicians select them).
+
+STAGE also gets the WP6/WP7 feature extraction patients of the fhir-path-feature-extraction checkout
+(FEATURE_EXTRACTION_DIR, default ../../../fhir-path-feature-extraction), as their transaction bundles (fixed ids, PUT):
+the storyboard patients sb-p1..sb-p4 (storyboard_patients/baseline), wp6-test-complete (test_data) and the profiles
+123456..523456 (tests/test_data). Loading them again overwrites their baseline resources; to also remove what a demo
+run added (saved forms, care plans, ...) use storyboard_patients/reset_patients.py with a token.
 """
+import os
 import argparse
 import base64
 import json
@@ -38,6 +45,19 @@ STAGE_PATIENTS = [
     ('49d47569-6e48-49fa-b709-bfe13cffe084', 'pa01', ('Ahmet', 'Kilic'), 'male'),                  # ahmet_kilic
     ('295e1a06-5b7b-4176-9ecf-c482e4190f39', 'pa-demo-01', ('John', 'Wick'), 'male'),              # john_wick
 ]
+
+
+# Transaction bundles of the fhir-path-feature-extraction checkout, loaded into STAGE
+FEATURE_EXTRACTION_DIR = pathlib.Path(os.environ.get('FEATURE_EXTRACTION_DIR', HERE / '../../../fhir-path-feature-extraction'))
+FEATURE_EXTRACTION_BUNDLES = ['storyboard_patients/baseline/*-bundle.json', 'test_data/wp6-complete-patient-bundle.json',
+                              'tests/test_data/profile*.json']
+
+
+def feature_extraction_bundles():
+    if not FEATURE_EXTRACTION_DIR.is_dir():
+        print(f'{FEATURE_EXTRACTION_DIR} not found: the feature extraction patients are not loaded')
+        return []
+    return [p for pattern in FEATURE_EXTRACTION_BUNDLES for p in sorted(FEATURE_EXTRACTION_DIR.glob(pattern))]
 
 
 # Practitioner users of realm smart (the apps read the user's own record), in both repositories
@@ -131,6 +151,8 @@ def load():
     failed = 0
     for repository, base in REPOSITORIES.items():
         bundles = [batch(PRACTITIONERS)] + json.loads((SEED_DIR / f'{repository}.json').read_text(encoding='utf-8'))
+        if repository == 'stage':
+            bundles += [json.loads(p.read_text(encoding='utf-8')) for p in feature_extraction_bundles()]
         for bundle in bundles:
             request = urllib.request.Request(base, data=json.dumps(bundle).encode(), method='POST', headers={
                 'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/fhir+json',
