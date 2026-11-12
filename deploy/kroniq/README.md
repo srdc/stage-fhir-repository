@@ -35,7 +35,7 @@ checkout first), then pushed to nexus:
 | `nexus.srdc.com.tr:18445/stage/fhir-repository` | `cd stage-fhir-repository && mvn clean package -DskipTests && docker build -t nexus.srdc.com.tr:18445/stage/fhir-repository .` | STAGE repository, CDS services, SMART Health Links (configuration mounted) |
 | `nexus.srdc.com.tr:18445/stage/smart-apps` | `cd smart-apps && npm ci && build-docker.bat`, then `docker tag srdc/smart-apps nexus.srdc.com.tr:18445/stage/smart-apps` | the apps |
 | `nexus.srdc.com.tr:18445/stage/onauth` | `cd stage-onauth && ./build.sh` (its README: onauth-server and onauth-manager checkouts) | onAuth (configuration mounted) |
-| `nexus.srdc.com.tr:18445/stage/shap-client` | `cd stage-fhir-repository && docker build -t nexus.srdc.com.tr:18445/stage/shap-client --build-context shap-client=../shap-client -f deploy/kroniq/ml/shap-client.Dockerfile deploy/testing/ml/shap-client` | shap-client code and models (incl. `data/models/stage2`, not in git) |
+| `nexus.srdc.com.tr:18445/stage/shap-client` | `cd stage-fhir-repository && docker build -t nexus.srdc.com.tr:18445/stage/shap-client --build-context shap-client=../shap-client -f deploy/kroniq/ml/shap-client.Dockerfile deploy/testing/ml/shap-client` | shap-client code and models (incl. the STAGE model package `data/models/stage_v0_3_1`: only its `metadata.json` is in git, the model ZIP is extracted into it) |
 | `nexus.srdc.com.tr:18445/stage/fhir-rag-med` | `cd fhir-rag-med && docker build -t nexus.srdc.com.tr:18445/stage/fhir-rag-med .` | fhir-rag-med |
 
 ```

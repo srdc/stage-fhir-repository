@@ -1,5 +1,5 @@
 # shap-client for kroniq: the Python runtime of deploy/testing (ml/shap-client) with the code (app/) and the models
-# (data/models, including the stage2 package) of the shap-client checkout built in. From stage-fhir-repository:
+# (data/models, including the STAGE model package stage_v0_3_1) of the shap-client checkout built in. From stage-fhir-repository:
 #   docker build -t nexus.srdc.com.tr:18445/stage/shap-client --build-context shap-client=<shap-client checkout> \
 #     -f deploy/kroniq/ml/shap-client.Dockerfile deploy/testing/ml/shap-client
 FROM python:3.13-slim

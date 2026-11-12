@@ -16,6 +16,10 @@ object MLModelClient {
 
   implicit val formats: DefaultFormats.type = DefaultFormats
 
+  // Model name of the STAGE models in shap-client's generic API (/models/{model_name}/...): an alias of the deployed
+  // model version (e.g. stage_v0_3_1)
+  val StageModel = "stage"
+
   case class LocalPlotRequest(
                                features: Map[String, Any],
                                patient_id: Option[String] = None,
@@ -164,7 +168,7 @@ object MLModelClient {
 
     val httpRequest = HttpRequest(
       method = HttpMethods.POST,
-      uri = s"$mlServiceUrl/stage/plots/local",
+      uri = s"$mlServiceUrl/models/$StageModel/plots/local",
       entity = HttpEntity(
         ContentTypes.`application/json`,
         requestJson
@@ -242,7 +246,7 @@ object MLModelClient {
 
     val httpRequest = HttpRequest(
       method = HttpMethods.POST,
-      uri = s"$mlServiceUrl/stage/predict",
+      uri = s"$mlServiceUrl/models/$StageModel/predict",
       entity = HttpEntity(
         ContentTypes.`application/json`,
         requestJson
@@ -486,7 +490,7 @@ object MLModelClient {
                  (implicit system: ActorSystem, ec: ExecutionContext): Option[List[String]] = {
     val httpRequest = HttpRequest(
       method = HttpMethods.GET,
-      uri = s"$mlServiceUrl/diseases"
+      uri = s"$mlServiceUrl/models/$StageModel/diseases"
     )
 
     try {
