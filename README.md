@@ -60,7 +60,7 @@ layout: the `*_DIR` variables in `deploy/testing/.env`, see its README):
 |---|---|---|---|---|
 | `onfhir` | `git@github.com:srdc/onfhir.git` | `smart-health-cards-2.13` | 3.4.1-SNAPSHOT (Scala 2.13) | building this repository |
 | `onfhir-cds` | `git@gitlab.srdc.com.tr:onfhir/onfhir-cds.git` | `onfhir-cds-2.13-stage` | 1.1-SNAPSHOT | building this repository (CDS services) |
-| `stage-fhir-repository` | `git@github.com:srdc/stage-fhir-repository.git` | `merge-smart-cds` | 1.0 | this repository |
+| `stage-fhir-repository` | `git@github.com:srdc/stage-fhir-repository.git` | `main` | 1.0 | this repository |
 | `ng-smart-on-fhir` | `git@github.com:srdc/ng-smart-on-fhir.git` | `main` | 1.3.0 (npm) | the apps' SMART library; smart-apps installs it from npm, the checkout is only needed to change it |
 | `smart-apps` | `git@github.com:srdc/smart-on-fhir-web-apps.git` | `merging-ml-llm` | | the STAGE apps |
 | `stage-onauth` | `https://gitlab.srdc.com.tr/stage/stage-onauth.git` | `master` | | onAuth image and realm `smart` (`deploy/testing`) |
@@ -72,7 +72,7 @@ layout: the `*_DIR` variables in `deploy/testing/.env`, see its README):
 ```
 git clone -b smart-health-cards-2.13 git@github.com:srdc/onfhir.git
 git clone -b onfhir-cds-2.13-stage git@gitlab.srdc.com.tr:onfhir/onfhir-cds.git
-git clone -b merge-smart-cds git@github.com:srdc/stage-fhir-repository.git
+git clone -b main git@github.com:srdc/stage-fhir-repository.git
 git clone -b main git@github.com:srdc/ng-smart-on-fhir.git
 git clone -b merging-ml-llm git@github.com:srdc/smart-on-fhir-web-apps.git smart-apps
 git clone -b master https://gitlab.srdc.com.tr/stage/stage-onauth.git stage-onauth
