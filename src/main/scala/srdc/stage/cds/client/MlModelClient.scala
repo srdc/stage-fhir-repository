@@ -8,6 +8,7 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization.write
 import srdc.stage.cds.config.CdsConfig
+import srdc.stage.cds.model.StageDiseases
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, ExecutionContext, Future}
@@ -20,74 +21,19 @@ object MLModelClient {
   // model version (e.g. stage_v0_3_1)
   val StageModel = "stage"
 
+  // shap-client requires at least one disease for local plots: the selected ones, or all deployed ones (defaultDiseases)
   case class LocalPlotRequest(
                                features: Map[String, Any],
                                patient_id: Option[String] = None,
-                               diseases: Seq[String] = Seq(
-                                 "Anxiety",
-                                 "Asthma",
-                                 "Atrial_Fibrillation",
-                                 "COPD",
-                                 "Cancer",
-                                 "Chronic_Kidney_Disease",
-                                 "Chronic_Liver_Disease",
-                                 "Coronary_Heart_Disease",
-                                 "Dementia_ICD10",
-                                 "Depression",
-                                 "Diabetes_Mellitus",
-                                 "Epilepsy",
-                                 "Heart_Failure",
-                                 "Hyperlipidemia",
-                                 "Hypertension",
-                                 "Hypothyroidism",
-                                 "Multiple_Sclerosis",
-                                 "Obesity",
-                                 "Osteoarthritis",
-                                 "Osteoporosis",
-                                 "Parkinsons",
-                                 "Peripheral_Vascular_Disease",
-                                 "Rheumatoid_Arthritis",
-                                 "Severe_Mental_Illness",
-                                 "Sleep_Apnea",
-                                 "Stroke_Cerebrovascular",
-                                 "Substance_Use_Disorder"
-                               ),
+                               diseases: Seq[String],
                                plot_types: Seq[String] = Seq("waterfall")
                              )
 
-  // Request model (unchanged)
+  // diseases: None = all diseases the model predicts
   case class PredictionRequest(
                                 features: Map[String, Any],
                                 patient_id: Option[String] = None,
-                                diseases: Seq[String] = Seq(
-                                  "Anxiety",
-                                  "Asthma",
-                                  "Atrial_Fibrillation",
-                                  "COPD",
-                                  "Cancer",
-                                  "Chronic_Kidney_Disease",
-                                  "Chronic_Liver_Disease",
-                                  "Coronary_Heart_Disease",
-                                  "Dementia_ICD10",
-                                  "Depression",
-                                  "Diabetes_Mellitus",
-                                  "Epilepsy",
-                                  "Heart_Failure",
-                                  "Hyperlipidemia",
-                                  "Hypertension",
-                                  "Hypothyroidism",
-                                  "Multiple_Sclerosis",
-                                  "Obesity",
-                                  "Osteoarthritis",
-                                  "Osteoporosis",
-                                  "Parkinsons",
-                                  "Peripheral_Vascular_Disease",
-                                  "Rheumatoid_Arthritis",
-                                  "Severe_Mental_Illness",
-                                  "Sleep_Apnea",
-                                  "Stroke_Cerebrovascular",
-                                  "Substance_Use_Disorder"
-                                ),
+                                diseases: Option[Seq[String]] = None,
                                 include_shap: Boolean = true
                               )
 
@@ -122,7 +68,7 @@ object MLModelClient {
                                )
 
   /**
-   * Call ML model and get predictions for all 14 diseases with SHAP explanations
+   * Call the ML model for the selected diseases (default: all the model's diseases), with SHAP explanations
    */
   def getPredictionsWithPlots(
                       answers: Map[String, Option[Any]],
@@ -156,12 +102,10 @@ object MLModelClient {
 
     println(s"[ML Model] Extracted ${flatFeatures.size} features")
 
-    // Only the diseases the user selected (if any); otherwise the default list (the ML service ignores the
+    // Only the diseases the user selected (if any); otherwise all the model's diseases (the ML service skips the
     // ones the patient's stratum has no model for)
-    val requestBody = diseases.filter(_.nonEmpty) match {
-      case Some(selected) => LocalPlotRequest(features = flatFeatures, patient_id = patientId, diseases = selected)
-      case None => LocalPlotRequest(features = flatFeatures, patient_id = patientId)
-    }
+    val requestBody = LocalPlotRequest(features = flatFeatures, patient_id = patientId,
+      diseases = diseases.filter(_.nonEmpty).getOrElse(defaultDiseases(mlServiceUrl)))
 
     val requestJson = write(requestBody)
     println(s"[ML Model] Request JSON: $requestJson")
@@ -201,7 +145,7 @@ object MLModelClient {
   }
 
   /**
-   * Call ML model and get predictions for all 14 diseases with SHAP explanations
+   * Call the ML model for the selected diseases (default: all the model's diseases), with SHAP explanations
    */
   def getPredictions(
                       answers: Map[String, Option[Any]],
@@ -484,7 +428,15 @@ object MLModelClient {
   }
 
   /**
-   * Get list of all diseases the model can predict
+   * All diseases the STAGE model predicts: the ML service's list, or the built-in list of [[StageDiseases]] if the
+   * service cannot be reached (the prediction request then fails anyway, with the error card)
+   */
+  def defaultDiseases(mlServiceUrl: String = CdsConfig.mlServiceUrl)
+                     (implicit system: ActorSystem, ec: ExecutionContext): Seq[String] =
+    getDiseases(mlServiceUrl).filter(_.nonEmpty).getOrElse(StageDiseases.Known.map(_.name))
+
+  /**
+   * Get list of all diseases the model can predict (shap-client GET /models/stage/diseases)
    */
   def getDiseases(mlServiceUrl: String = CdsConfig.mlServiceUrl)
                  (implicit system: ActorSystem, ec: ExecutionContext): Option[List[String]] = {

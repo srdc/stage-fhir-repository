@@ -17,11 +17,11 @@ object RiskPredictionUtil {
    * Builds the ML server request inputs from the QuestionnaireResponse that onfhir-feast's
    * `stage_wp6_model_features` FeatureSet returns (via `$retrieve-feature-values&format=fhir`).
    *
-   * The FeatureSet's outputName (= the linkId of every item in that response) is the UK Biobank field code, and
-   * the ML server accepts UK Biobank codes directly as feature names, so no feature-name mapping or per-feature
-   * logic lives here: every answered item becomes `UKBB code -> value`. All transformations (mappings,
-   * aggregations, 'Yes'/'Unknown' conversions, ...) are defined in the feature mapping Excel and generated into
-   * the FeatureSet definitions.
+   * The FeatureSet's outputName (= the linkId of every item in that response) is the STAGE model's input name
+   * (e.g. `Sex 0.0`, `Age 0.0`, `Systolic blood pressure_average`), which the ML service (shap-client, model
+   * `stage`) takes as is, so no feature-name mapping or per-feature logic lives here: every answered item becomes
+   * `input name -> value`. All transformations (mappings, aggregations, 'Yes'/'Unknown' conversions, ...) are
+   * defined in the feature mapping Excel and generated into the FeatureSet definitions.
    *
    * The response groups features under synthetic parent item(s), so this descends one level, falling back to
    * the top-level item itself when it has no nested `item` array. Items without an answer are left out
