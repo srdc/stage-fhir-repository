@@ -26,14 +26,16 @@ The services share one Redis and one PostgreSQL:
 over objects created by another role; it exits when done. Another service gets a line there, a secret file in setup.sh
 and a mount. Do not set a Redis `maxmemory` eviction policy: it would also drop onAuth's sessions and tokens.
 
-The ML services of the CDS services run as containers too, from the checkouts next to this repository (mounted
-read-only, so `docker restart <container>` picks up code changes):
+The ML services of the CDS services run as containers too, from the checkouts next to this repository (the workspace
+of "Related repositories" in the main README; mounted read-only, so `docker restart <container>` picks up code changes).
+Checkouts elsewhere: set their `.env` variable (`deploy/testing/.env`, gitignored), a path relative to this folder or
+absolute, e.g. `FHIR_RAG_MED_DIR=../../../../other/fhir-rag-med`:
 
 | Container | Checkout (`.env` variable) | Used by |
 |---|---|---|
-| shap-client (`stage/shap-client:testing`: Python runtime only) | `STAGE/shap-client` (`SHAP_CLIENT_DIR`) | risk_prediction, risk_prediction_diseases |
-| fhir-rag-med (its own image, `src` mounted), Redis database 1 | `SRDC/fhir-rag-med` (`FHIR_RAG_MED_DIR`) | shap_explain, ask_llm (calls its LLM provider on the internet) |
-| onfhir-feast (`onfhir-feast-standalone.jar` and `definitions` mounted), PostgreSQL database `onfhir_feast` | `SRDC/onfhir-feast` (`ONFHIR_FEAST_DIR`) | risk_prediction_form, risk_prediction |
+| shap-client (`stage/shap-client:testing`: Python runtime only) | `shap-client` (`SHAP_CLIENT_DIR`) | risk_prediction, risk_prediction_diseases |
+| fhir-rag-med (its own image, `src` mounted), Redis database 1 | `fhir-rag-med` (`FHIR_RAG_MED_DIR`) | shap_explain, ask_llm (calls its LLM provider on the internet) |
+| onfhir-feast (`onfhir-feast-standalone.jar` and `definitions` mounted), PostgreSQL database `onfhir_feast` | `onfhir-feast` (`ONFHIR_FEAST_DIR`) | risk_prediction_form, risk_prediction |
 
 onfhir-feast reads the patients' data from the repositories (data sources `stageFhir` and `ehrFhir`) with a token of
 the client `stage-services` (client credentials, `user/*.read`), which `setup.sh` adds to the testing realm only. To use
@@ -43,14 +45,18 @@ services on the host instead, set `ML_SERVICE_URL`, `LLM_SERVICE_URL`, `ONFHIR_F
 ## 1. Once
 
 - `mkcert -install` (trusts the local CA in Windows; restart the browser. Firefox: also needs `certutil` / NSS, see mkcert).
+- The checkouts of "Related repositories" in the main README, pulled, at their branches.
 - Secrets as for kroniq, in `fhir-conf/` (gitignored): `jwks.json`, `jwks-ehr.json`, `secrets.conf`,
-  `protected-resource-server-metadata.json`; and a `stage-onauth` checkout next to this repository (`STAGE_ONAUTH_DIR`).
+  `protected-resource-server-metadata.json`; and the `stage-onauth` checkout next to this repository (`STAGE_ONAUTH_DIR`)
+  with its realm `smart` (`conf/realms/smart`).
 - `./setup.sh`: writes `local/` (gitignored): the certificate, the onAuth metadata of stage.testing.eu for the
   repositories, the onAuth configuration with realm smart (redirect URIs of all the apps on stage.testing.eu, client
   `stage-services`), the onfhir-feast configuration and the generated secrets (`stage-services.secret`,
   `postgres.secret`, `postgres-onfhir_feast.secret`). Run it again after changing those sources.
 
 ## 2. Images
+
+From the workspace (onFHIR and onfhir-cds installed first, see Build in the main README):
 
 ```
 # repository (FHIR + CDS)
@@ -59,20 +65,22 @@ cd stage-fhir-repository && mvn package -DskipTests && docker build -t stage/fhi
 #   npx ng build <app> --configuration production --base-href /smart-apps/<path>/ --deploy-url /smart-apps/<path>/
 # for qrisk2 (path qrisk), qrisk3, advance, acc_aha, score (score2), shc-generator, risk-prediction, dashboard)
 # Git Bash: export MSYS_NO_PATHCONV=1 first, or it turns --base-href /smart-apps/... into C:/Program Files/Git/smart-apps/...
+# npm ci first (ng-smart-on-fhir comes from npm)
 cd smart-apps
 npx ng build cds-hooks && npx ng build ui-components && npx ng build common
 npx ng build risk-prediction --configuration production --base-href /smart-apps/risk-prediction/ --deploy-url /smart-apps/risk-prediction/
 ...
 docker build -t srdc/smart-apps:testing -f ./docker/Dockerfile .
 # ML services
-docker build -t stage/shap-client:testing ml/shap-client
-cd SRDC/fhir-rag-med && docker build -t fhir-rag-med .
-cd SRDC/onfhir-feast && mvn package -DskipTests   # onfhir-feast-server/target/onfhir-feast-standalone.jar
+docker build -t stage/shap-client:testing stage-fhir-repository/deploy/testing/ml/shap-client
+cd fhir-rag-med && docker build -t fhir-rag-med .
+cd onfhir-feast && mvn package -DskipTests   # onfhir-feast-server/target/onfhir-feast-standalone.jar
 ```
 
-onAuth: built from the stage-onauth checkout, `cd stage-onauth && docker build -t stage/onauth:testing .` (its
-entrypoint points onauth-manager's built-in `/onauth` paths to `/stage-onauth`; the nexus image of 2026-10-06 does not,
-and its login page then redirects to `/onauth/onauth-manager/...`). Other
+onAuth: built from the stage-onauth checkout, `cd stage-onauth && IMAGE=stage/onauth:testing ./build.sh` (builds
+onauth-server and onauth-manager from their checkouts first, see its README; `./build.sh image` when they are built
+already). Its entrypoint points onauth-manager's built-in `/onauth` paths to `/stage-onauth`; the nexus image of
+2026-10-06 does not, and its login page then redirects to `/onauth/onauth-manager/...`. Other
 images via `.env` (`FHIR_IMAGE`, `SMART_APPS_IMAGE`, `ONAUTH_IMAGE`, `SHL_IMAGE` (the Node reference), `SHAP_CLIENT_IMAGE`,
 `FHIR_RAG_MED_IMAGE`).
 

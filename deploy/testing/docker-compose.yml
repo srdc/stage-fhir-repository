@@ -197,11 +197,11 @@ services:
       - REDIS_URL=redis://redis:6379/1
     volumes:
       - type: bind
-        source: ${FHIR_RAG_MED_DIR:-../../../../SRDC/fhir-rag-med}/src
+        source: ${FHIR_RAG_MED_DIR:-../../../fhir-rag-med}/src
         target: /app/src
         read_only: true
       - type: bind
-        source: ${FHIR_RAG_MED_DIR:-../../../../SRDC/fhir-rag-med}/data/shap
+        source: ${FHIR_RAG_MED_DIR:-../../../fhir-rag-med}/data/shap
         target: /app/data/shap
         read_only: true
       - rag-chroma:/app/chroma
@@ -271,11 +271,11 @@ services:
     volumes:
       # built in the onfhir-feast checkout (mvn package)
       - type: bind
-        source: ${ONFHIR_FEAST_DIR:-../../../../SRDC/onfhir-feast}/onfhir-feast-server/target/onfhir-feast-standalone.jar
+        source: ${ONFHIR_FEAST_DIR:-../../../onfhir-feast}/onfhir-feast-server/target/onfhir-feast-standalone.jar
         target: /usr/local/onfhir-feast/onfhir-feast-standalone.jar
         read_only: true
       - type: bind
-        source: ${ONFHIR_FEAST_DIR:-../../../../SRDC/onfhir-feast}/definitions
+        source: ${ONFHIR_FEAST_DIR:-../../../onfhir-feast}/definitions
         target: /usr/local/onfhir-feast/definitions
         read_only: true
       # written by setup.sh: the data sources of the repositories (with the stage-services secret)
