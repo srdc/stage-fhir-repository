@@ -1,14 +1,12 @@
 # Two separate repositories for the SMART Health Cards/Links (xShare) tests, each with its own FHIR repository
-# (database, signing key) and SMART Health Links server.
+# (database, signing key), serving its SMART Health Links itself (<server>/shl, links in its database).
 # Build the image first: mvn clean install && docker build -t nexus.srdc.com.tr:18445/stage/fhir-repository .
-#   STAGE: FHIR http://localhost:8080/fhir   SHL http://localhost:3000
-#   EHR:   FHIR http://localhost:8180/fhir   SHL http://localhost:3001
+#   STAGE: FHIR http://localhost:8080/fhir   SHL http://localhost:8080/shl
+#   EHR:   FHIR http://localhost:8180/fhir   SHL http://localhost:8180/shl
 # Deployment on kroniq.srdc.com.tr: deploy/kroniq
 volumes:
   mongodata:
     driver: local
-  shl-data-stage:
-  shl-data-ehr:
 
 services:
   stage-mongo:
@@ -52,28 +50,4 @@ services:
       - SHC_SIGNING_KEY_ID=ctJZJqbAj5pk3kj3DRR2woQgIu-fXVH5hTQm8skB880
     volumes:
       - ./:/repo
-    restart: always
-
-  stage-shl:
-    image: nexus.srdc.com.tr:18445/stage/shl-server
-    container_name: stage-shl
-    ports:
-      - 3000:3000
-    environment:
-      - NODE_ENV=production
-      - PUBLIC_BASE_URL=http://localhost:3000
-    volumes:
-      - shl-data-stage:/home/node/app/shc
-    restart: always
-
-  shl-ehr:
-    image: nexus.srdc.com.tr:18445/stage/shl-server
-    container_name: shl-ehr
-    ports:
-      - 3001:3000
-    environment:
-      - NODE_ENV=production
-      - PUBLIC_BASE_URL=http://localhost:3001
-    volumes:
-      - shl-data-ehr:/home/node/app/shc
     restart: always

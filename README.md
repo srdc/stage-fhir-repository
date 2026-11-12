@@ -122,5 +122,25 @@ java -Dconfig.file=application-ehr.conf -jar target/stage-fhir-repository-standa
 
 Both repositories use the same onAuth (`fhir-conf/*-local.json` locally); in a real setup each organisation has its own.
 
-Docker: `docker-compose.yml` runs MongoDB, both repositories (`application-docker.conf`, per-EHR values in the
-environment: `FHIR_ROOT_URL`, `DB_NAME`, `JWKS_PATH`, `SHC_SIGNING_KEY_ID`) and an SHL server per repository. Deployment on kroniq.srdc.com.tr: `deploy/kroniq`.
+Docker: `docker-compose.yml` runs MongoDB and both repositories (`application-docker.conf`, per-EHR values in the
+environment: `FHIR_ROOT_URL`, `DB_NAME`, `JWKS_PATH`, `SHC_SIGNING_KEY_ID`); each repository serves its SMART Health
+Links itself (`<server>/shl`). Deployment on kroniq.srdc.com.tr: `deploy/kroniq`.
+
+## License
+
+GNU General Public License v3.0, see `LICENSE.txt`. The CDS services implement third-party risk algorithms (QRISK3,
+ADVANCE, ACC/AHA, SCORE2): their licenses, terms and sources are in `NOTICE.txt`.
+
+## Disclaimer
+
+This software is a research demonstration of the STAGE project. Its CDS services incorporate the QRISK, ADVANCE,
+ACC/AHA and SCORE2 algorithms and machine learning risk models for illustrative purposes only. It is **not intended**
+for use in real-world clinical decision-making. The results it generates should not be considered as medical advice.
+
+## Acknowledgements
+
+This software has been developed as part of the [STAGE project](https://stage-healthyageing.eu/).
+
+STAGE has received funding from the European Union’s Horizon Europe Research and Innovation Programme under grant agreement nº 101137146. UK participants in Horizon Europe Project STAGE are supported by UKRI grant numbers 10112787 (Beta Technology), 10099041 (University of Bristol) and 10109957 (Imperial College London).
+
+For more information about the project, visit the [STAGE project website](https://stage-healthyageing.eu/).
