@@ -45,6 +45,7 @@ STAGE_PATIENTS = [
     ('6fd322a8-9cb6-4cb2-b672-7fa5a35ff741', '6fd322a8-9cb6-4cb2-b672-7fa5a35ff741', None, None),  # helen_wright
     ('49d47569-6e48-49fa-b709-bfe13cffe084', 'pa01', ('Ahmet', 'Kilic'), 'male'),                  # ahmet_kilic
     ('295e1a06-5b7b-4176-9ecf-c482e4190f39', 'pa-demo-01', ('John', 'Wick'), 'male'),              # john_wick
+    ('b403943f-76f7-47e0-9687-28aa93504fbe', 'b403943f-76f7-47e0-9687-28aa93504fbe', None, None),  # susan_smith (xShare demo: IPS exported from STAGE, imported into EHR)
 ]
 # Source patients whose records are in STAGE: not in EHR
 STAGE_SOURCE_PATIENTS = {source_id for source_id, _, _, _ in STAGE_PATIENTS}
