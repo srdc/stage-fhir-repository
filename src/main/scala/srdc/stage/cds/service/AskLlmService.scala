@@ -18,8 +18,6 @@ import org.json4s._
 class AskLlmService(cdsServiceContext: CdsServiceContext) extends BaseCdsService(cdsServiceContext) {
 
   override def executeCds(cdsServiceRequest: CdsServiceRequest)(implicit ex: ExecutionContext): Future[CdsResponse] = {
-    val disease = Try(cdsServiceRequest.getStringContext("disease")).toOption
-    val chartType = Try(cdsServiceRequest.getStringContext("chartType")).toOption
     val sessionId = Try(cdsServiceRequest.getStringContext("sessionId")).toOption
     val question = Try(cdsServiceRequest.getStringContext("question")).toOption
 
@@ -29,32 +27,9 @@ class AskLlmService(cdsServiceContext: CdsServiceContext) extends BaseCdsService
 
     val responseBuilder = createResponse(cdsServiceRequest)
 
-    var structuredQuestion = ""
-
-    if (disease.nonEmpty) {
-      structuredQuestion +=
-        s"""
-          |The user is shown the risk predictions of $disease using the SHAP values provided before.\n
-          |""".stripMargin
-    }
-
-    if (chartType.nonEmpty) {
-      structuredQuestion +=
-        s"""
-          |The user is shown a graph as following: $chartType\n
-          |""".stripMargin
-    }
-
-    if (disease.nonEmpty || chartType.nonEmpty) {
-      structuredQuestion +=
-        s"""
-           |Considering the context information above, answer the following question asked by the user:\n
-           |""".stripMargin
-    }
-
-    structuredQuestion += question
-
-    LLMClient.ask(sessionId.get, structuredQuestion) map { response =>
+    // The plain user question: fhir-rag-med keeps the context (the patient's risks, SHAP values and the plot shown)
+    // in the session, so the optional context parameters 'disease' and 'chartType' are not added to it
+    LLMClient.ask(sessionId.get, question.get) map { response =>
       val withCard = responseBuilder.withCard(_.loadCardWithPostTranslation("card-llm-response",
         "text" -> response.text.replaceAll("\n", "\\\\n"),
         "sessionId" -> response.session_id,
