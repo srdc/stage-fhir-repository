@@ -1,0 +1,19 @@
+# The STAGE SMART apps (smart-apps image): https://kroniq.srdc.com.tr/smart-apps/<app>/ (dashboard, risk-prediction,
+# qrisk3, ...). They take the host from the page, and call the repositories, their CDS services and onAuth through nginx.
+name: stage-apps
+
+services:
+  stage-smart-apps:
+    image: ${SMART_APPS_IMAGE}
+    container_name: stage-smart-apps
+    environment:
+      - SERVER_NAME=${SERVER_NAME}
+      - SERVER_PATH=/smart-apps/
+    ports:
+      - 127.0.0.1:${SMART_APPS_PORT}:80
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1G"

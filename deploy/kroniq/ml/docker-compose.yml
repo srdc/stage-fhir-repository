@@ -1,0 +1,69 @@
+# ML services of the CDS services, called by the repositories (fhir/docker-compose.yml: ML_SERVICE_URL, LLM_SERVICE_URL,
+# ONFHIR_FEAST_URL):
+#   stage-shap-client   risk prediction and SHAP plots (risk_prediction, risk_prediction_diseases, shap_explain)
+#   stage-fhir-rag-med  LLM explanations and chat (shap_explain, ask_llm; calls its LLM provider on the internet)
+#   stage-onfhir-feast  feature extraction from the repositories (risk_prediction_form, risk_prediction)
+# Not part of deploy-all.sh: ./deploy.sh ml
+name: stage-ml
+
+networks:
+  stage-network:
+    external: true
+
+volumes:
+  rag-chroma:
+  rag-hf-cache:
+  feast-output-data:
+
+x-limits: &limits
+  restart: always
+  networks:
+    - stage-network
+  deploy:
+    resources:
+      limits:
+        cpus: "1.0"
+        memory: "4G"
+
+services:
+  stage-shap-client:
+    <<: *limits
+    # code and models of the shap-client checkout (deploy/kroniq/ml/shap-client.Dockerfile)
+    image: ${SHAP_CLIENT_IMAGE}
+    container_name: stage-shap-client
+
+  stage-fhir-rag-med:
+    <<: *limits
+    # built from the fhir-rag-med checkout (its Dockerfile)
+    image: ${FHIR_RAG_MED_IMAGE}
+    container_name: stage-fhir-rag-med
+    environment:
+      - PYTHONPATH=/app
+      # database 1 of the shared Redis (0 is onAuth's)
+      - REDIS_URL=redis://stage-redis:6379/1
+    volumes:
+      - rag-chroma:/app/chroma
+      - rag-hf-cache:/root/.cache
+
+  stage-onfhir-feast:
+    <<: *limits
+    # the onfhir-feast jar and STAGE definitions of the stage/onfhir-feast checkout, copied here by package.py
+    image: library/eclipse-temurin:11-jre
+    container_name: stage-onfhir-feast
+    working_dir: /usr/local/onfhir-feast
+    command: java -Xms512m -Xmx4g -Dconfig.file=/conf/application.conf -jar onfhir-feast-standalone.jar
+    volumes:
+      - type: bind
+        source: ./onfhir-feast/onfhir-feast-standalone.jar
+        target: /usr/local/onfhir-feast/onfhir-feast-standalone.jar
+        read_only: true
+      - type: bind
+        source: ./onfhir-feast/definitions
+        target: /usr/local/onfhir-feast/definitions
+        read_only: true
+      # data sources of the repositories, database: written by package.py (holds secrets)
+      - type: bind
+        source: ./onfhir-feast/application.conf
+        target: /conf/application.conf
+        read_only: true
+      - feast-output-data:/data/output-data

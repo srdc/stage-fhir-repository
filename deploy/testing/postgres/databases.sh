@@ -8,7 +8,8 @@
 # (local/postgres-<database>.secret), written by setup.sh. To add a service: a secret file, a mount and a line at the end.
 set -eu
 
-export PGHOST=postgres PGUSER=postgres
+# PGHOST: the PostgreSQL container (deploy/testing: postgres; deploy/kroniq: stage-db)
+export PGHOST=${PGHOST:-postgres} PGUSER=postgres
 PGPASSWORD="$(cat /run/secrets/postgres)"
 export PGPASSWORD
 

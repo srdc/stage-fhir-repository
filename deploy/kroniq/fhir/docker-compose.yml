@@ -1,0 +1,86 @@
+# STAGE and EHR FHIR repositories (stage-fhir-repository image): FHIR API, CDS Hooks services (<FHIR base>/cds-hooks) and
+# SMART Health Links (/shl, links in each database). EHR is the second repository of the xShare (SMART Health
+# Cards/Links) demos. Their configuration is mounted from this folder (fhir-conf with the signing keys and secrets,
+# cds-conf, application-docker.conf), so no secret goes into the image.
+name: stage-fhir
+
+networks:
+  stage-network:
+    external: true
+
+x-fhir: &fhir
+  image: ${FHIR_IMAGE}
+  volumes:
+    # bind mounts fail if the host path is missing, instead of Docker creating an empty directory in its place
+    - type: bind
+      source: ./fhir-conf
+      target: /repo/fhir-conf
+      read_only: true
+      bind:
+        create_host_path: false
+    - type: bind
+      source: ./cds-conf
+      target: /repo/cds-conf
+      read_only: true
+      bind:
+        create_host_path: false
+    - type: bind
+      source: ./application-docker.conf
+      target: /repo/application-docker.conf
+      read_only: true
+      bind:
+        create_host_path: false
+  healthcheck:
+    test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080' || exit 1"]
+    interval: 10s
+    timeout: 5s
+    retries: 30
+    start_period: 60s
+  restart: always
+  networks:
+    - stage-network
+  deploy:
+    resources:
+      limits:
+        cpus: "1.0"
+        memory: "4G"
+
+x-env: &env
+  APP_CONF_FILE: /repo/application-docker.conf
+  DB_HOST: stage-mongo
+  # ML services of the CDS services (ml/docker-compose.yml); until they run, those CDS services answer with an error
+  ML_SERVICE_URL: http://stage-shap-client:8001
+  LLM_SERVICE_URL: http://stage-fhir-rag-med:8000
+  ONFHIR_FEAST_URL: http://stage-onfhir-feast:8085/onfhir-feast/api
+
+services:
+  stage-fhir:
+    <<: *fhir
+    container_name: stage-fhir
+    ports:
+      - 127.0.0.1:${STAGE_FHIR_PORT}:8080
+    environment:
+      <<: *env
+      DB_NAME: ${STAGE_DB_NAME}
+      # public URL: base of the Bundle links and the SMART Health Card issuer (keys at <root>/.well-known/jwks.json)
+      FHIR_ROOT_URL: ${PUBLIC_HOST}/stage-fhir
+      JWKS_PATH: /repo/fhir-conf/jwks.json
+      SHC_SIGNING_KEY_ID: Fd_ncCoG4zYPoNit-tYEQ4YLQzraKqQ-kH1r8PN9TW0
+      # SMART Health Links: manifest URLs (nginx maps /stage-shl/shl to <server>/shl)
+      SHL_PUBLIC_BASE_URL: ${PUBLIC_HOST}/stage-shl
+      # onfhir-feast data source of this repository (ml/onfhir-feast/application.conf)
+      ONFHIR_FEAST_DATA_SOURCE_ID: stageFhir
+
+  ehr-fhir:
+    <<: *fhir
+    container_name: ehr-fhir
+    ports:
+      - 127.0.0.1:${EHR_FHIR_PORT}:8080
+    environment:
+      <<: *env
+      DB_NAME: ${EHR_DB_NAME}
+      FHIR_ROOT_URL: ${PUBLIC_HOST}/ehr
+      JWKS_PATH: /repo/fhir-conf/jwks-ehr.json
+      SHC_SIGNING_KEY_ID: ctJZJqbAj5pk3kj3DRR2woQgIu-fXVH5hTQm8skB880
+      SHL_PUBLIC_BASE_URL: ${PUBLIC_HOST}/shl-ehr
+      ONFHIR_FEAST_DATA_SOURCE_ID: ehrFhir

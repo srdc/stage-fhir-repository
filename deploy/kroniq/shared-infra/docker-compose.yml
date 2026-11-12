@@ -1,0 +1,121 @@
+# Shared stateful services of the STAGE stack on kroniq.srdc.com.tr: one MongoDB, one Redis, one PostgreSQL. The other
+# STAGE compose files (fhir, onauth, ml) reach them on the external network stage-network by container name.
+# Deploy this first (deploy-all.sh does).
+name: stage-infra
+
+networks:
+  stage-network:
+    external: true
+
+volumes:
+  # MongoDB data of the STAGE repository since 2024 (the stage-repo compose, later stage-repo-mongo), kept: databases
+  # onfhir (STAGE repository), ehr, stage_onauth / stage_onauth_smart (onAuth), fdp (FAIR Data Point)
+  mongo-data:
+    external: true
+    name: ${STAGE_MONGO_VOLUME}
+  redis-data:
+  postgres-data:
+
+x-limits: &limits
+  deploy:
+    resources:
+      limits:
+        cpus: "1.0"
+        memory: "4G"
+
+services:
+  stage-mongo:
+    <<: *limits
+    image: library/mongo:4.4
+    container_name: stage-mongo
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: always
+    networks:
+      stage-network:
+        # the former container name: the FAIR Data Point (FDP-docker, mongodb://stage-repo-mongo/fdp) still uses it
+        aliases:
+          - stage-repo-mongo
+
+  # Redis of the services, one database per service:
+  #   0  onAuth (sessions, tokens; onAuth has no setting for the database, and flushes it when its realm is reloaded)
+  #   1  fhir-rag-med (session state, expiring after 6 h)
+  # No password (onAuth's Redis client takes none) and no published port: only stage-network reaches it.
+  # No maxmemory: an eviction policy would also drop onAuth's sessions and tokens.
+  stage-redis:
+    image: library/redis:7-alpine
+    container_name: stage-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: always
+    networks:
+      - stage-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1G"
+
+  # PostgreSQL of the services: one database and login role per service (stage-db-setup, postgres/databases.sh); the
+  # superuser only administers it. (stage-postgres is the FAIR Data Point's own, see FDP-docker.)
+  stage-db:
+    <<: *limits
+    image: library/postgres:16
+    container_name: stage-db
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - type: bind
+        source: ../secrets/postgres.secret
+        target: /run/secrets/postgres
+        read_only: true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    restart: always
+    networks:
+      - stage-network
+
+  # creates (or updates) the services' databases and roles, then exits
+  stage-db-setup:
+    image: library/postgres:16
+    container_name: stage-db-setup
+    depends_on:
+      stage-db:
+        condition: service_healthy
+    environment:
+      - PGHOST=stage-db
+    entrypoint: ["sh", "/setup/databases.sh"]
+    volumes:
+      - type: bind
+        source: ./postgres/databases.sh
+        target: /setup/databases.sh
+        read_only: true
+      - type: bind
+        source: ../secrets/postgres.secret
+        target: /run/secrets/postgres
+        read_only: true
+      - type: bind
+        source: ../secrets/postgres-onfhir_feast.secret
+        target: /run/secrets/onfhir_feast
+        read_only: true
+    restart: "no"
+    networks:
+      - stage-network

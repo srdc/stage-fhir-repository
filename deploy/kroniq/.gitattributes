@@ -1,0 +1,2 @@
+# shell scripts run on the Linux server (and Git Bash): keep LF on Windows checkouts (core.autocrlf)
+*.sh text eol=lf

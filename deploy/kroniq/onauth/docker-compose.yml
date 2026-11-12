@@ -1,0 +1,48 @@
+# onAuth of the STAGE repositories (stage-onauth image): https://kroniq.srdc.com.tr/stage-onauth/api/smart (realm smart)
+# and its manager (/stage-onauth/onauth-manager/smart/login). Configuration in conf/ (package.py copies it from the
+# stage-onauth checkout): conf/application.conf, the realm in conf/realms/smart.
+name: stage-onauth
+
+networks:
+  stage-network:
+    external: true
+
+services:
+  stage-onauth:
+    image: ${ONAUTH_IMAGE}
+    container_name: stage-onauth
+    environment:
+      - DB_HOST=stage-mongo
+      # database 0 of the shared Redis
+      - REDIS_HOST=stage-redis
+      - APP_CONF_FILE=/sps/conf/application.conf
+      # SMART context resolution (patient selection) and auditing: the STAGE repository on stage-network
+      - FHIR_HOST=http://stage-fhir:8080/fhir
+      - AUDIT_HOST=http://stage-fhir:8080/fhir
+      - ONAUTH_SERVER_NAME=${SERVER_NAME}
+      - ONAUTH_SERVER_PATH=stage-onauth
+      - ONAUTH_SERVER_PROTOCOL=https
+      - DOCKER_CONTAINER_HOST=stage-onauth
+      - REDIRECT_MANAGER_RELATIVE=true
+      # ONAUTH_REALM_INIT=true (.env or the shell, for one start): onAuth drops its database and Redis database 0 and
+      # stores the realm from conf/realms/smart again (everyone is logged out; changes made only in the manager are
+      # lost). Recreate the container with false afterwards, or every restart does it again.
+      - JAVA_TOOL_OPTIONS=-Donauth.realms.init=${ONAUTH_REALM_INIT:-false}
+    ports:
+      - 127.0.0.1:${ONAUTH_PORT}:80
+    volumes:
+      - ./:/sps
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8081' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    restart: always
+    networks:
+      - stage-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "2G"
