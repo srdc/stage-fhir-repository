@@ -1,13 +1,12 @@
 # Local simulation of the STAGE server: https://stage.testing.eu
 
 The deployment of `deploy/kroniq` on one machine, under a test domain (127.0.0.1 `stage.testing.eu` in the hosts file),
-with the same paths, so the apps, onAuth and the repositories behave as on https://kroniq.srdc.com.tr:
+with the same paths, so the apps, onAuth and the repository behave as on https://kroniq.srdc.com.tr:
 
 | Path | Container |
 |---|---|
 | `/stage-fhir` (FHIR, CDS Hooks under `/stage-fhir/cds-hooks`) | stage-fhir (`stage/fhir-repository:testing`, database `stage`, also on 127.0.0.1:7702) |
-| `/ehr` (FHIR, CDS Hooks under `/ehr/cds-hooks`) | ehr-fhir (database `ehr`, also on 127.0.0.1:7707) |
-| `/stage-shl/shl`, `/shl-ehr/shl` | SMART Health Links of stage-fhir and ehr-fhir (`<server>/shl`, links in each database's `shl_links`) |
+| `/stage-shl/shl` | SMART Health Links of stage-fhir (`<server>/shl`, links in the database's `shl_links`) |
 | `/stage-onauth` | onAuth (realm smart, database `stage_onauth`) |
 | `/smart-apps` | smart-apps (`/smart-apps/risk-prediction/`, `/qrisk3/`, `/dashboard/`) |
 
@@ -37,7 +36,7 @@ absolute, e.g. `FHIR_RAG_MED_DIR=../../../../other/fhir-rag-med`:
 | fhir-rag-med (its own image, `src` mounted), Redis database 1 | `fhir-rag-med` (`FHIR_RAG_MED_DIR`) | shap_explain, ask_llm (calls its LLM provider on the internet) |
 | onfhir-feast (`onfhir-feast-standalone.jar` and `definitions` mounted), PostgreSQL database `onfhir_feast` | `onfhir-feast` (`ONFHIR_FEAST_DIR`) | risk_prediction_form, risk_prediction |
 
-onfhir-feast reads the patients' data from the repositories (data sources `stageFhir` and `ehrFhir`) with a token of
+onfhir-feast reads the patients' data from the repository (data source `stageFhir`) with a token of
 the client `stage-services` (client credentials, `user/*.read`), which `setup.sh` adds to the testing realm only. To use
 services on the host instead, set `ML_SERVICE_URL`, `LLM_SERVICE_URL`, `ONFHIR_FEAST_URL` in `.env`
 (e.g. `http://host.docker.internal:8001`).
@@ -46,7 +45,7 @@ services on the host instead, set `ML_SERVICE_URL`, `LLM_SERVICE_URL`, `ONFHIR_F
 
 - `mkcert -install` (trusts the local CA in Windows; restart the browser. Firefox: also needs `certutil` / NSS, see mkcert).
 - The checkouts of "Related repositories" in the main README, pulled, at their branches.
-- Secrets as for kroniq, in `fhir-conf/` (gitignored): `jwks.json`, `jwks-ehr.json`, `secrets.conf`,
+- Secrets as for kroniq, in `fhir-conf/` (gitignored): `jwks.json`, `secrets.conf`,
   `protected-resource-server-metadata.json`; and the `stage-onauth` checkout next to this repository (`STAGE_ONAUTH_DIR`)
   with its realm `smart` (`conf/realms/smart`).
 - `./setup.sh`: writes `local/` (gitignored): the certificate, the onAuth metadata of stage.testing.eu for the
@@ -94,7 +93,7 @@ docker compose up -d
 docker compose logs -f stage-fhir
 ```
 
-https://stage.testing.eu/smart-apps/risk-prediction/ (login "STAGE" or "EHR", users of realm smart).
+https://stage.testing.eu/smart-apps/risk-prediction/ (login "STAGE", users of realm smart).
 
 On the first start onAuth creates its realms and may stop with `Futures timed out after [10 seconds]` (its fixed
 start-up timeout; the container keeps running because of its own nginx): `docker restart stage-testing-onauth`, the
@@ -110,15 +109,12 @@ docker restart stage-testing-onauth
 
 ### Test patients
 
-The repositories start with the STAGE conformance resources, ValueSets and Questionnaires only. `seed.py` loads the
-test patients (synthetic, HTEST tagged) from `local/seed/` with a `stage-services` token:
+The repository starts with the STAGE conformance resources, ValueSets and Questionnaires only. `seed.py` loads the
+test patients (synthetic, HTEST tagged) into STAGE from `local/seed/` with a `stage-services` token:
 
-- STAGE: the patients of realm smart's patient users: helen_wright (`6fd322a8-...`), ahmet_kilic (`pa01`) and
-  john_wick (`pa-demo-01`), the last two copies of other test patients' records;
-- EHR: the other seven test patients of the source (practitioner anna_svensson selects them). No record of a STAGE
-  patient is in EHR (same ids, or the source records of the copies), so they can be imported from STAGE into EHR
-  (xShare) in a demo;
-- STAGE, also: the feature extraction patients of the `fhir-path-feature-extraction` checkout (`FEATURE_EXTRACTION_DIR`),
+- the patients of realm smart's patient users: helen_wright (`6fd322a8-...`), ahmet_kilic (`pa01`), john_wick
+  (`pa-demo-01`) and susan_smith (`b403943f-...`), ahmet_kilic and john_wick copies of other test patients' records;
+- the feature extraction patients of the `fhir-path-feature-extraction` checkout (`FEATURE_EXTRACTION_DIR`),
   read from there on every load: the WP7 storyboard patients `sb-p1`..`sb-p4` (one per model stratum), `wp6-test-complete`
   and the profiles `123456`..`523456`. They have no realm users: a clinician (anna_svensson) opens them. To also remove what a demo run added, use its
   `storyboard_patients/reset_patients.py https://stage.testing.eu/stage-fhir --token <token>`.

@@ -8,10 +8,10 @@ https://stage.testing.eu.
 | Component | Containers | Public path (host nginx, `nginx-locations.conf`) | Host port |
 |---|---|---|---|
 | `shared-infra` | `stage-mongo` (alias `stage-repo-mongo`), `stage-redis`, `stage-db` (PostgreSQL), `stage-db-setup` (one-shot) | none | none |
-| `fhir` | `stage-fhir`, `ehr-fhir`: FHIR, CDS Hooks (`<FHIR base>/cds-hooks`), SMART Health Links (`/shl`) | `/stage-fhir`, `/stage-shl/shl`, `/ehr`, `/shl-ehr/shl` | 7702, 7707 |
+| `fhir` | `stage-fhir`: FHIR, CDS Hooks (`<FHIR base>/cds-hooks`), SMART Health Links (`/shl`) | `/stage-fhir`, `/stage-shl/shl` | 7702 |
 | `onauth` | `stage-onauth` (realm `smart`) | `/stage-onauth` | 7709 |
 | `apps` | `stage-smart-apps` | `/smart-apps` | 7700 |
-| `ml` (not deployed yet) | `stage-shap-client`, `stage-fhir-rag-med`, `stage-onfhir-feast` | none (the repositories call them) | none |
+| `ml` (not deployed yet) | `stage-shap-client`, `stage-fhir-rag-med`, `stage-onfhir-feast` | none (the repository calls them) | none |
 
 All containers are on the external network `stage-network`; host ports listen on 127.0.0.1 only. The FAIR Data Point
 (`Distribution/FDP-docker`, `docker-compose-kroniq.yml`) is deployed separately; it uses `stage-mongo` (database `fdp`,
@@ -21,7 +21,7 @@ through the alias `stage-repo-mongo`) and its own PostgreSQL `stage-postgres`.
 
 | Store | Used by |
 |---|---|
-| `stage-mongo` (MongoDB 4.4, volume `stage_vstagerepomongo` of 2024, kept) | `onfhir` (STAGE repository), `ehr`, `stage_onauth` and `stage_onauth_smart` (onAuth), `fdp` (FAIR Data Point) |
+| `stage-mongo` (MongoDB 4.4, volume `stage_vstagerepomongo` of 2024, kept) | `onfhir` (STAGE repository), `stage_onauth` and `stage_onauth_smart` (onAuth), `fdp` (FAIR Data Point) |
 | `stage-redis` (Redis 7, AOF) | database 0: onAuth (flushed when its realm is reloaded); 1: fhir-rag-med. Never `FLUSHALL`, no `maxmemory` |
 | `stage-db` (PostgreSQL 16) | database and role `onfhir_feast`; the superuser only administers (`shared-infra/postgres/databases.sh`, run by `stage-db-setup` on every deploy) |
 
@@ -53,7 +53,7 @@ The former images `stage/smart-cds`, `stage/shl-server` and `srdc/onfhir:r4` are
 python deploy/kroniq/package.py        # into <workspace>/Distribution/stage; ONFHIR_FEAST_DIR / STAGE_ONAUTH_DIR for checkouts elsewhere
 ```
 
-It needs the gitignored secrets of the repository (`fhir-conf/jwks.json`, `jwks-ehr.json`, `secrets.conf`,
+It needs the gitignored secrets of the repository (`fhir-conf/jwks.json`, `secrets.conf`,
 `protected-resource-server-metadata.json`) and generates `secrets/` (PostgreSQL passwords, the secret of client
 `stage-services`) once. Copy the folder to the server (it keeps `.env` and `secrets/` of an existing copy; the server copy
 of `secrets/` must stay, or the PostgreSQL passwords no longer match).
@@ -67,7 +67,7 @@ of `secrets/` must stay, or the PostgreSQL passwords no longer match).
 ```
 
 After changing configuration (`package.py` again, copy): `./deploy.sh <component>` recreates what changed; the
-repositories read `fhir-conf` on start, so `docker restart stage-fhir ehr-fhir` after a change there.
+repository reads `fhir-conf` on start, so `docker restart stage-fhir` after a change there.
 
 onAuth stores realm `smart` in its database on the first start only. To load `onauth/conf/realms/smart` again (drops
 onAuth's database and Redis database 0: everyone is logged out, changes made only in onauth-manager are lost):
@@ -96,22 +96,33 @@ Realm `smart` after the reload is the one of the files: clients `liva` and `abac
 them to LIVA and ABACUS, or put the secrets they have into the files before), users as in the files (`stage_admin`,
 `liva_admin`, `abacus_admin`, test patients and practitioner).
 
+## Removal of the EHR repository (once)
+
+The second repository of the xShare demo (`ehr-fhir`, `/ehr`, `/shl-ehr/shl`, port 7707) is no longer deployed. On a
+server that still runs it, after copying the folder (`package.py`):
+
+1. `./deploy.sh fhir`, then `docker rm -f ehr-fhir`; `./deploy.sh ml` when the ML services run (onfhir-feast without
+   the `ehrFhir` data source).
+2. nginx: remove the `/ehr` and `/shl-ehr/shl` locations (see `nginx-locations.conf`), `nginx -t && systemctl reload nginx`.
+3. Its data, when no longer needed: database `ehr` of `stage-mongo`
+   (`docker exec stage-mongo mongo --quiet --eval 'db.getSiblingDB("ehr").dropDatabase()'`).
+
 ## Checks
 
 ```
 curl -s https://kroniq.srdc.com.tr/stage-fhir/metadata | head -c 100
-curl -s https://kroniq.srdc.com.tr/ehr/cds-hooks/cds-services | head -c 100
+curl -s https://kroniq.srdc.com.tr/stage-fhir/cds-hooks/cds-services | head -c 100
 curl -s https://kroniq.srdc.com.tr/stage-onauth/api/smart/.well-known/openid-configuration | head -c 100
 curl -s https://kroniq.srdc.com.tr/stage-fhir/.well-known/jwks.json      # public keys only (no "d")
-curl -si -X POST https://kroniq.srdc.com.tr/shl-ehr/shl/unknown/m -H "Content-Type: application/json" -d '{"recipient":"test"}' | head -1   # 404
+curl -si -X POST https://kroniq.srdc.com.tr/stage-shl/shl/unknown/m -H "Content-Type: application/json" -d '{"recipient":"test"}' | head -1   # 404
 ```
 
-Then https://kroniq.srdc.com.tr/smart-apps/dashboard/ (login STAGE and EHR). The SHL conformance tests
+Then https://kroniq.srdc.com.tr/smart-apps/dashboard/ (login STAGE). The SHL conformance tests
 (`deploy/testing/shl-conformance`, `SHL_URL=https://kroniq.srdc.com.tr/stage-shl`) run against the server too; they
 create test links.
 
 ## ML services (later)
 
 Images `stage/shap-client` and `stage/fhir-rag-med` pushed, onfhir-feast jar in `ml/onfhir-feast` (package.py), then
-`./deploy.sh ml`. The repositories already point to them (`fhir/docker-compose.yml`); onfhir-feast reads the
-repositories with client `stage-services` (realm `smart`, added by package.py) and keeps its jobs in `stage-db`.
+`./deploy.sh ml`. The repository already points to them (`fhir/docker-compose.yml`); onfhir-feast reads the
+repository with client `stage-services` (realm `smart`, added by package.py) and keeps its jobs in `stage-db`.

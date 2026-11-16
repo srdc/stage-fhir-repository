@@ -34,7 +34,7 @@ Links of the Node server are not migrated (test data only).
 
 ```
 python -m venv .venv && .venv/Scripts/python -m pip install -r requirements.txt   # (Linux/macOS: .venv/bin/python)
-# the server under test (STAGE; EHR: https://stage.testing.eu/shl-ehr); https://stage.testing.eu uses the mkcert CA
+# the server under test; https://stage.testing.eu uses the mkcert CA
 # (or set SHL_CA_BUNDLE)
 SHL_URL=https://stage.testing.eu/stage-shl .venv/Scripts/python -m pytest -q
 # compared with the former Node server (docker compose --profile shl-reference up -d node-shl)

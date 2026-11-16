@@ -11,8 +11,7 @@ An onFHIR 3.4.1 (Scala 2.13, Java 11) FHIR R4 server for STAGE that also serves:
 - SMART Health Cards issuing (`Patient/[id]/$health-cards-issue`, from onFHIR);
 - SMART Health Links (`src/main/scala/srdc/stage/shl`, `<server>/shl`, links in MongoDB collection `shl_links`).
 
-It runs as two instances, STAGE and EHR, to demonstrate sharing data between organisations. Deployments:
-`deploy/kroniq` (the server, https://kroniq.srdc.com.tr) and `deploy/testing` (a local copy of it on
+Deployments: `deploy/kroniq` (the server, https://kroniq.srdc.com.tr) and `deploy/testing` (a local copy of it on
 https://stage.testing.eu, with onAuth, the apps and the ML services). Read `README.md`, then the README of the
 deployment you work on.
 
@@ -38,7 +37,7 @@ are in `README.md`, "Related repositories". Before building or running:
 ## Secrets: never in git, never printed
 
 Provided by the team, gitignored, see `README.md` "Secrets" and the `*.example` files:
-`fhir-conf/jwks.json`, `fhir-conf/jwks-ehr.json` (card signing keys), `fhir-conf/protected-resource-server-metadata.json`,
+`fhir-conf/jwks.json` (card signing key), `fhir-conf/protected-resource-server-metadata.json`,
 `fhir-conf/secrets.conf` (onAuth token secret, LLM client secret). `deploy/testing/setup.sh` generates the rest into
 `deploy/testing/local/` (gitignored). Do not commit, echo or `cat` these files; to check a value, compare lengths or
 hashes. Do not print test users' passwords from the onAuth realm either.

@@ -1,6 +1,6 @@
 # Local simulation of the STAGE server on https://stage.testing.eu (127.0.0.1 in the Windows hosts file), with the same
-# paths as https://kroniq.srdc.com.tr (deploy/kroniq): STAGE and EHR repositories (FHIR, CDS Hooks and SMART Health
-# Links), onAuth and the smart-apps, behind an nginx with a mkcert certificate. See README.md.
+# paths as https://kroniq.srdc.com.tr (deploy/kroniq): the STAGE repository (FHIR, CDS Hooks and SMART Health Links),
+# onAuth and the smart-apps, behind an nginx with a mkcert certificate. See README.md.
 #   ./setup.sh                      (once: certificate, onAuth configuration, .env)
 #   docker compose up -d
 # fhir-conf, cds-conf and application-docker.conf of this repository are mounted (the private keys never go into an
@@ -92,26 +92,7 @@ services:
       # direct access, bypassing nginx (same port as deploy/kroniq)
       - 127.0.0.1:7702:8080
 
-  ehr-fhir:
-    <<: *fhir
-    container_name: stage-testing-ehr-fhir
-    environment:
-      - APP_CONF_FILE=/testing/application-testing.conf
-      - DB_HOST=mongo
-      - DB_NAME=ehr
-      - FHIR_ROOT_URL=https://stage.testing.eu/ehr
-      - AUTHZ_SERVER_ROOT_URL=https://stage.testing.eu/stage-onauth/api/smart
-      - JWKS_PATH=/repo/fhir-conf/jwks-ehr.json
-      - SHC_SIGNING_KEY_ID=ctJZJqbAj5pk3kj3DRR2woQgIu-fXVH5hTQm8skB880
-      - ML_SERVICE_URL=${ML_SERVICE_URL:-http://shap-client:8001}
-      - LLM_SERVICE_URL=${LLM_SERVICE_URL:-http://fhir-rag-med:8000}
-      - ONFHIR_FEAST_URL=${ONFHIR_FEAST_URL:-http://onfhir-feast:8085/onfhir-feast/api}
-      - ONFHIR_FEAST_DATA_SOURCE_ID=ehrFhir
-      - SHL_PUBLIC_BASE_URL=https://stage.testing.eu/shl-ehr
-    ports:
-      - 127.0.0.1:7707:8080
-
-  # The former Node shl-server, replaced by the repositories' SMART Health Links: only as the reference of the
+  # The former Node shl-server, replaced by the repository's SMART Health Links: only as the reference of the
   # conformance tests (shl-conformance, SHL_REFERENCE_URL=https://stage.testing.eu/node-shl).
   #   docker compose --profile shl-reference up -d node-shl
   node-shl:
@@ -262,8 +243,6 @@ services:
         condition: service_completed_successfully
       stage-fhir:
         condition: service_started
-      ehr-fhir:
-        condition: service_started
       stage-onauth:
         condition: service_started
     working_dir: /usr/local/onfhir-feast
@@ -278,7 +257,7 @@ services:
         source: ${ONFHIR_FEAST_DIR:-../../../onfhir-feast}/definitions
         target: /usr/local/onfhir-feast/definitions
         read_only: true
-      # written by setup.sh: the data sources of the repositories (with the stage-services secret)
+      # written by setup.sh: the data source of the repository (with the stage-services secret)
       - type: bind
         source: ./local/onfhir-feast
         target: /testing/onfhir-feast
@@ -303,7 +282,6 @@ services:
     container_name: stage-testing-nginx
     depends_on:
       - stage-fhir
-      - ehr-fhir
       - stage-onauth
       - smart-apps
     volumes:

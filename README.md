@@ -13,9 +13,6 @@ missing prefetches are read from this server's FHIR API with that token. Calls o
 `valueset`) and the discovery endpoint are open. Off when `fhir.authorization.method = none`; see `stage.cds.security`
 in `application.conf`.
 
-It can run as two separate repositories, STAGE and EHR (own port, database and signing key), to demonstrate sharing data between
-organisations with SMART Health Cards / Links.
-
 ## Layout
 
 | Path | Content |
@@ -26,7 +23,7 @@ organisations with SMART Health Cards / Links.
 | `fhir-conf/searchparameter/` | `Goal.target-code`, `Observation.codeText`, `Questionnaire.questionnaire-code`, `context`, `language`, `RiskAssessment.code` |
 | `fhir-conf/questionnaire/` | STAGE questionnaires (WHO-5, life space mobility, ...), stored at startup |
 | `fhir-conf/valueset/` | STAGE ValueSets, stored at startup (see below) |
-| `fhir-conf/*.json` | onAuth / SMART metadata, `jwks.json` (STAGE keys) and `jwks-ehr.json` (EHR keys) |
+| `fhir-conf/*.json` | onAuth / SMART metadata, `jwks.json` (SMART Health Card signing key) |
 | `cds-conf/` | CDS Hooks service and hook definitions, concept definitions and card templates (`definitions/`), bundles and ValueSets the services read (`bundle/`, `valueset/`) |
 | `scripts/generate_valuesets.py` | Regenerates `fhir-conf/valueset` |
 | `src/main/scala/srdc/stage/fhir` | Boot, the four operations, startup storage of ValueSets / Questionnaires |
@@ -98,7 +95,7 @@ cd stage-fhir-repository && mvn clean install -DskipTests
 
 Gitignored, to be provided on each machine (keep them out of commits):
 
-- `fhir-conf/jwks.json`, `fhir-conf/jwks-ehr.json`: the private EC keys signing the SMART Health Cards;
+- `fhir-conf/jwks.json`: the private EC key signing the SMART Health Cards;
 - `fhir-conf/protected-resource-server-metadata.json`: the onAuth client registration of the repository
   (see `fhir-conf/protected-resource-server-metadata.example.json`);
 - `fhir-conf/secrets.conf`: other secret settings, e.g. the HS256 secret of the onAuth access tokens and the client
@@ -109,21 +106,20 @@ Gitignored, to be provided on each machine (keep them out of commits):
 
 ```
 java -Dconfig.file=application-stage.conf -jar target/stage-fhir-repository-standalone.jar
-java -Dconfig.file=application-ehr.conf -jar target/stage-fhir-repository-standalone.jar
 ```
 
-| | STAGE | EHR |
-|---|---|---|
-| FHIR | http://127.0.0.1:8080/fhir | http://127.0.0.1:8180/fhir |
-| Database | `stage` | `ehr` |
-| Card signing key (`kid`) | `fhir-conf/jwks.json` (`Fd_ncCoG...`) | `fhir-conf/jwks-ehr.json` (`ctJZJqbA...`) |
-| Issuer keys for verifiers | `<root>/.well-known/jwks` | `<root>/.well-known/jwks.json` |
-| SMART Health Links | http://127.0.0.1:8080/shl | http://127.0.0.1:8180/shl |
+| | |
+|---|---|
+| FHIR | http://127.0.0.1:8080/fhir |
+| Database | `stage` |
+| Card signing key (`kid`) | `fhir-conf/jwks.json` (`Fd_ncCoG...`) |
+| Issuer keys for verifiers | `<root>/.well-known/jwks.json` |
+| SMART Health Links | http://127.0.0.1:8080/shl |
 
-Both repositories use the same onAuth (`fhir-conf/*-local.json` locally); in a real setup each organisation has its own.
+Locally it uses onAuth with `fhir-conf/*-local.json`.
 
-Docker: `docker-compose.yml` runs MongoDB and both repositories (`application-docker.conf`, per-EHR values in the
-environment: `FHIR_ROOT_URL`, `DB_NAME`, `JWKS_PATH`, `SHC_SIGNING_KEY_ID`); each repository serves its SMART Health
+Docker: `docker-compose.yml` runs MongoDB and the repository (`application-docker.conf`, deployment values in the
+environment: `FHIR_ROOT_URL`, `DB_NAME`, `JWKS_PATH`, `SHC_SIGNING_KEY_ID`); the repository serves its SMART Health
 Links itself (`<server>/shl`). Deployment on kroniq.srdc.com.tr: `deploy/kroniq`.
 
 ## License

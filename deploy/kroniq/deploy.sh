@@ -49,7 +49,7 @@ for component in "$@"; do
   compose "$component" up -d
   case "$component" in
     shared-infra) wait_healthy stage-mongo; wait_healthy stage-redis; wait_healthy stage-db; wait_done stage-db-setup ;;
-    fhir)         wait_healthy stage-fhir; wait_healthy ehr-fhir ;;
+    fhir)         wait_healthy stage-fhir ;;
     onauth)       wait_healthy stage-onauth ;;
     apps)         wait_healthy stage-smart-apps ;;
     ml)           wait_healthy stage-shap-client; wait_healthy stage-fhir-rag-med; wait_healthy stage-onfhir-feast ;;

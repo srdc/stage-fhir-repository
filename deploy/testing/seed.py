@@ -4,14 +4,13 @@ Test patients of https://stage.testing.eu (see README.md).
 
   python seed.py export [--source http://127.0.0.1:7799/fhir]
       Reads the test patients from a FHIR server without authorization (e.g. a temporary repository on a copy of a local
-      database) and writes them as batch bundles into local/seed/<repository>.json (gitignored).
+      database) and writes them as batch bundles into local/seed/stage.json (gitignored).
   python seed.py load
-      Writes local/seed/*.json into the repositories through nginx (PUT, so it can be repeated), with a token of the
+      Writes local/seed/stage.json into the STAGE repository through nginx (PUT, so it can be repeated), with a token of the
       stage-services client of realm smart (setup.sh, local/stage-services.secret).
 
 STAGE gets the patients of the realm's patient users (Patient id = the user's patient id); users without a record in
-the source get a copy of another source patient's record. EHR gets the other patients of the source (clinicians select
-them): no record of a STAGE patient is in EHR, so it can be imported from STAGE (xShare) in a demo.
+the source get a copy of another source patient's record. The other patients of the source are not loaded.
 
 STAGE also gets the WP6/WP7 feature extraction patients of the fhir-path-feature-extraction checkout
 (FEATURE_EXTRACTION_DIR, default ../../../fhir-path-feature-extraction), as their transaction bundles (fixed ids, PUT):
@@ -34,10 +33,10 @@ import urllib.request
 HERE = pathlib.Path(__file__).resolve().parent
 SEED_DIR = HERE / 'local' / 'seed'
 HOST = 'https://stage.testing.eu'
-REPOSITORIES = {'stage': HOST + '/stage-fhir', 'ehr': HOST + '/ehr'}
+STAGE_FHIR = HOST + '/stage-fhir'
 TOKEN_ENDPOINT = HOST + '/stage-onauth/api/smart/token'
 
-# The patients' clinical data (the SMART Health Card documents of xShare are created by the apps)
+# The patients' clinical data (the SMART Health Card documents are created by the apps)
 TYPES = ['Observation', 'Condition', 'MedicationStatement', 'FamilyMemberHistory', 'Goal', 'CarePlan']
 
 # Patient users of realm smart (stage-onauth/conf/realms/smart/users): (source patient id, patient id, name, gender)
@@ -45,14 +44,8 @@ STAGE_PATIENTS = [
     ('6fd322a8-9cb6-4cb2-b672-7fa5a35ff741', '6fd322a8-9cb6-4cb2-b672-7fa5a35ff741', None, None),  # helen_wright
     ('49d47569-6e48-49fa-b709-bfe13cffe084', 'pa01', ('Ahmet', 'Kilic'), 'male'),                  # ahmet_kilic
     ('295e1a06-5b7b-4176-9ecf-c482e4190f39', 'pa-demo-01', ('John', 'Wick'), 'male'),              # john_wick
-    ('b403943f-76f7-47e0-9687-28aa93504fbe', 'b403943f-76f7-47e0-9687-28aa93504fbe', None, None),  # susan_smith (xShare demo: IPS exported from STAGE, imported into EHR)
+    ('b403943f-76f7-47e0-9687-28aa93504fbe', 'b403943f-76f7-47e0-9687-28aa93504fbe', None, None),  # susan_smith
 ]
-# Source patients whose records are in STAGE: not in EHR
-STAGE_SOURCE_PATIENTS = {source_id for source_id, _, _, _ in STAGE_PATIENTS}
-
-
-def in_ehr(bundle):
-    return bundle['entry'][0]['resource']['id'] not in STAGE_SOURCE_PATIENTS
 
 
 # Transaction bundles of the fhir-path-feature-extraction checkout, loaded into STAGE
@@ -68,7 +61,7 @@ def feature_extraction_bundles():
     return [p for pattern in FEATURE_EXTRACTION_BUNDLES for p in sorted(FEATURE_EXTRACTION_DIR.glob(pattern))]
 
 
-# Practitioner users of realm smart (the apps read the user's own record), in both repositories
+# Practitioner users of realm smart (the apps read the user's own record)
 PRACTITIONERS = [
     {'resourceType': 'Practitioner', 'id': '3c670b96-8657-4fe7-bc48-b4352a2b5284',  # anna_svensson
      'identifier': [{'system': 'http://www.inera.se/TJANSTER--PROJEKT/HSA/', 'value': '3c670b96-8657-4fe7-bc48-b4352a2b5284'}],
@@ -131,11 +124,8 @@ def export(source):
     stage = []
     for source_id, patient_id, name, gender in STAGE_PATIENTS:
         stage.append(batch(renamed(patient_record(source, source_id), patient_id, name, gender)))
-    ehr = [batch(patient_record(source, p['id'])) for p in search_all(f'{source}/Patient?_count=500')
-           if p['id'] not in STAGE_SOURCE_PATIENTS]
-    for repository, bundles in (('stage', stage), ('ehr', ehr)):
-        (SEED_DIR / f'{repository}.json').write_text(json.dumps(bundles, indent=1), encoding='utf-8')
-        print(f'{repository}: {len(bundles)} patients, {sum(len(b["entry"]) for b in bundles)} resources')
+    (SEED_DIR / 'stage.json').write_text(json.dumps(stage, indent=1), encoding='utf-8')
+    print(f'stage: {len(stage)} patients, {sum(len(b["entry"]) for b in stage)} resources')
 
 
 def ssl_context():
@@ -158,24 +148,20 @@ def load():
     context = ssl_context()
     access_token = token(context)
     failed = 0
-    for repository, base in REPOSITORIES.items():
-        bundles = [batch(PRACTITIONERS)] + json.loads((SEED_DIR / f'{repository}.json').read_text(encoding='utf-8'))
-        if repository == 'ehr':
-            bundles = [b for b in bundles if in_ehr(b)]
-        else:
-            bundles += [json.loads(p.read_text(encoding='utf-8')) for p in feature_extraction_bundles()]
-        for bundle in bundles:
-            request = urllib.request.Request(base, data=json.dumps(bundle).encode(), method='POST', headers={
-                'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/fhir+json',
-                'Accept': 'application/fhir+json'})
-            with urllib.request.urlopen(request, context=context) as r:
-                response = json.load(r)
-            statuses = [e.get('response', {}).get('status', '') for e in response.get('entry', [])]
-            errors = [s for s in statuses if not s.startswith('2')]
-            failed += len(errors)
-            first = bundle['entry'][0]['resource']
-            print(f'{repository} {first["resourceType"]}/{first["id"]}: {len(statuses) - len(errors)} written'
-                  + (f', {len(errors)} failed ({", ".join(sorted(set(errors)))})' if errors else ''))
+    bundles = [batch(PRACTITIONERS)] + json.loads((SEED_DIR / 'stage.json').read_text(encoding='utf-8'))
+    bundles += [json.loads(p.read_text(encoding='utf-8')) for p in feature_extraction_bundles()]
+    for bundle in bundles:
+        request = urllib.request.Request(STAGE_FHIR, data=json.dumps(bundle).encode(), method='POST', headers={
+            'Authorization': 'Bearer ' + access_token, 'Content-Type': 'application/fhir+json',
+            'Accept': 'application/fhir+json'})
+        with urllib.request.urlopen(request, context=context) as r:
+            response = json.load(r)
+        statuses = [e.get('response', {}).get('status', '') for e in response.get('entry', [])]
+        errors = [s for s in statuses if not s.startswith('2')]
+        failed += len(errors)
+        first = bundle['entry'][0]['resource']
+        print(f'stage {first["resourceType"]}/{first["id"]}: {len(statuses) - len(errors)} written'
+              + (f', {len(errors)} failed ({", ".join(sorted(set(errors)))})' if errors else ''))
     return failed
 
 

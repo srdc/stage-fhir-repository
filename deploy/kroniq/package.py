@@ -9,7 +9,7 @@ and the checkouts of the workspace (README.md of the repository, "Related reposi
   onauth/conf                                        stage-onauth: conf/application-matrix.conf as application.conf, realm
                                                      smart (+ client stage-services for onfhir-feast)
   ml/onfhir-feast                                    onfhir-feast: jar (mvn package first) and definitions; its
-                                                     application.conf with the data sources of the repositories
+                                                     application.conf with the data source of the repository
   secrets/                                           generated once: PostgreSQL passwords, stage-services secret
 
   python package.py [target]          (environment: STAGE_ONAUTH_DIR, ONFHIR_FEAST_DIR for checkouts elsewhere)
@@ -39,7 +39,7 @@ OBSOLETE = ['stage-repo', 'docker-compose.yml', 'docker-compose-cds.yml', 'docke
             'deploy-cds.sh', 'deploy-shl.sh', 'destroy-apps.sh', 'destroy-cds.sh', 'destroy-shl.sh', 'onauth/deploy.sh',
             'onauth/destroy.sh', 'onauth/conf/application-stage.conf', 'onauth/conf/realms/stage',
             'shared-infra/deploy.sh', 'shared-infra/destroy.sh']
-REPO_SECRETS = ['fhir-conf/jwks.json', 'fhir-conf/jwks-ehr.json', 'fhir-conf/secrets.conf',
+REPO_SECRETS = ['fhir-conf/jwks.json', 'fhir-conf/secrets.conf',
                 'fhir-conf/protected-resource-server-metadata.json']
 
 
@@ -102,7 +102,7 @@ secret('postgres.secret')
 feast_db_password = secret('postgres-onfhir_feast.secret')
 services_secret = secret('stage-services.secret')
 
-# repositories
+# repository
 tree(REPO / 'fhir-conf', TARGET / 'fhir/fhir-conf')
 tree(REPO / 'cds-conf', TARGET / 'fhir/cds-conf')
 text_lf(REPO / 'application-docker.conf', TARGET / 'fhir/application-docker.conf')
@@ -117,7 +117,7 @@ repo_client = json.loads((realm / 'clients/fhir-repo.json').read_text(encoding='
 if 'smart_context_resolution' in repo_client:
     repo_client['smart_context_resolution']['fhirServerBaseUrl'] = 'http://stage-fhir:8080/fhir'
     write_json(realm / 'clients/fhir-repo.json', repo_client)
-# client stage-services (client credentials, read access to all data): onfhir-feast reads the repositories with it
+# client stage-services (client credentials, read access to all data): onfhir-feast reads the repository with it
 base = json.loads((realm / 'clients/smart-test.json').read_text(encoding='utf-8'))
 client = {k: v for k, v in base.items() if k not in ('redirect_uris', 'registration_access_token')}
 client.update({
@@ -179,6 +179,5 @@ source = '''  %s {
     'onfhir-feast.etl.data-sources = null\n'
     'onfhir-feast.etl.data-sources {\n'
     + source % ('stageFhir', 'stageFhir', 'http://stage-fhir:8080/fhir', services_secret)
-    + source % ('ehrFhir', 'ehrFhir', 'http://ehr-fhir:8080/fhir', services_secret)
     + '}\n', encoding='utf-8')
 print('done')

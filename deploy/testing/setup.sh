@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Writes the local (gitignored) files of the stage.testing.eu simulation into ./local:
 #   local/certs        TLS certificate of stage.testing.eu (mkcert; run `mkcert -install` once to trust its CA)
-#   local/fhir-conf    onAuth metadata of the repositories, from fhir-conf with the host replaced
+#   local/fhir-conf    onAuth metadata of the repository, from fhir-conf with the host replaced
 #   local/onauth/conf  onAuth configuration and realm "smart", from stage-onauth/conf with the host replaced
 #                      (holds secrets: the client secrets and users of the realm)
 # Run again after changing the sources; it overwrites ./local (the data in the Docker volumes stays).
@@ -15,7 +15,7 @@ REPO=../..
 ONAUTH_DIR=${STAGE_ONAUTH_DIR:-$REPO/../stage-onauth}
 
 for f in "$REPO/fhir-conf/authorization-server-metadata.json" "$REPO/fhir-conf/smart-configuration.json" \
-         "$REPO/fhir-conf/secrets.conf" "$REPO/fhir-conf/jwks.json" "$REPO/fhir-conf/jwks-ehr.json" \
+         "$REPO/fhir-conf/secrets.conf" "$REPO/fhir-conf/jwks.json" \
          "$ONAUTH_DIR/conf/application-matrix.conf" "$ONAUTH_DIR/conf/realms/smart/realm.json"; do
   [ -f "$f" ] || { echo "Missing $f" >&2; exit 1; }
 done
@@ -27,7 +27,7 @@ if [ ! -f local/certs/$HOST.pem ]; then
   mkcert -cert-file local/certs/$HOST.pem -key-file local/certs/$HOST-key.pem $HOST
 fi
 
-# 2) onAuth metadata of the repositories (issuer and endpoints on stage.testing.eu)
+# 2) onAuth metadata of the repository (issuer and endpoints on stage.testing.eu)
 for f in authorization-server-metadata.json smart-configuration.json; do
   sed "s#https://$KRONIQ/#https://$HOST/#g" "$REPO/fhir-conf/$f" > local/fhir-conf/$f
 done
@@ -58,7 +58,7 @@ for p in pathlib.Path('local/onauth/conf/realms/smart/clients').glob('*.json'):
     p.write_text(json.dumps(client, indent=2), encoding='utf-8')
 EOF
 
-# 4) Service client "stage-services" (testing realm only): client credentials with user/*.* on the repositories, for
+# 4) Service client "stage-services" (testing realm only): client credentials with user/*.* on the repository, for
 #    onfhir-feast (reads the patients' data for the risk prediction services) and seed.py (loads the test patients).
 #    Its secret is generated once into local/stage-services.secret.
 [ -f local/stage-services.secret ] || python -c "import secrets; print(secrets.token_urlsafe(32))" > local/stage-services.secret
@@ -85,7 +85,7 @@ for name, content in files.items():
     (realm / name).write_text(json.dumps(content, indent=2), encoding='utf-8')
 EOF
 
-# 5) onfhir-feast: one data source per repository (the ids the repositories send, ONFHIR_FEAST_DATA_SOURCE_ID), read
+# 5) onfhir-feast: the data source of the repository (the id the repository sends, ONFHIR_FEAST_DATA_SOURCE_ID), read
 #    through the containers' network with a read-only token of stage-services
 mkdir -p local/onfhir-feast
 # passwords of the shared postgres container, generated once: its superuser, and onfhir-feast's own role (database
@@ -131,7 +131,6 @@ conf = ('# Written by setup.sh (holds the secret of the stage-services client)\n
         'onfhir-feast.etl.data-sources = null\n'
         'onfhir-feast.etl.data-sources {\n'
         + source % ('stageFhir', 'stageFhir', 'http://stage-fhir:8080/fhir', secret)
-        + source % ('ehrFhir', 'ehrFhir', 'http://ehr-fhir:8080/fhir', secret)
         + '}\n')
 pathlib.Path('local/onfhir-feast/application.conf').write_text(conf, encoding='utf-8')
 EOF

@@ -1,8 +1,6 @@
-# Two separate repositories for the SMART Health Cards/Links (xShare) tests, each with its own FHIR repository
-# (database, signing key), serving its SMART Health Links itself (<server>/shl, links in its database).
+# The STAGE repository with its MongoDB; it serves its SMART Health Links itself (<server>/shl, links in its database).
 # Build the image first: mvn clean install && docker build -t nexus.srdc.com.tr:18445/stage/fhir-repository .
-#   STAGE: FHIR http://localhost:8080/fhir   SHL http://localhost:8080/shl
-#   EHR:   FHIR http://localhost:8180/fhir   SHL http://localhost:8180/shl
+#   FHIR http://localhost:8080/fhir   SHL http://localhost:8080/shl
 # Deployment on kroniq.srdc.com.tr: deploy/kroniq
 volumes:
   mongodata:
@@ -30,24 +28,6 @@ services:
       - FHIR_ROOT_URL=http://localhost:8080/fhir
       - JWKS_PATH=/repo/fhir-conf/jwks.json
       - SHC_SIGNING_KEY_ID=Fd_ncCoG4zYPoNit-tYEQ4YLQzraKqQ-kH1r8PN9TW0
-    volumes:
-      - ./:/repo
-    restart: always
-
-  ehr-fhir:
-    image: nexus.srdc.com.tr:18445/stage/fhir-repository
-    container_name: ehr-fhir
-    depends_on:
-      - stage-mongo
-    ports:
-      - 8180:8080
-    environment:
-      - APP_CONF_FILE=/repo/application-docker.conf
-      - DB_HOST=stage-mongo
-      - DB_NAME=ehr
-      - FHIR_ROOT_URL=http://localhost:8180/fhir
-      - JWKS_PATH=/repo/fhir-conf/jwks-ehr.json
-      - SHC_SIGNING_KEY_ID=ctJZJqbAj5pk3kj3DRR2woQgIu-fXVH5hTQm8skB880
     volumes:
       - ./:/repo
     restart: always

@@ -9,7 +9,7 @@ networks:
 
 volumes:
   # MongoDB data of the STAGE repository since 2024 (the stage-repo compose, later stage-repo-mongo), kept: databases
-  # onfhir (STAGE repository), ehr, stage_onauth / stage_onauth_smart (onAuth), fdp (FAIR Data Point)
+  # onfhir (STAGE repository), stage_onauth / stage_onauth_smart (onAuth), fdp (FAIR Data Point)
   mongo-data:
     external: true
     name: ${STAGE_MONGO_VOLUME}

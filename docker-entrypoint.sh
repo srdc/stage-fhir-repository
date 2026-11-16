@@ -59,7 +59,7 @@ if [ ! -z "$AUTHZ_SERVER_ROOT_URL" ]; then
     JAVA_CMD+="-Dfhir.authorization.authz-server-url=$AUTHZ_SERVER_ROOT_URL "
 fi
 
-# Configure the MongoDB database (one per EHR when several repositories share a MongoDB)
+# Configure the MongoDB database
 if [ ! -z "$DB_NAME" ]; then
     JAVA_CMD+="-Dmongodb.db=$DB_NAME "
 fi

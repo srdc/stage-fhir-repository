@@ -1,7 +1,6 @@
-# STAGE and EHR FHIR repositories (stage-fhir-repository image): FHIR API, CDS Hooks services (<FHIR base>/cds-hooks) and
-# SMART Health Links (/shl, links in each database). EHR is the second repository of the xShare (SMART Health
-# Cards/Links) demos. Their configuration is mounted from this folder (fhir-conf with the signing keys and secrets,
-# cds-conf, application-docker.conf), so no secret goes into the image.
+# STAGE FHIR repository (stage-fhir-repository image): FHIR API, CDS Hooks services (<FHIR base>/cds-hooks) and
+# SMART Health Links (/shl, links in its database). Its configuration is mounted from this folder (fhir-conf with the
+# signing key and secrets, cds-conf, application-docker.conf), so no secret goes into the image.
 name: stage-fhir
 
 networks:
@@ -70,17 +69,3 @@ services:
       SHL_PUBLIC_BASE_URL: ${PUBLIC_HOST}/stage-shl
       # onfhir-feast data source of this repository (ml/onfhir-feast/application.conf)
       ONFHIR_FEAST_DATA_SOURCE_ID: stageFhir
-
-  ehr-fhir:
-    <<: *fhir
-    container_name: ehr-fhir
-    ports:
-      - 127.0.0.1:${EHR_FHIR_PORT}:8080
-    environment:
-      <<: *env
-      DB_NAME: ${EHR_DB_NAME}
-      FHIR_ROOT_URL: ${PUBLIC_HOST}/ehr
-      JWKS_PATH: /repo/fhir-conf/jwks-ehr.json
-      SHC_SIGNING_KEY_ID: ctJZJqbAj5pk3kj3DRR2woQgIu-fXVH5hTQm8skB880
-      SHL_PUBLIC_BASE_URL: ${PUBLIC_HOST}/shl-ehr
-      ONFHIR_FEAST_DATA_SOURCE_ID: ehrFhir
