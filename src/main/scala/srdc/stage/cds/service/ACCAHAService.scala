@@ -7,6 +7,7 @@ import srdc.stage.cds.flow.ACCAHAFlowExecution
 import srdc.stage.cds.util.{CdsPrefetchUtil, ConceptIdUtil}
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Try
 
 class ACCAHAService(cdsServiceContext: CdsServiceContext) extends BaseCdsService(cdsServiceContext) {
   implicit val formats: DefaultFormats.type = DefaultFormats
@@ -16,9 +17,13 @@ class ACCAHAService(cdsServiceContext: CdsServiceContext) extends BaseCdsService
     val responseBuilder = createResponse(cdsServiceRequest)
 
     Future {
-      ACCAHAFlowExecution.executeFlow(
-        age = CdsPrefetchUtil.getAge(fhirPathEvaluator),
-        gender = fhirPathEvaluator.evaluateString(CdsPrefetchUtil.GENDER_PATH, JNothing).head,
+      // Without a (full) birth date or a gender the score cannot be calculated: no cards, the app tells the user so
+      val age = Try(CdsPrefetchUtil.getAge(fhirPathEvaluator)).toOption
+      val gender = Try(fhirPathEvaluator.evaluateString(CdsPrefetchUtil.GENDER_PATH, JNothing).headOption).toOption.flatten
+      if (age.isEmpty || gender.isEmpty) responseBuilder.cdsResponse
+      else ACCAHAFlowExecution.executeFlow(
+        age = age.get,
+        gender = gender.get,
         totalCholesterol = CdsPrefetchUtil.getObservationValue("TotalCholesterol", fhirPathEvaluator),
         hdlCholesterol = CdsPrefetchUtil.getObservationValue("HDL", fhirPathEvaluator),
         systolicBP = CdsPrefetchUtil.getObservationOrComponentValue("BP_SBP", ConceptIdUtil.SYSTOLIC_BP, fhirPathEvaluator),

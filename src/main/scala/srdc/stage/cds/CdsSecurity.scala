@@ -3,7 +3,7 @@ package srdc.stage.cds
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers.{Authorization, OAuth2BearerToken}
+import akka.http.scaladsl.model.headers.{Accept, Authorization, OAuth2BearerToken}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import io.onfhir.cds.server.CdsCorsHandler
@@ -32,7 +32,14 @@ import scala.util.{Failure, Success, Try}
  *    server (checked with a FHIR read, so the onFHIR authorization decides: a patient token for that patient, or a
  *    user/system token that can read patients).
  *  - The missing prefetches are fetched from the FHIR API of this server with the token (fhirServer is set to the
- *    local FHIR URL), never with the unauthenticated in-process client. A fhirServer other than this server is refused.
+ *    local FHIR URL), never with the unauthenticated in-process client.
+ *  - Apps launched from another EHR (SMART on FHIR) send that EHR's FHIR base as fhirServer and its token. This is
+ *    accepted for the EHRs of stage.cds.security.trusted-fhir-servers: the token must be able to read
+ *    Patient/{patientId} from that EHR, and the missing prefetches are fetched from that EHR with the token (as in the
+ *    CDS Hooks specification). The services of stage.cds.security.local-only-services (the ML risk prediction and LLM
+ *    services) are refused for them, even on supplied data: some read the patient's data from this server outside the
+ *    prefetches (onfhir-feast's data source of this server), and the patient id of another EHR may be the id of another
+ *    patient here. Any other fhirServer is refused.
  *  - Calls that need neither (no patientId, every prefetch supplied: e.g. definition, valueset, in-memory-search)
  *    only compute on the given data and need no token.
  *
@@ -62,11 +69,32 @@ object CdsSecurity extends CdsCorsHandler {
       securityConfig.flatMap(c => Try(c.getStringList("fhir-server-aliases").asScala.toSeq).toOption).getOrElse(Nil))
       .map(normalize).toSet
 
+  /**
+   * FHIR bases of other EHRs whose SMART apps may call the CDS services with their own tokens. A fhirServer matches an
+   * entry when it is that URL or below it (e.g. the SMART launcher's https://launch.smarthealthit.org/v/r4/sim/.../fhir).
+   */
+  lazy val trustedFhirServers: Seq[String] =
+    securityConfig.flatMap(c => Try(c.getStringList("trusted-fhir-servers").asScala.toSeq).toOption).getOrElse(Nil)
+      .map(normalize).filter(_.nonEmpty)
+
+  /** Services that read the patient's data from this server outside the prefetches: only for this server's patients */
+  lazy val localOnlyServices: Set[String] =
+    securityConfig.flatMap(c => Try(c.getStringList("local-only-services").asScala.toSet).toOption).getOrElse(Set.empty)
+
+  /** Whether fhirServer is one of the trusted EHRs (a plain URL, no query, fragment, user info or path traversal) */
+  private def isTrustedFhirServer(fhirServer: String): Boolean = {
+    val url = normalize(fhirServer)
+    val plain = url.matches("^https?://[^/?#@\\\\]+(/[^?#@\\\\]*)?$") && !url.split('/').contains("..") && !url.contains("%2e")
+    plain && trustedFhirServers.exists(t => url == t || url.startsWith(t + "/"))
+  }
+
   // localhost and 127.0.0.1 are the same host (e.g. root-url http://127.0.0.1:8080/fhir, apps on http://localhost:8080/fhir)
   private def normalize(url: String): String =
     url.trim.stripSuffix("/").toLowerCase.replaceFirst("^(?<scheme>https?://)localhost(?<rest>[:/]|$)", "${scheme}127.0.0.1${rest}")
 
   private val FhirId = "^[A-Za-z0-9\\-.]{1,64}$".r
+
+  private val FhirJson = MediaType.applicationWithFixedCharset("fhir+json", HttpCharsets.`UTF-8`)
 
   /**
    * Wraps the CDS Hooks route with the access control (if enabled)
@@ -108,23 +136,27 @@ object CdsSecurity extends CdsCorsHandler {
                 case _ => Set.empty[String]
               }
               val missingPrefetches = serviceDefinition.prefetch.keySet.diff(suppliedPrefetches)
-              val fhirServer = getString(cdsRequest \ "fhirServer")
+              // The FHIR API the patient check and the prefetch reads go to: this server, or a trusted EHR
+              val otherEhr = getString(cdsRequest \ "fhirServer").filterNot(s => ownFhirUrls.contains(normalize(s)))
+              val fhirApi = otherEhr.map(_.trim.stripSuffix("/")).getOrElse(localFhirUrl)
 
-              if (patientId.isEmpty && missingPrefetches.isEmpty)
+              if (otherEhr.nonEmpty && localOnlyServices.contains(serviceId))
+                failWith(StatusCodes.BadRequest, s"The CDS service $serviceId is only available for the patients of this FHIR server (${OnfhirConfig.fhirRootUrl})!")
+              else if (patientId.isEmpty && missingPrefetches.isEmpty)
                 cdsRoute // Only computes on the supplied data
               else if (token.isEmpty)
                 failWith(StatusCodes.Unauthorized, s"The CDS service $serviceId needs patient data: send the SMART access token of the app in fhirAuthorization.access_token (or as a Bearer token)!")
-              else if (fhirServer.exists(s => !ownFhirUrls.contains(normalize(s))))
-                failWith(StatusCodes.BadRequest, s"fhirServer must be this FHIR server (${OnfhirConfig.fhirRootUrl})!")
+              else if (otherEhr.exists(s => !isTrustedFhirServer(s)))
+                failWith(StatusCodes.BadRequest, s"fhirServer must be this FHIR server (${OnfhirConfig.fhirRootUrl}) or a trusted EHR!")
               else if (patientId.exists(FhirId.findFirstIn(_).isEmpty))
                 failWith(StatusCodes.BadRequest, "Invalid patientId in the context!")
               else
-                onComplete(patientId.map(canReadPatient(_, token.get)).getOrElse(Future.successful(StatusCodes.OK))) {
+                onComplete(patientId.map(canReadPatient(fhirApi, _, token.get)).getOrElse(Future.successful(StatusCodes.OK))) {
                   case Success(StatusCodes.OK) =>
-                    // Fetch the missing prefetches from the FHIR API with the token
+                    // Fetch the missing prefetches from that FHIR API with the token
                     val securedRequest = JObject(
                       cdsRequest.obj.filterNot(f => f._1 == "fhirServer" || f._1 == "fhirAuthorization") ++ List(
-                        "fhirServer" -> JString(localFhirUrl),
+                        "fhirServer" -> JString(fhirApi),
                         "fhirAuthorization" -> fhirAuthorization(cdsRequest \ "fhirAuthorization", token.get)
                       ))
                     mapRequest(_.withEntity(HttpEntity(ContentTypes.`application/json`, compact(render(securedRequest))))) {
@@ -133,10 +165,10 @@ object CdsSecurity extends CdsCorsHandler {
                   case Success(StatusCodes.Unauthorized) =>
                     failWith(StatusCodes.Unauthorized, "The access token is not valid (or has expired)!")
                   case Success(status) =>
-                    logger.debug(s"CDS service $serviceId refused for Patient/${patientId.get}: the FHIR read returned $status")
+                    logger.debug(s"CDS service $serviceId refused for Patient/${patientId.get} ($fhirApi): the FHIR read returned $status")
                     failWith(StatusCodes.Forbidden, s"The access token does not give access to Patient/${patientId.get}!")
                   case Failure(t) =>
-                    logger.error(s"Patient access check failed for the CDS service $serviceId (local FHIR API: $localFhirUrl)", t)
+                    logger.error(s"Patient access check failed for the CDS service $serviceId (FHIR API: $fhirApi)", t)
                     failWith(StatusCodes.ServiceUnavailable, "The patient access could not be checked!")
                 }
           }
@@ -144,15 +176,16 @@ object CdsSecurity extends CdsCorsHandler {
     }
 
   /**
-   * Status of reading Patient/{patientId} from the FHIR API of this server with the given token (the onFHIR
+   * Status of reading Patient/{patientId} from a FHIR API (this server's, or a trusted EHR's) with the given token (its
    * authorization decides). 200 means the token gives access to the patient, 401 that the token is not valid.
    */
-  private def canReadPatient(patientId: String, token: String)(implicit system: ActorSystem): Future[StatusCode] = {
+  private def canReadPatient(fhirApi: String, patientId: String, token: String)(implicit system: ActorSystem): Future[StatusCode] = {
     import system.dispatcher
     Http()
       .singleRequest(HttpRequest(
-        uri = s"$localFhirUrl/Patient/$patientId?_elements=id",
-        headers = List(Authorization(OAuth2BearerToken(token)))
+        // _elements keeps this server's answer small; other EHRs may not support it
+        uri = s"$fhirApi/Patient/$patientId" + (if (fhirApi == localFhirUrl) "?_elements=id" else ""),
+        headers = List(Authorization(OAuth2BearerToken(token)), Accept(MediaRange(FhirJson)))
       ))
       .map { response =>
         response.discardEntityBytes()

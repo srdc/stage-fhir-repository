@@ -61,6 +61,8 @@ object ACCAHAFlowExecution {
         ))
         output = recommendStopSmokingIfApplicable(smokingStatus, output)
         output = recommendReduceBPIfApplicable(systolicBP, output)
+      case None =>
+        // An input is missing (or the gender is neither male nor female): no cards, the app tells the user so
     }
 
     output
@@ -91,7 +93,7 @@ object ACCAHAFlowExecution {
    * @return whether or not patient should stop smoking
    */
   private def recommendStopSmokingIfApplicable(SmokingStatus: Option[Int], output: CdsResponseBuilder): CdsResponseBuilder = {
-    if (SmokingStatus.get >= SmokingCategoryEnum.LIGHT) {
+    if (SmokingStatus.exists(_ >= SmokingCategoryEnum.LIGHT)) {
       output.withCard(_.loadCardWithPostTranslation("card-stop-smoking",
         "effectiveDate" -> DateTimeUtil.zonedNow()
       ))
