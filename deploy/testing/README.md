@@ -114,6 +114,8 @@ test patients (synthetic, HTEST tagged) into STAGE from `local/seed/` with a `st
 
 - the patients of realm smart's patient users: helen_wright (`6fd322a8-...`), ahmet_kilic (`pa01`), john_wick
   (`pa-demo-01`) and susan_smith (`b403943f-...`), ahmet_kilic and john_wick copies of other test patients' records;
+- the other six test patients of the source, as they are (no realm users: a clinician such as anna_svensson opens
+  them);
 - the feature extraction patients of the `fhir-path-feature-extraction` checkout (`FEATURE_EXTRACTION_DIR`),
   read from there on every load: the WP7 storyboard patients `sb-p1`..`sb-p4` (one per model stratum), `wp6-test-complete`
   and the profiles `123456`..`523456`. They have no realm users: a clinician (anna_svensson) opens them. To also remove what a demo run added, use its

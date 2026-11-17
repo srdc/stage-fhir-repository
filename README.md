@@ -63,7 +63,7 @@ layout: the `*_DIR` variables in `deploy/testing/.env`, see its README):
 | `stage-onauth` | `https://gitlab.srdc.com.tr/stage/stage-onauth.git` | `master` | | onAuth image and realm `smart` (`deploy/testing`) |
 | `shap-client` | `git@gitlab.srdc.com.tr:onfhir/shap-client.git` | `feature/stage-model-integration` | | risk prediction models (`deploy/testing`) |
 | `fhir-rag-med` | `git@gitlab.srdc.com.tr:onfhir/fhir-rag-med.git` | `master` | | LLM explanations (`deploy/testing`) |
-| `onfhir-feast` | `git@gitlab.srdc.com.tr:onfhir/onfhir-feast.git` | `main` | 1.1-SNAPSHOT | feature extraction (`deploy/testing`) |
+| `onfhir-feast` | `git@gitlab.srdc.com.tr:stage/onfhir-feast.git` | `main` | 1.1-SNAPSHOT | feature extraction (`deploy/testing`) |
 | `fhir-path-feature-extraction` | not in git: the STAGE project folder of the WP7 test patients | | | optional test patients (`deploy/testing/seed.py`) |
 
 ```
@@ -75,7 +75,7 @@ git clone -b merging-ml-llm git@github.com:srdc/smart-on-fhir-web-apps.git smart
 git clone -b master https://gitlab.srdc.com.tr/stage/stage-onauth.git stage-onauth
 git clone -b feature/stage-model-integration git@gitlab.srdc.com.tr:onfhir/shap-client.git
 git clone -b master git@gitlab.srdc.com.tr:onfhir/fhir-rag-med.git
-git clone -b main git@gitlab.srdc.com.tr:onfhir/onfhir-feast.git
+git clone -b main git@gitlab.srdc.com.tr:stage/onfhir-feast.git
 ```
 
 Pull all of them before building (`git -C <checkout> pull`). onFHIR and onfhir-cds are SNAPSHOT versions: Maven uses

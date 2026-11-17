@@ -10,7 +10,8 @@ Test patients of https://stage.testing.eu (see README.md).
       stage-services client of realm smart (setup.sh, local/stage-services.secret).
 
 STAGE gets the patients of the realm's patient users (Patient id = the user's patient id); users without a record in
-the source get a copy of another source patient's record. The other patients of the source are not loaded.
+the source get a copy of another source patient's record. The other patients of the source are extra test patients
+(as they are, no realm users: clinicians select them); the source records of the copies are left out.
 
 STAGE also gets the WP6/WP7 feature extraction patients of the fhir-path-feature-extraction checkout
 (FEATURE_EXTRACTION_DIR, default ../../../fhir-path-feature-extraction), as their transaction bundles (fixed ids, PUT):
@@ -46,6 +47,8 @@ STAGE_PATIENTS = [
     ('295e1a06-5b7b-4176-9ecf-c482e4190f39', 'pa-demo-01', ('John', 'Wick'), 'male'),              # john_wick
     ('b403943f-76f7-47e0-9687-28aa93504fbe', 'b403943f-76f7-47e0-9687-28aa93504fbe', None, None),  # susan_smith
 ]
+# Source records of the patient users (the copies are renamed): not loaded again as extra patients
+STAGE_SOURCE_PATIENTS = {source_id for source_id, _, _, _ in STAGE_PATIENTS}
 
 
 # Transaction bundles of the fhir-path-feature-extraction checkout, loaded into STAGE
@@ -124,6 +127,9 @@ def export(source):
     stage = []
     for source_id, patient_id, name, gender in STAGE_PATIENTS:
         stage.append(batch(renamed(patient_record(source, source_id), patient_id, name, gender)))
+    # the other patients of the source, as they are
+    stage += [batch(patient_record(source, p['id'])) for p in search_all(f'{source}/Patient?_count=500')
+              if p['id'] not in STAGE_SOURCE_PATIENTS]
     (SEED_DIR / 'stage.json').write_text(json.dumps(stage, indent=1), encoding='utf-8')
     print(f'stage: {len(stage)} patients, {sum(len(b["entry"]) for b in stage)} resources')
 

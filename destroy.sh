@@ -1,1 +1,1 @@
-docker compose -f docker-compose.yml -p stage-ehr down
+docker compose -f docker-compose.yml -p stage-fhir-repository down

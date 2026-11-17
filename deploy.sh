@@ -1,1 +1,1 @@
-docker compose -f docker-compose.yml -p stage-ehr up -d
+docker compose -f docker-compose.yml -p stage-fhir-repository up -d
